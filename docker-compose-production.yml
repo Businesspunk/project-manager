@@ -1,0 +1,14 @@
+version: '3.0'
+services:
+  php-cli:
+    image: ${REGISTRY}/manager-php-cli:${TAG}
+  php-fpm:
+    image: ${REGISTRY}/manager-php-fpm:${TAG}
+    restart: always
+  nginx:
+    image: ${REGISTRY}/manager-nginx:${TAG}
+    ports:
+      - 80:80
+    depends_on:
+      - php-fpm
+    restart: always

@@ -1,0 +1,24 @@
+version: '3.0'
+services:
+  php-cli:
+    build:
+      context: ./manager/docker/development
+      dockerfile: php-cli.docker
+    volumes:
+      - ./manager:/app
+  php-fpm:
+    build:
+      context: ./manager/docker/development
+      dockerfile: php-fpm.docker
+    volumes:
+      - ./manager:/app
+  nginx:
+    build: 
+      context: ./manager/docker/development
+      dockerfile: nginx.docker
+    volumes:
+      - ./manager:/app
+    ports:
+      - 8080:80
+    depends_on:
+      - php-fpm
