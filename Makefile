@@ -1,13 +1,21 @@
 REGISTRY := $(shell echo businesspunk)
-TAG := $(shell echo 1.0)
+TAG := $(shell echo 3.0)
 USER_HOST := $(shell echo ec2-user@44.203.151.26)
 PEM_KEY_PATH := $(shell echo /Users/nikitakazakevich/Downloads/Manager.pem)
 
+init: down pull dev-build manager-init up
 up: dev-up
-init: down pull dev-build up
-
-down:
+tests: manager-tests
+down: 
 	docker-compose down --remove-orphans
+
+manager-init: manager-composer-install
+
+manager-composer-install:
+	docker-compose run --rm php-cli composer install
+
+manager-tests:
+	docker-compose run --rm php-cli php bin/phpunit
 
 pull:
 	docker-compose pull
@@ -18,21 +26,13 @@ dev-up:
 dev-build:
 	docker-compose build
 
-dev-cli:
-	docker-compose run --rm php-cli php bin/app.php
-
 prod-up:
-	docker network create app
-	docker run -d --name=php-fpm --network=app manager-php-fpm
-	docker run -d --name=nginx -p 8080:80 --network=app manager-nginx
+	REGISTRY=$(REGISTRY) TAG=$(TAG) docker-compose -f docker-compose-production.yml up -d
 
 prod-build:
 	docker build --pull --file=manager/docker/production/php-cli.docker -t $(REGISTRY)/manager-php-cli:$(TAG) manager
 	docker build --pull --file=manager/docker/production/php-fpm.docker -t $(REGISTRY)/manager-php-fpm:$(TAG) manager
 	docker build --pull --file=manager/docker/production/nginx.docker -t $(REGISTRY)/manager-nginx:$(TAG) manager
-
-prod-cli:
-	docker run --rm $(REGISTRY)/manager-php-cli:$(TAG) php bin/app.php
 
 publish:
 	docker push $(REGISTRY)/manager-php-cli:$(TAG)

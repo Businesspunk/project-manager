@@ -1,5 +1,15 @@
-FROM php:7.2-cli
-
+FROM php:7.2-cli AS builder
+RUN apt update && apt install -y unzip zlib1g-dev zip \
+    && docker-php-ext-install zip
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 WORKDIR /app
+COPY ./composer.json ./composer.lock ./
+RUN composer install --no-dev --no-scripts --prefer-dist --optimize-autoloader
 
+FROM php:7.2-cli
+RUN apt update
+WORKDIR /app
+COPY --from=builder /app ./
 COPY ./ ./
+ENV APP_ENV prod
+RUN php bin/console cache:clear
