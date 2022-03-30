@@ -7,7 +7,9 @@ COPY ./composer.json ./composer.lock ./
 RUN composer install --no-dev --no-scripts --prefer-dist --optimize-autoloader
 
 FROM php:7.2-cli
-RUN apt update
+RUN apt update && apt install -y libpq-dev \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pdo_pgsql
 WORKDIR /app
 COPY --from=builder /app ./
 COPY ./ ./

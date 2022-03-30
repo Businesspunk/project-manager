@@ -1,18 +1,18 @@
 version: '3.0'
 services:
-  php-cli:
+  manager-php-cli:
     build:
       context: ./manager/docker/development
       dockerfile: php-cli.docker
     volumes:
       - ./manager:/app
-  php-fpm:
+  manager-php-fpm:
     build:
       context: ./manager/docker/development
       dockerfile: php-fpm.docker
     volumes:
       - ./manager:/app
-  nginx:
+  manager-nginx:
     build: 
       context: ./manager/docker/development
       dockerfile: nginx.docker
@@ -21,4 +21,15 @@ services:
     ports:
       - 8080:80
     depends_on:
-      - php-fpm
+      - manager-php-fpm
+  manager-postgres:
+    image: postgres:14.2-alpine
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: 123456
+
+volumes:
+  pgdata:

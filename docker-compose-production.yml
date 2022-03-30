@@ -1,8 +1,8 @@
 version: '3.0'
 services:
-  php-cli:
+  manager-php-cli:
     image: ${REGISTRY}/manager-php-cli:${TAG}
-  php-fpm:
+  manager-php-fpm:
     image: ${REGISTRY}/manager-php-fpm:${TAG}
     restart: always
   nginx:
@@ -10,5 +10,16 @@ services:
     ports:
       - 80:80
     depends_on:
-      - php-fpm
+      - manager-php-fpm
     restart: always
+  manager-postgres:
+    image: postgres:14.2-alpine
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: 123456
+
+volumes:
+  pgdata:

@@ -1,21 +1,24 @@
 REGISTRY := $(shell echo businesspunk)
-TAG := $(shell echo 3.0)
+TAG := $(shell echo 3.1)
 USER_HOST := $(shell echo ec2-user@44.203.151.26)
 PEM_KEY_PATH := $(shell echo /Users/nikitakazakevich/Downloads/Manager.pem)
 
-init: down pull dev-build manager-init up
+init: down pull dev-build up manager-init
 up: dev-up
 tests: manager-tests
 down: 
 	docker-compose down --remove-orphans
 
-manager-init: manager-composer-install
+manager-init: manager-composer-install manager-migrations
 
 manager-composer-install:
-	docker-compose run --rm php-cli composer install
+	docker-compose run --rm manager-php-cli composer install
+
+manager-migrations:
+	docker-compose run --rm manager-php-cli bin/console doctrine:migrations:migrate --no-interaction
 
 manager-tests:
-	docker-compose run --rm php-cli php bin/phpunit
+	docker-compose run --rm manager-php-cli php bin/phpunit
 
 pull:
 	docker-compose pull
@@ -29,6 +32,9 @@ dev-build:
 prod-up:
 	REGISTRY=$(REGISTRY) TAG=$(TAG) docker-compose -f docker-compose-production.yml up -d
 
+manager-migrations-prod:
+	docker-compose run --rm $(REGISTRY)/manager-php-cli:$(TAG) bin/console doctrine:migrations:migrate --no-interaction
+
 prod-build:
 	docker build --pull --file=manager/docker/production/php-cli.docker -t $(REGISTRY)/manager-php-cli:$(TAG) manager
 	docker build --pull --file=manager/docker/production/php-fpm.docker -t $(REGISTRY)/manager-php-fpm:$(TAG) manager
@@ -40,8 +46,13 @@ publish:
 	docker push $(REGISTRY)/manager-nginx:$(TAG)
 
 deploy:
-	ssh -i $(PEM_KEY_PATH) $(USER_HOST) 'rm -rf docker-compose.yml .env'
-	scp -i $(PEM_KEY_PATH) docker-compose-production.yml $(USER_HOST):~/docker-compose.yml
-	ssh -i $(PEM_KEY_PATH) $(USER_HOST) 'echo "REGISTRY=$(REGISTRY)" >> .env'
-	ssh -i $(PEM_KEY_PATH) $(USER_HOST) 'echo "TAG=$(TAG)" >> .env'
-	ssh -i $(PEM_KEY_PATH) $(USER_HOST) 'docker-compose up -d --build'
+	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'rm -rf docker-compose.yml .env'
+	scp -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) docker-compose-production.yml $(USER_HOST):~/docker-compose.yml
+	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'echo "REGISTRY=$(REGISTRY)" >> .env'
+	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'echo "TAG=$(TAG)" >> .env'
+	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'docker-compose up -d --build'
+	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'until docker-compose exec -T manager-postgres pg_isready --timeout=0 --dbname=app ; do sleep 1 ; done'
+	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'docker-compose run --rm manager-php-cli bin/console doctrine:migrations:migrate --no-interaction'
+
+now:
+	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST)
