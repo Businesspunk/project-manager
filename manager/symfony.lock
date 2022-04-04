@@ -1,4 +1,7 @@
 {
+    "brick/math": {
+        "version": "0.9.3"
+    },
     "doctrine/annotations": {
         "version": "1.13",
         "recipe": {
@@ -165,6 +168,12 @@
     },
     "psr/log": {
         "version": "1.1.4"
+    },
+    "ramsey/collection": {
+        "version": "1.1.4"
+    },
+    "ramsey/uuid": {
+        "version": "4.2.3"
     },
     "sebastian/code-unit-reverse-lookup": {
         "version": "1.0.2"
