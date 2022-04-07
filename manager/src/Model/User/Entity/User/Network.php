@@ -2,25 +2,38 @@
 
 namespace App\Model\User\Entity\User;
 
+use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
+/**
+ * @ORM\Entity
+ * @ORM\Table (name="user_user_networks", uniqueConstraints={
+ *     @ORM\UniqueConstraint(columns={"network", "identity"})
+ * })
+ */
 class Network
 {
     /**
      * @var string
+     * @ORM\Column (type="guid")
+     * @ORM\Id
      */
     private $id;
     /**
      * @var User
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="networks")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $user;
     /**
      * @var string
+     * @ORM\Column (type="string")
      */
     private $network;
 
     /**
      * @var string
+     * @ORM\Column (type="string")
      */
     private $identity;
 

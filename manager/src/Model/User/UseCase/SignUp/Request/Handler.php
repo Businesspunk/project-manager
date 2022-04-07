@@ -57,12 +57,9 @@ class Handler
             throw new UserCreationException('This user is already exists.');
         }
 
-        $user = new User(
+        $user = User::signUpByEmail(
             Id::next(),
-            new DateTimeImmutable()
-        );
-
-        $user->signUpByEmail(
+            new DateTimeImmutable(),
             $email,
             $this->passwordHasher->hash($command->password),
             $token = $this->tokenizer->generate()

@@ -20,6 +20,9 @@ manager-migrations:
 manager-tests:
 	docker-compose run --rm manager-php-cli php bin/phpunit
 
+manager-wait-db:
+	until docker-compose exec -T manager-postgres pg_isready --timeout=0 --dbname=app ; do sleep 1 ; done
+
 pull:
 	docker-compose pull
 

@@ -31,5 +31,6 @@ class RequestTest extends KernelTestCase
         $this->assertEquals($email, $user->getEmail());
         $this->assertEquals($password, $user->getPasswordHash());
         $this->assertEquals($token, $user->getToken());
+        $this->assertTrue($user->getRole()->isUser());
     }
 }

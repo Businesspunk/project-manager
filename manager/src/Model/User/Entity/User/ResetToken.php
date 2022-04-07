@@ -4,15 +4,21 @@ namespace App\Model\User\Entity\User;
 
 use DateTimeImmutable;
 use Webmozart\Assert\Assert;
+use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Embeddable
+ */
 class ResetToken
 {
     /**
      * @var string
+     * @ORM\Column (type="string", nullable=true)
      */
     private $token;
     /**
      * @var DateTimeImmutable
+     * @ORM\Column (type="datetime_immutable", nullable=true)
      */
     private $expires;
 
@@ -30,5 +36,21 @@ class ResetToken
     public function isExpiredToDate(DateTimeImmutable $date): bool
     {
         return $this->expires <= $date;
+    }
+
+    /**
+     * @return string
+     */
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return empty($this->token);
     }
 }

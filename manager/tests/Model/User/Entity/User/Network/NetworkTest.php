@@ -21,15 +21,4 @@ class NetworkTest extends KernelTestCase
         $this->assertEquals($network, $first->getNetwork());
         $this->assertEquals($identity, $first->getIdentity());
     }
-
-    public function testUserAlreadySignedUpByNetwork(): void
-    {
-        $user = (new UserBuilder())->viaNetwork(
-            $network = 'vk',
-            $identity = '12345'
-        )->build();
-
-        $this->expectExceptionMessage('This user is already registered');
-        $user->signUpByNetwork($network, $identity);
-    }
 }

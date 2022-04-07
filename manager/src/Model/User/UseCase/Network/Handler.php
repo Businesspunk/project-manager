@@ -5,6 +5,8 @@ namespace App\Model\User\UseCase\SignUp\Network;
 use App\Model\User\Entity\User\UserRepository;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Flusher;
+use DateTimeImmutable;
+use App\Model\User\Entity\User\Id;
 
 class Handler
 {
@@ -26,15 +28,16 @@ class Handler
     public function handle(Command $command)
     {
         if ($this->users->hasByNetworkIdentity($command->network, $command->identity)) {
-            throw new UserCreationException('This user is already exists.');
+            throw new \DomainException('This user is already exists.');
         }
 
-        $user = new User(
+        $user = User::signUpByNetwork(
             Id::next(),
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            $command->network,
+            $command->identity
         );
 
-        $user->signUpByNetwork($command->network, $command->identity);
         $this->users->add($user);
         $this->flusher->flush();
     }
