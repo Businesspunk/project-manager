@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Model\User\UseCase\Reset;
+namespace App\Model\User\UseCase\Reset\Request;
+
+use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
     /**
+     * @Assert\Email
+     * @Assert\NotBlank
      * @var string
      */
     public $email;
-
-    public function __construct(string $email)
-    {
-        $this->email = $email;
-    }
 }

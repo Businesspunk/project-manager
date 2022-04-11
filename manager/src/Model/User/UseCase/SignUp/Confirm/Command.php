@@ -8,4 +8,9 @@ class Command
      * @var string
      */
     public $token;
+
+    public function __construct($token)
+    {
+        $this->token = $token;
+    }
 }

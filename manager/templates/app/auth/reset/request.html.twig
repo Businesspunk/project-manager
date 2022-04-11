@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reset request password{% endblock %}
+
+{% block body %}
+    <h1 class="mt-3">Reset request password</h1>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div class="form-group mt-3">
+        <button type="submit" class="btn btn-primary">Reset</button>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+

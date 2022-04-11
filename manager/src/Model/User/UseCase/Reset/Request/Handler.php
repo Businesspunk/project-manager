@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model\User\UseCase\Reset;
+namespace App\Model\User\UseCase\Reset\Request;
 
 use App\Model\User\Entity\User\Email;
 use App\Model\User\Entity\User\ResetToken;
@@ -36,13 +36,13 @@ class Handler
         $this->flusher = $flusher;
     }
 
-    public function handler(Command $command)
+    public function handle(Command $command)
     {
         $user = $this->users->getByEmail(new Email($command->email));
 
         $token = $this->tokenizer->generate();
-        $user->requestResetPassword($token);
+        $user->requestResetPassword($token, new \DateTimeImmutable());
         $this->flusher->flush();
-        $this->sender->send($user->getEmail(), $user->getResetToken());
+        $this->sender->send($user->getEmail(), $user->getResetToken()->getToken());
     }
 }

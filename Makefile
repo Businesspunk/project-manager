@@ -1,5 +1,5 @@
 REGISTRY := $(shell echo businesspunk)
-TAG := $(shell echo 3.1)
+TAG := $(shell echo 3.2)
 USER_HOST := $(shell echo ec2-user@44.203.151.26)
 PEM_KEY_PATH := $(shell echo /Users/nikitakazakevich/Downloads/Manager.pem)
 
@@ -9,13 +9,16 @@ tests: manager-tests
 down: 
 	docker-compose down --remove-orphans
 
-manager-init: manager-composer-install manager-migrations
+manager-init: manager-composer-install manager-migrations manager-fixtures
 
 manager-composer-install:
 	docker-compose run --rm manager-php-cli composer install
 
 manager-migrations:
 	docker-compose run --rm manager-php-cli bin/console doctrine:migrations:migrate --no-interaction
+
+manager-fixtures:
+	docker-compose run --rm manager-php-cli bin/console doctrine:fixtures:load --no-interaction
 
 manager-tests:
 	docker-compose run --rm manager-php-cli php bin/phpunit

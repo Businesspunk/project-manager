@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model\User\UseCase\SignUp\Network;
+namespace App\Model\User\UseCase\Network;
 
 use App\Model\User\Entity\User\UserRepository;
 use App\Model\User\Entity\User\User;

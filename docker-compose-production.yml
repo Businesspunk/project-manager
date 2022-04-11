@@ -20,6 +20,9 @@ services:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: 123456
-
+  mailer:
+    image: mailhog/mailhog:latest
+    ports:
+      - 8081:8025
 volumes:
   pgdata:

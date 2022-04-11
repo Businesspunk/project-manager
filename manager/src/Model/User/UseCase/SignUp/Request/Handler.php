@@ -11,6 +11,7 @@ use App\Model\User\Service\PasswordHasher;
 use App\Model\User\Flusher;
 use App\Model\User\Service\ConfirmTokenSender;
 use DateTimeImmutable;
+use DomainException;
 
 class Handler
 {
@@ -54,7 +55,7 @@ class Handler
         $email = new Email($command->email);
 
         if ($this->users->hasByEmail($email)) {
-            throw new UserCreationException('This user is already exists.');
+            throw new DomainException('This user is already exists.');
         }
 
         $user = User::signUpByEmail(

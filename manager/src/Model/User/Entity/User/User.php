@@ -17,8 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User
 {
-    private const STATUS_WAIT = 'wait';
-    private const STATUS_ACTIVE = 'active';
+    public const STATUS_WAIT = 'wait';
+    public const STATUS_ACTIVE = 'active';
     /**
      * @var Id
      * @ORM\Column (type="user_user_id")
@@ -183,14 +183,14 @@ class User
     public function requestResetPassword(ResetToken $token, DateTimeImmutable $date): void
     {
         if (!$this->isActive()) {
-            throw new \Exception('User is not active');
+            throw new \DomainException('User is not active');
         }
 
         if (!$this->email) {
-            throw new \Exception('Email is not specified.');
+            throw new \DomainException('Email is not specified.');
         }
         if ($this->resetToken && !$this->resetToken->isExpiredToDate($date)) {
-            throw new \Exception('Previous reset token is not expired.');
+            throw new \DomainException('Previous reset token is not expired.');
         }
 
         $this->resetToken = $token;

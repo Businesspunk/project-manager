@@ -28,7 +28,7 @@ class Handler
         $this->flusher = $flusher;
     }
 
-    public function handler(Command $command)
+    public function handle(Command $command)
     {
         if( !$user = $this->users->findByResetToken($command->token) ){
             throw new \DomainException('No users with this token');
