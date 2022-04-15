@@ -19,20 +19,21 @@ class UserProvider implements UserProviderInterface
 
     public function refreshUser(UserInterface $user): UserInterface
     {
-        $user = $this->loadUser($user->getUsername());
-        return $this->createIdentityByUser($user);
+        $username = $user->getUsername();
+        $user = $this->loadUser($username);
+        return $this->createIdentityByUser($user, $username);
     }
 
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
         $user = $this->loadUser($identifier);
-        return $this->createIdentityByUser($user);
+        return $this->createIdentityByUser($user, $identifier);
     }
 
     public function loadUserByUsername(string $username): UserInterface
     {
         $user = $this->loadUser($username);
-        return $this->createIdentityByUser($user);
+        return $this->createIdentityByUser($user, $username);
     }
 
     public function supportsClass(string $class): bool
@@ -42,17 +43,22 @@ class UserProvider implements UserProviderInterface
 
     private function loadUser(string $username): AuthView
     {
-        if(!$user = $this->users->findForAuth($username)){
+        $chunks = explode(':', $username);
+        if (count($chunks) == 2 && $user = $this->users->findForAuthByNetwork($chunks[0], $chunks[1])) {
+            return $user;
+        }
+
+        if (!$user = $this->users->findForAuthByEmail($username)) {
             throw new UserNotFoundException('');
         }
         return $user;
     }
 
-    private function createIdentityByUser(AuthView $user): UserIdentity
+    private function createIdentityByUser(AuthView $user, string $username): UserIdentity
     {
         return new UserIdentity(
             $user->id,
-            $user->email,
+            $username,
             $user->password_hash,
             $user->role,
             $user->status

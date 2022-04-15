@@ -59,6 +59,3 @@ deploy:
 	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'docker-compose up -d --build'
 	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'until docker-compose exec -T manager-postgres pg_isready --timeout=0 --dbname=app ; do sleep 1 ; done'
 	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'docker-compose run --rm manager-php-cli bin/console doctrine:migrations:migrate --no-interaction'
-
-now:
-	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST)

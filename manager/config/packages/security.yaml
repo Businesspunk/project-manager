@@ -17,6 +17,7 @@ security:
             provider: fetcher
             custom_authenticators:
                 - App\Security\LoginFormAuthenticator
+                - App\Security\FacebookAuthenticator
             user_checker: App\Security\UserChecker
             entry_point: App\Security\LoginFormAuthenticator
             remember_me:

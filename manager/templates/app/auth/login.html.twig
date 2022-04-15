@@ -22,6 +22,8 @@
         <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
     </div>
 
+    <a href="{{ path('auth.facebook.start') }}">Facebook</a>
+
     <input type="hidden" name="_csrf_token"
            value="{{ csrf_token('authenticate') }}"
     >

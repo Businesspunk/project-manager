@@ -14,7 +14,7 @@ class UserIdentity implements UserInterface, EquatableInterface
     private $role;
     private $status;
 
-    public function __construct(string $id, string $username, string $password, string $role, string $status)
+    public function __construct(string $id, string $username, ?string $password, string $role, string $status)
     {
         $this->id = $id;
         $this->username = $username;
