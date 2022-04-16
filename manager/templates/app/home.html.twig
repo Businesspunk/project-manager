@@ -1,7 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Home{% endblock %}
-
 {% block body %}
-    <h1>Hello world! It's Symfony</h1>
+    <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
+        <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="init">
+        </ul>
+        <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
+    </div>
+    <div class="wrapper d-flex flex-column min-vh-100 bg-light">
+        <header class="header header-sticky mb-4">
+            <div class="container-fluid">
+                <button class="header-toggler px-md-0 me-md-3" id="sidebar-toggle" type="button">
+                    <svg class="icon icon-lg">
+                        <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-menu') }}"></use>
+                    </svg>
+                </button>
+                <a class="header-brand d-md-none" href="#">
+                    <svg width="118" height="46" alt="CoreUI Logo">
+                        <use xlink:href="{{ asset('build/coreui/icons/svg/brand.svg#full') }}"></use>
+                    </svg>
+                </a>
+                <ul class="header-nav d-none d-md-flex">
+                    <li class="nav-item"><a class="nav-link" href="#">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
+                </ul>
+                <ul class="header-nav ms-auto">
+
+                </ul>
+                <ul class="header-nav ms-3">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link py-0" href="#">{{ app.user.username }}</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="header-divider"></div>
+            <div class="container-fluid">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb my-0 ms-2">
+                        <li class="breadcrumb-item">
+                            <span>Home</span>
+                        </li>
+                        <li class="breadcrumb-item active"><span>Dashboard</span></li>
+                    </ol>
+                </nav>
+            </div>
+        </header>
+        <div class="body flex-grow-1 px-3">
+            <div class="container-lg">
+                <h1>Hello world! It's Symfony</h1>
+            </div>
+        </div>
+    </div>
 {% endblock %}

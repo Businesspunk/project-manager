@@ -3,16 +3,25 @@ TAG := $(shell echo 3.2)
 USER_HOST := $(shell echo ec2-user@44.203.151.26)
 PEM_KEY_PATH := $(shell echo /Users/nikitakazakevich/Downloads/Manager.pem)
 
-init: down pull dev-build up manager-init
+init: unready down pull dev-build up manager-init
 up: dev-up
 tests: manager-tests
 down: 
 	docker-compose down --remove-orphans
 
-manager-init: manager-composer-install manager-migrations manager-fixtures
+manager-init: manager-composer-install manager-assets-install ready manager-migrations manager-fixtures
+
+ready:
+	docker run --rm -v $(PWD)/manager:/app -w="/app" alpine touch .ready
+
+unready:
+	docker run --rm -v $(PWD)/manager:/app -w="/app" alpine rm -f .ready
 
 manager-composer-install:
 	docker-compose run --rm manager-php-cli composer install
+
+manager-assets-install:
+	docker-compose run --rm manager-node yarn install
 
 manager-migrations:
 	docker-compose run --rm manager-php-cli bin/console doctrine:migrations:migrate --no-interaction

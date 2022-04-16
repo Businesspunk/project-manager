@@ -30,6 +30,19 @@ services:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: 123456
+  manager-node:
+    build:
+      context: ./manager/docker/development
+      dockerfile: node.docker
+    volumes:
+      - ./manager:/app
+  manager-node-watch:
+    build:
+      context: ./manager/docker/development
+      dockerfile: node.docker
+    volumes:
+      - ./manager:/app
+    command: sh -c "until [ -f .ready ] ; do sleep 1 ; done && npm run watch"
   mailer:
     image: mailhog/mailhog:latest
     ports:

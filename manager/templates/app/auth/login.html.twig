@@ -1,41 +1,55 @@
-{% extends 'base.html.twig' %}
+{% extends 'auth.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block card %}
+    <div class="card p-4 mb-0">
+        <div class="card-body">
+            <h1>Login</h1>
+            <form method="post">
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
 
-{% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+                {% if app.user %}
+                    <div class="mb-3">
+                        You are logged in as {{ app.user.username }}, <a href="{{ path('auth.logout') }}">Logout</a>
+                    </div>
+                {% endif %}
 
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.username }}, <a href="{{ path('auth.logout') }}">Logout</a>
+                <p class="text-medium-emphasis">Sign In to your account</p>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">
+                        <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-user') }}"></use></svg>
+                    </span>
+                    <input class="form-control" value="{{ last_username }}" name="email" type="text" placeholder="E-mail" required>
+                </div>
+                <div class="input-group mb-4">
+                    <span class="input-group-text">
+                        <svg class="icon">
+                            <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-lock-locked') }}"></use>
+                        </svg></span>
+                    <input class="form-control" type="password" placeholder="Password" name="password" required>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-primary px-4" type="submit">Login</button>
+                        <a href="{{ path('auth.signup') }}" class="btn btn-secondary">Sign up</a>
+                    </div>
+                    <div class="col-6 text-end">
+                        <a href="{{ path('auth.reset') }}" class="px-0">Forgot password?</a>
+                    </div>
+                </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-primary facebook-button" type="button">
+                            <svg class="icon me-2">
+                                <use xlink:href="{{ asset('build/coreui/icons/svg/brand.svg#cib-facebook') }}"></use>
+                            </svg>Facebook
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
-    {% endif %}
-
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <div class="form-group mt-3">
-        <label for="inputPassword">Password</label>
-        <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
     </div>
-
-    <a href="{{ path('auth.facebook.start') }}">Facebook</a>
-
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
-
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" name="_remember_me"> Remember me
-            </label>
-        </div>
-
-    <button class="btn btn-lg btn-primary mt-3" type="submit">
-        Sign in
-    </button>
-</form>
 {% endblock %}

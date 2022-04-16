@@ -1,0 +1,15 @@
+@import '~@coreui/coreui/scss/coreui';
+
+.facebook-button{
+  background-color: #3b5998;
+}
+
+html:not([dir=rtl]) .wrapper {
+  padding-left: var(--cui-sidebar-occupy-start,0);
+}
+
+.wrapper{
+  width: 100%;
+  will-change: auto;
+  transition: padding .15s;
+}

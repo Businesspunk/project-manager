@@ -1,0 +1,7 @@
+FROM node:17-alpine
+
+RUN apk add --no-cache git openssh
+
+RUN npm install -g npm@8.7.0
+
+WORKDIR /app
