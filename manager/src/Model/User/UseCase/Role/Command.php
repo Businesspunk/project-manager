@@ -12,4 +12,10 @@ class Command
      * @var string
      */
     public $role;
+
+    public function __construct(string $id, string $role)
+    {
+        $this->id = $id;
+        $this->role = $role;
+    }
 }

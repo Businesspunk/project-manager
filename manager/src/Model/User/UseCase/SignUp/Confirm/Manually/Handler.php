@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Model\User\UseCase\SignUp\Confirm;
+namespace App\Model\User\UseCase\SignUp\Confirm\Manually;
 
+use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\UserRepository;
 use App\Model\User\Flusher;
 
@@ -24,7 +25,7 @@ class Handler
 
     public function handle(Command $command)
     {
-        if (!$user = $this->users->findByConfirmationToken($command->token)) {
+        if (!$user = $this->users->find(new Id($command->id))) {
             throw new \DomainException('No users with this confirmation token');
         }
 

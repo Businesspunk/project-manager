@@ -6,8 +6,8 @@ use Webmozart\Assert\Assert;
 
 class Role
 {
-    private const ROLE_USER = 'ROLE_USER';
-    private const ROLE_ADMIN = 'ROLE_ADMIN';
+    public const ROLE_USER = 'ROLE_USER';
+    public const ROLE_ADMIN = 'ROLE_ADMIN';
     /**
      * @var string
      */

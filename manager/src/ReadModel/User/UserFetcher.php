@@ -57,4 +57,18 @@ class UserFetcher
         $result = $stmt->fetch();
         return $result ?: null;
     }
+
+    public function findByEmail(string $email): ?ShortView
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select('id', 'email', 'password_hash', 'role', 'status')
+            ->from('user_users')
+            ->where('email = :email')
+            ->setParameter(':email', $email)
+            ->execute();
+
+        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, ShortView::class);
+        $result = $stmt->fetch();
+        return $result ?: null;
+    }
 }
