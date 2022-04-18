@@ -22,13 +22,20 @@
                     </span>
                     <input class="form-control" value="{{ last_username }}" name="email" type="text" placeholder="E-mail" required>
                 </div>
-                <div class="input-group mb-4">
+                <div class="input-group mb-3">
                     <span class="input-group-text">
                         <svg class="icon">
                             <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-lock-locked') }}"></use>
                         </svg></span>
                     <input class="form-control" type="password" placeholder="Password" name="password" required>
                 </div>
+
+                <div class="form-check mb-4">
+                    <label class="form-check-label">
+                        <input class="form-check-input" name="_remember_me" type="checkbox"> Remember me
+                    </label>
+                </div>
+
                 <div class="row">
                     <div class="col-6">
                         <button class="btn btn-primary px-4" type="submit">Login</button>
