@@ -71,4 +71,31 @@ class UserFetcher
         $result = $stmt->fetch();
         return $result ?: null;
     }
+
+    public function getDetail(string $id): ?DetailView
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select('id', 'date',  'role', 'status')
+            ->from('user_users')
+            ->where('id = :id')
+            ->setParameter(':id', $id)
+            ->execute();
+
+        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, DetailView::class);
+        $result = $stmt->fetch();
+
+        $stmt = $this->connection->createQueryBuilder()
+            ->select('n.network', 'n.identity')
+            ->from('user_users', 'u')
+            ->innerJoin('u', 'user_user_networks', 'n', 'u.id = n.user_id')
+            ->where('u.id = :id')
+            ->setParameter(':id', $id)
+            ->execute();
+
+        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, NetworkView::class);
+
+        $result->networks = $stmt->fetchAll();
+
+        return $result ?: null;
+    }
 }

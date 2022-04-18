@@ -42,11 +42,11 @@
                 <hr>
                 <div class="row">
                     <div class="col-6">
-                        <button class="btn btn-primary facebook-button" type="button">
+                        <a href="{{ path('auth.facebook.start') }}" class="btn btn-primary facebook-button">
                             <svg class="icon me-2">
                                 <use xlink:href="{{ asset('build/coreui/icons/svg/brand.svg#cib-facebook') }}"></use>
                             </svg>Facebook
-                        </button>
+                        </a>
                     </div>
                 </div>
             </form>

@@ -1,0 +1,55 @@
+{% extends 'app/index.html.twig' %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('home') }}">Home</a></span>
+    </li>
+    <li class="breadcrumb-item active"><span>Profile</span></li>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">Profile</div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th scope="row">ID</th>
+                        <td>{{ detail.id }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Created</th>
+                        <td>{{ detail.date }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Role</th>
+                        <td>{{ detail.role }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Status</th>
+                        <td>{{ detail.status }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if detail.networks %}
+    <div class="card mt-5">
+        <div class="card-header">Networks</div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tbody>
+                {% for network in detail.networks %}
+                    <tr>
+                        <th scope="row">{{ network.network }}</th>
+                        <td>{{ network.identity }}</td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

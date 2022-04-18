@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
+        <div class="sidebar-brand d-none d-md-flex">
+            <svg class="sidebar-brand-full" width="150" height="46" alt="CoreUI Logo" fill="#fff">
+                <use xlink:href="{{ asset('build/coreui/icons/svg/brand.svg#cib-coreui') }}"></use>
+            </svg>
+        </div>
+        <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="init">
+            <div class="simplebar-wrapper">
+                <div class="simplebar-height-auto-observer-wrapper">
+                    <div class="simplebar-height-auto-observer"></div>
+                </div>
+                <div class="simplebar-mask">
+                    <div class="simplebar-offset">
+                        <div class="simplebar-content-wrapper">
+                            <div class="simplebar-content">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">
+                                        <svg class="nav-icon">
+                                            <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-speedometer') }}"></use>
+                                        </svg>
+                                        Dashboard
+                                    </a>
+                                </li>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="simplebar-placeholder"></div>
+            </div>
+            <div class="simplebar-track simplebar-horizontal">
+                <div class="simplebar-scrollbar"></div>
+            </div>
+            <div class="simplebar-track simplebar-vertical">
+                <div class="simplebar-scrollbar"></div>
+            </div>
+        </ul>
+    </div>
+    <div class="wrapper d-flex flex-column min-vh-100 bg-light">
+        <header class="header header-sticky mb-4">
+            <div class="container-fluid">
+                <button class="header-toggler px-md-0 me-md-3" id="sidebar-toggle" type="button">
+                    <svg class="icon icon-lg">
+                        <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-menu') }}"></use>
+                    </svg>
+                </button>
+                <a class="header-brand d-md-none" href="#">
+                    <svg width="118" height="46" alt="CoreUI Logo">
+                        <use xlink:href="{{ asset('build/coreui/icons/svg/brand.svg#full') }}"></use>
+                    </svg>
+                </a>
+                <ul class="header-nav ms-auto">
+
+                </ul>
+                <ul class="header-nav ms-3">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link py-0" data-coreui-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true" href="#">{{ app.user.username }}</a>
+                        <div class="dropdown-menu dropdown-menu-end pt-0" data-popper-placement="bottom-end">
+                            <div class="dropdown-header bg-light py-2">
+                                <div class="fw-semibold">Account</div>
+                            </div>
+                            <a class="dropdown-item" href="{{ path('profile') }}">
+                                <svg class="icon me-2">
+                                    <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-bell') }}"></use>
+                                </svg> Profile
+                            </a>
+                            <div class="dropdown-header bg-light py-2">
+                                <div class="fw-semibold">Settings</div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ path('auth.logout') }}">
+                                <svg class="icon me-2">
+                                    <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-account-logout') }}"></use>
+                                </svg> Logout
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="header-divider"></div>
+            <div class="container-fluid">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb my-0 ms-2">
+                        {% block breadcrumb %}{% endblock %}
+                    </ol>
+                </nav>
+            </div>
+        </header>
+        <div class="body flex-grow-1 px-3">
+            <div class="container-lg">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
