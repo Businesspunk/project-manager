@@ -14,4 +14,5 @@ WORKDIR /app
 COPY --from=builder /app ./
 COPY ./ ./
 ENV APP_ENV prod
-RUN php bin/console cache:clear
+RUN php bin/console cache:clear \
+    && chown -R www-data:www-data ./var

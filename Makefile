@@ -1,7 +1,8 @@
 REGISTRY := $(shell echo businesspunk)
-TAG := $(shell echo 3.2)
+TAG := $(shell echo 3.3)
 USER_HOST := $(shell echo ec2-user@44.203.151.26)
 PEM_KEY_PATH := $(shell echo /Users/nikitakazakevich/Downloads/Manager.pem)
+REDIS_SECRET := $(shell echo secret)
 
 init: unready down pull dev-build up manager-init
 up: dev-up
@@ -65,6 +66,7 @@ deploy:
 	scp -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) docker-compose-production.yml $(USER_HOST):~/docker-compose.yml
 	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'echo "REGISTRY=$(REGISTRY)" >> .env'
 	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'echo "TAG=$(TAG)" >> .env'
+	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'echo "REDIS_SECRET=$(REDIS_SECRET)" >> .env'
 	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'docker-compose up -d --build'
 	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'until docker-compose exec -T manager-postgres pg_isready --timeout=0 --dbname=app ; do sleep 1 ; done'
 	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'docker-compose run --rm manager-php-cli bin/console doctrine:migrations:migrate --no-interaction'

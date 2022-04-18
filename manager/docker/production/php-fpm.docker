@@ -29,3 +29,4 @@ COPY --from=node-builder /app/public/build ./public/build
 COPY ./ ./
 ENV APP_ENV prod
 RUN php bin/console assets:install && php bin/console cache:clear
+RUN chown -R www-data:www-data ./var
