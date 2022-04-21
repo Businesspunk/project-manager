@@ -66,6 +66,17 @@ class User
      */
     private $resetToken;
 
+    /**
+     * @var Email|null
+     * @ORM\Column (type="user_user_email", nullable=true)
+     */
+    private $newEmail;
+    /**
+     * @var string|null
+     * @ORM\Column (type="string", nullable=true)
+     */
+    private $newEmailToken;
+
     private function __construct(
         Id $id,
         DateTimeImmutable $date
@@ -245,5 +256,50 @@ class User
     public function getStatus(): string
     {
         return $this->status;
+    }
+
+    public function requestChangeEmail(Email $email, string $token)
+    {
+        if ($email->getValue() === $this->getEmail()->getValue()) {
+            throw new \DomainException('Email is the same');
+        }
+
+        if (!$this->isActive()) {
+            throw new \DomainException('User is not active');
+        }
+
+        $this->newEmail = $email;
+        $this->newEmailToken = $token;
+    }
+
+    /**
+     * @return Email|null
+     */
+    public function getNewEmail(): ?Email
+    {
+        return $this->newEmail;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getNewEmailToken(): ?string
+    {
+        return $this->newEmailToken;
+    }
+
+    public function changeEmail(string $token)
+    {
+        if ( is_null($this->newEmailToken) || is_null($this->newEmail)) {
+            throw new \DomainException('Change email was not requested');
+        }
+
+        if ($token != $this->newEmailToken) {
+            throw new \DomainException('Token is invalid');
+        }
+
+        $this->email = $this->newEmail;
+        $this->newEmailToken = null;
+        $this->newEmail = null;
     }
 }

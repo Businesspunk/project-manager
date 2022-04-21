@@ -90,6 +90,7 @@
         </header>
         <div class="body flex-grow-1 px-3">
             <div class="container-lg">
+                {% include '_flashes.html.twig' %}
                 {% block content %}{% endblock %}
             </div>
         </div>

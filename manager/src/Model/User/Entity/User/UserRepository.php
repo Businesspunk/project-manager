@@ -31,12 +31,22 @@ class UserRepository
         return $this->repo->findOneBy(['resetToken.token' => $token]);
     }
 
+    public function findByRequestedNewEmailToken(string $token): ?User
+    {
+        return $this->repo->findOneBy(['requestedNewEmailToken' => $token]);
+    }
+
     public function getByEmail(Email $email): User
     {
-        if (!$user = $this->repo->findOneBy(['email' => $email->getValue()])) {
+        if (!$user = $this->findByEmail($email)) {
             throw new \DomainException('User is not found');
         }
         return $user;
+    }
+
+    public function findByEmail(Email $email): ?User
+    {
+        return $this->repo->findOneBy(['email' => $email->getValue()]);
     }
 
     public function hasByEmail(Email $email): bool

@@ -7,6 +7,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/profile")
+ */
 class ProfileController extends AbstractController
 {
     private $userFetcher;
@@ -17,7 +20,7 @@ class ProfileController extends AbstractController
     }
 
     /**
-     * @Route("/profile", name="profile")
+     * @Route("/", name="profile")
      * @return Response
      */
     public function index(): Response
