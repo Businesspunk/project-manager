@@ -5,6 +5,7 @@ namespace App\Controller\Profile;
 use App\Model\User\Entity\User\UserRepository;
 use App\Model\User\UseCase\Email\Request as ChangeEmail;
 use App\Model\User\UseCase\Email\Confirm as ConfirmEmail;
+use App\ReadModel\User\UserFetcher;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +29,11 @@ class EmailController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $handler->handle($command);
-                $this->addFlash('success', 'Check your mailbox of new your new email address');
+                $message = filter_var($this->getUser()->getUsername(), FILTER_VALIDATE_EMAIL)
+                            ? 'Check your mailbox of new your new email address'
+                            : 'Email is successfully added';
+
+                $this->addFlash('success', $message);
                 return $this->redirectToRoute('profile.email');
             } catch (\Exception $e) {
                 $this->addFlash('error', $e->getMessage());

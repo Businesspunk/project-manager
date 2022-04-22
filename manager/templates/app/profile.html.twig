@@ -27,7 +27,7 @@
                         <th scope="row">Email</th>
                         <td>
                             <span>{{ detail.email }}</span>
-                            <a class="btn btn-outline-info btn-small-icon" href="{{ path('profile.email.change') }}">
+                            <a class="btn btn-outline-info btn-small-icon" href="{{ path('profile.email') }}">
                                 <svg class="icon">
                                     <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-pen') }}"></use>
                                 </svg>
@@ -47,22 +47,35 @@
         </div>
     </div>
 
-    {% if detail.networks %}
     <div class="card mt-5">
         <div class="card-header">Networks</div>
         <div class="card-body">
-            <table class="table table-bordered">
-                <tbody>
-                {% for network in detail.networks %}
-                    <tr>
-                        <th scope="row">{{ network.network }}</th>
-                        <td>{{ network.identity }}</td>
-                    </tr>
-                {% endfor %}
+            {% if detail.networks %}
+                <table class="table table-bordered">
+                    <tbody>
+                    {% for network in detail.networks %}
+                        <tr>
+                            <th scope="row">{{ network.network }}</th>
+                            <td class="d-flex justify-content-between">
+                                <span>{{ network.identity }}</span>
+                                <a class="btn btn-danger text-white btn-small-icon"
+                                   href="{{ path('profile.auth.facebook.detach', {'network': 'facebook'}) }}"
+                                   onclick="return confirm('Are you sure you want to delete Facebook network?')">
+                                    <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-delete') }}"></use></svg>
+                                </a>
+                            </td>
 
-                </tbody>
-            </table>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+
+            <a href="{{ path('profile.auth.facebook') }}" class="btn btn-primary facebook-button">
+                <svg class="icon me-2">
+                    <use xlink:href="{{ asset('build/coreui/icons/svg/brand.svg#cib-facebook') }}"></use>
+                </svg>Facebook
+            </a>
         </div>
     </div>
-    {% endif %}
 {% endblock %}

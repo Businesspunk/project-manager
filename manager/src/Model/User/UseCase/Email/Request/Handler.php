@@ -40,7 +40,11 @@ class Handler
         $user = $this->users->get(new Id($command->id));
         $token = $this->tokenizer->generate();
         $user->requestChangeEmail($email, $token);
-        $this->sender->send($email, $token);
+        if ($user->getEmail()) {
+            $this->sender->send($email, $token);
+        } else{
+            $user->changeEmail($token);
+        }
         $this->flusher->flush();
     }
 }

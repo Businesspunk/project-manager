@@ -107,7 +107,7 @@ class User
         return $user;
     }
 
-    private function attachNetwork(string $network, string $identity): void
+    public function attachNetwork(string $network, string $identity): void
     {
         foreach ($this->networks as $existing) {
             if ($existing->isForNetwork($network)) {
@@ -115,6 +115,23 @@ class User
             }
         }
         $this->networks->add(new Network($this, $network, $identity));
+    }
+
+    public function dettachNetwork(string $network): void
+    {
+        $networkKeyForDelete = null;
+        foreach ($this->networks as $key => $existing) {
+            if ($existing->isForNetwork($network)) {
+                $networkKeyForDelete = $key;
+                break;
+            }
+        }
+
+        if (is_null($networkKeyForDelete)) {
+            throw new \Exception('This network is not exist');
+        } else{
+            $this->networks->remove($networkKeyForDelete);
+        }
     }
 
     /**
@@ -128,7 +145,7 @@ class User
     /**
      * @return Email
      */
-    public function getEmail(): Email
+    public function getEmail(): ?Email
     {
         return $this->email;
     }
@@ -260,7 +277,7 @@ class User
 
     public function requestChangeEmail(Email $email, string $token)
     {
-        if ($email->getValue() === $this->getEmail()->getValue()) {
+        if ( !is_null($this->getEmail()) && $email->getValue() === $this->getEmail()->getValue()) {
             throw new \DomainException('Email is the same');
         }
 
