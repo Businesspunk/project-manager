@@ -3,11 +3,15 @@
 namespace App\Controller\Auth;
 
 use App\Model\User\UseCase\SignUp;
+use App\ReadModel\User\UserFetcher;
+use App\Security\LoginFormAuthenticator;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SignUpController extends AbstractController
@@ -43,6 +47,7 @@ class SignUpController extends AbstractController
             try {
                 $handler->handle($command);
                 $this->addFlash('success', 'Check your email');
+                return $this->redirectToRoute('auth.signup');
             } catch (\DomainException $e) {
                 $this->logger->error($e->getMessage(), ['exception' => $e]);
                 $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
@@ -59,12 +64,28 @@ class SignUpController extends AbstractController
      * @param string $token
      * @param SignUp\Confirm\byEmail\Handler $handler
      */
-    public function confirm(string $token, SignUp\Confirm\byEmail\Handler $handler): Response
+    public function confirm(
+        Request $request,
+        string $token,
+        SignUp\Confirm\byEmail\Handler $handler,
+        LoginFormAuthenticator $formAuthenticator,
+        UserAuthenticatorInterface $authenticator,
+        UserProviderInterface $userProvider,
+        UserFetcher $users
+    ): Response
     {
+        if (!$user = $users->findBySignUpConfirmationToken($token)) {
+            throw new \DomainException('User is not found');
+        }
+
         $command = new SignUp\Confirm\byEmail\Command($token);
         try {
             $handler->handle($command);
-            $this->addFlash('success', 'Email is successfully confirmed');
+            return $authenticator->authenticateUser(
+                $userProvider->loadUserByUsername($user->email),
+                $formAuthenticator,
+                $request
+            );
         } catch (\DomainException $e) {
             $this->logger->error($e->getMessage(), ['exception' => $e]);
             $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
