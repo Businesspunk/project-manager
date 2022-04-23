@@ -19,10 +19,8 @@ class Handler
 
     public function handle(Command $command)
     {
-        $network = $command->network;
-
         $user = $this->users->get(new Id($command->user_id));
-        $user->dettachNetwork($network);
+        $user->detachNetwork($command->network, $command->identity);
         $this->flusher->flush();
     }
 }

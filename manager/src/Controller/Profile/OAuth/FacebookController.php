@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Controller\Profile;
+namespace App\Controller\Profile\OAuth;
 
 use App\Model\User\UseCase\Network\Attach;
-use App\Model\User\UseCase\Network\Detach;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,25 +41,6 @@ class FacebookController extends AbstractController
             $this->addFlash('success', 'Facebook was successfully added');
         } catch (\Exception $e){
             $this->addFlash('error', $e->getMessage());
-        }
-        return $this->redirectToRoute('profile');
-    }
-
-    /**
-     * @Route("/oauth/facebook/detach/{network}", name="profile.auth.facebook.detach")
-     */
-    public function detach(string $network, Detach\Handler $handler): Response
-    {
-        $command = new Detach\Command(
-            $this->getUser()->getId(),
-            $network
-        );
-
-        try {
-            $handler->handle($command);
-            $this->addFlash('success','Network was successfully detached');
-        } catch (\Exception $e) {
-            $this->addFlash('error',$e->getMessage());
         }
         return $this->redirectToRoute('profile');
     }

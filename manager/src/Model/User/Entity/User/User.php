@@ -117,21 +117,19 @@ class User
         $this->networks->add(new Network($this, $network, $identity));
     }
 
-    public function dettachNetwork(string $network): void
+    public function detachNetwork(string $network, string $identity): void
     {
-        $networkKeyForDelete = null;
-        foreach ($this->networks as $key => $existing) {
-            if ($existing->isForNetwork($network)) {
-                $networkKeyForDelete = $key;
-                break;
+        foreach ($this->networks as $existing) {
+            if ($existing->isFor($network, $identity)) {
+                if (is_null($this->getEmail()) && $this->networks->count() === 1) {
+                    throw new \DomainException('You can not detach last identity');
+                }
+                $this->networks->removeElement($existing);
+                return;
             }
         }
 
-        if (is_null($networkKeyForDelete)) {
-            throw new \Exception('This network is not exist');
-        } else{
-            $this->networks->remove($networkKeyForDelete);
-        }
+        throw new \DomainException('This network is not exist');
     }
 
     /**

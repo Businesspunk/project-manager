@@ -58,11 +58,17 @@
                             <th scope="row">{{ network.network }}</th>
                             <td class="d-flex justify-content-between">
                                 <span>{{ network.identity }}</span>
-                                <a class="btn btn-danger text-white btn-small-icon"
-                                   href="{{ path('profile.auth.facebook.detach', {'network': 'facebook'}) }}"
-                                   onclick="return confirm('Are you sure you want to delete Facebook network?')">
-                                    <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-delete') }}"></use></svg>
-                                </a>
+                                <form
+                                        action="{{ path('profile.auth.detach', {network: 'facebook', identity: network.identity}) }}"
+                                        method="post"
+                                        onsubmit="return confirm('Are you sure you want to delete Facebook network?')"
+                                >
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="token" value="{{ csrf_token('delete') }}"/>
+                                    <button type="submit" class="btn btn-danger text-white btn-small-icon">
+                                        <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-delete') }}"></use></svg>
+                                    </button>
+                                </form>
                             </td>
 
                         </tr>
