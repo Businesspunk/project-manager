@@ -54,13 +54,15 @@ class FacebookAuthenticator extends OAuth2Authenticator
                 $facebookUser = $client->fetchUserFromToken($accessToken);
 
                 $identity = $facebookUser->getId();
+                $firstName = $facebookUser->getFirstName();
+                $lastName = $facebookUser->getLastName();
                 $network = 'facebook';
 
                 $username = sprintf('%s:%s', $network, $identity);
                 try {
                     $user = $this->userProvider->loadUserByUsername($username);
                 } catch (UserNotFoundException  $e){
-                    $this->handler->handle(new Auth\Command($network, $identity));
+                    $this->handler->handle(new Auth\Command($network, $identity, $firstName, $lastName));
                     $user = $this->userProvider->loadUserByUsername($username);
                 }
 

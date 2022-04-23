@@ -2,6 +2,7 @@
 
 namespace App\Model\User\UseCase\SignUp\Request;
 
+use App\Model\User\Entity\User\Name;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Entity\User\Email;
 use App\Model\User\Entity\User\Id;
@@ -62,6 +63,7 @@ class Handler
             Id::next(),
             new DateTimeImmutable(),
             $email,
+            new Name($command->first_name, $command->last_name),
             $this->passwordHasher->hash($command->password),
             $token = $this->tokenizer->generate()
         );

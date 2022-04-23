@@ -10,17 +10,24 @@ class UserIdentity implements UserInterface, EquatableInterface
 {
     private $id;
     private $username;
+    private $display;
     private $password;
     private $role;
     private $status;
 
-    public function __construct(string $id, string $username, ?string $password, string $role, string $status)
+    public function __construct(string $id, string $username, string $name, ?string $password, string $role, string $status)
     {
         $this->id = $id;
         $this->username = $username;
+        $this->display = $name ?? $username;
         $this->password = $password;
         $this->role = $role;
         $this->status = $status;
+    }
+
+    public function getDisplay(): string
+    {
+        return $this->display;
     }
 
     public function getUserIdentifier()

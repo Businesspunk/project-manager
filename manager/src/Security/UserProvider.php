@@ -58,7 +58,8 @@ class UserProvider implements UserProviderInterface
     {
         return new UserIdentity(
             $user->id,
-            $user->email ?? $username,
+            $user->email ?: $username,
+            $user->name ?: $username,
             $user->password_hash,
             $user->role,
             $user->status

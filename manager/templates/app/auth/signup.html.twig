@@ -13,7 +13,21 @@
             {{ form_start(form) }}
             <div class="input-group mb-3">
                 <span class="input-group-text">
-                    <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-envelope-open') }}"></use></svg>
+                    <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-user') }}"></use></svg>
+                </span>
+                {{ form_widget(form.first_name, {'attr': {'class': 'form-control', 'placeholder': 'First name'}}) }}
+            </div>
+
+            <div class="input-group mb-3">
+                <span class="input-group-text">
+                    <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-user') }}"></use></svg>
+                </span>
+                {{ form_widget(form.last_name, {'attr': {'class': 'form-control', 'placeholder': 'Last name'}}) }}
+            </div>
+
+            <div class="input-group mb-3">
+                <span class="input-group-text">
+                    <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-envelope-closed') }}"></use></svg>
                 </span>
                 {{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'E-mail'}}) }}
             </div>

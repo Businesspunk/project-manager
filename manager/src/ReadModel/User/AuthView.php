@@ -6,6 +6,7 @@ class AuthView
 {
     public $id;
     public $email;
+    public $name;
     public $password_hash;
     public $role;
     public $status;

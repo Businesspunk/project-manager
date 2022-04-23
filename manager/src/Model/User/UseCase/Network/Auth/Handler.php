@@ -2,6 +2,7 @@
 
 namespace App\Model\User\UseCase\Network\Auth;
 
+use App\Model\User\Entity\User\Name;
 use App\Model\User\Entity\User\UserRepository;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Flusher;
@@ -34,6 +35,7 @@ class Handler
         $user = User::signUpByNetwork(
             Id::next(),
             new DateTimeImmutable(),
+            new Name($command->firstName, $command->lastName),
             $command->network,
             $command->identity
         );

@@ -5,7 +5,6 @@ namespace App\Controller\Profile;
 use App\Model\User\Entity\User\UserRepository;
 use App\Model\User\UseCase\Email\Request as ChangeEmail;
 use App\Model\User\UseCase\Email\Confirm as ConfirmEmail;
-use App\ReadModel\User\UserFetcher;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

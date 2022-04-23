@@ -36,6 +36,11 @@ class User
      */
     private $email;
     /**
+     * @var Name|null
+     * @ORM\Embedded(class="Name")
+     */
+    private $name;
+    /**
      * @var string
      * @ORM\Column (type="string", nullable=true, name="password_hash")
      */
@@ -79,19 +84,21 @@ class User
 
     private function __construct(
         Id $id,
-        DateTimeImmutable $date
+        DateTimeImmutable $date,
+        Name $name
     )
     {
         $this->id = $id;
         $this->date = $date;
+        $this->name = $name;
         $this->role = Role::user();
         $this->networks = new ArrayCollection();
     }
 
     public static function signUpByEmail(
-        Id $id, DateTimeImmutable $date, Email $email, string $passwordHash, string $confirmationToken): self
+        Id $id, DateTimeImmutable $date, Email $email, Name $name, string $passwordHash, string $confirmationToken): self
     {
-        $user = new self($id, $date);
+        $user = new self($id, $date, $name);
         $user->status = self::STATUS_WAIT;
         $user->email = $email;
         $user->passwordHash = $passwordHash;
@@ -99,12 +106,17 @@ class User
         return $user;
     }
 
-    public static function signUpByNetwork(Id $id, DateTimeImmutable $date, string $network, string $identity): self
+    public static function signUpByNetwork(Id $id, DateTimeImmutable $date, Name $name, string $network, string $identity): self
     {
-        $user = new self($id, $date);
+        $user = new self($id, $date, $name);
         $user->status = self::STATUS_ACTIVE;
         $user->attachNetwork($network, $identity);
         return $user;
+    }
+
+    public function getName(): ?Name
+    {
+        return $this->name;
     }
 
     public function attachNetwork(string $network, string $identity): void
@@ -316,5 +328,10 @@ class User
         $this->email = $this->newEmail;
         $this->newEmailToken = null;
         $this->newEmail = null;
+    }
+
+    public function changeName(Name $name)
+    {
+        $this->name = $name;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Tests\Builder\User;
 
 use App\Model\User\Entity\User\Email;
 use App\Model\User\Entity\User\Id;
+use App\Model\User\Entity\User\Name;
 use App\Model\User\Entity\User\User;
 use DateTimeImmutable;
 
@@ -13,6 +14,7 @@ class UserBuilder
     private $date;
 
     private $email;
+    private $name;
     private $hash;
     private $token;
 
@@ -21,9 +23,10 @@ class UserBuilder
 
     private $confirmed;
 
-    public function __construct(Id $id = null, DateTimeImmutable $date = null)
+    public function __construct(Id $id = null, DateTimeImmutable $date = null, Name $name = null)
     {
         $this->id = $id ?? Id::next();
+        $this->name = $name ?? new Name('user', 'user');
         $this->date = $date ?? new DateTimeImmutable();
     }
 
@@ -60,6 +63,7 @@ class UserBuilder
                 $this->id,
                 $this->date,
                 $this->email,
+                $this->name,
                 $this->hash,
                 $this->token
             );
@@ -73,6 +77,7 @@ class UserBuilder
             $user = User::signUpByNetwork(
                 $this->id,
                 $this->date,
+                $this->name,
                 $this->network,
                 $this->identity
             );

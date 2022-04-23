@@ -6,6 +6,7 @@ class DetailView
 {
     public $id;
     public $email;
+    public $name;
     public $date;
     public $role;
     public $status;

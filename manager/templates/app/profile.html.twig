@@ -24,6 +24,17 @@
                         <td>{{ detail.date }}</td>
                     </tr>
                     <tr>
+                        <th scope="row">Name</th>
+                        <td>
+                            <span>{{ detail.name }}</span>
+                            <a class="btn btn-outline-info btn-small-icon" href="{{ path('profile.name') }}">
+                                <svg class="icon">
+                                    <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-pen') }}"></use>
+                                </svg>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
                         <th scope="row">Email</th>
                         <td>
                             <span>{{ detail.email }}</span>

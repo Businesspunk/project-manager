@@ -30,7 +30,10 @@ class UserFetcher
     public function findForAuthByEmail(string $email): ?AuthView
     {
         $stmt = $this->connection->createQueryBuilder()
-            ->select('id', 'email', 'password_hash', 'role', 'status')
+            ->select(
+                'id', 'email','password_hash', 'role', 'status',
+                'TRIM(CONCAT(name_first, \' \', name_last)) as name'
+            )
             ->from('user_users')
             ->where('email = :email')
             ->setParameter(':email', $email)
@@ -44,7 +47,10 @@ class UserFetcher
     public function findForAuthByNetwork(string $network, string $identity): ?AuthView
     {
         $stmt = $this->connection->createQueryBuilder()
-            ->select('u.id', 'u.email', 'u.password_hash', 'u.role', 'u.status')
+            ->select(
+                'u.id', 'u.email', 'u.password_hash', 'u.role', 'u.status',
+                'TRIM(CONCAT(name_first, \' \', name_last)) as name'
+            )
             ->from('user_users', 'u')
             ->innerJoin('u', 'user_user_networks', 'n', 'u.id = n.user_id')
             ->where('n.network = :network AND n.identity = :identity')
@@ -89,7 +95,10 @@ class UserFetcher
     public function getDetail(string $id): ?DetailView
     {
         $stmt = $this->connection->createQueryBuilder()
-            ->select('id', 'email', 'date',  'role', 'status')
+            ->select(
+                'id', 'email', 'date',  'role', 'status',
+                'TRIM(CONCAT(name_first, \' \', name_last)) as name'
+            )
             ->from('user_users')
             ->where('id = :id')
             ->setParameter(':id', $id)

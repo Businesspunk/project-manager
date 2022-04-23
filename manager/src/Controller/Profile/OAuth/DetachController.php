@@ -15,7 +15,7 @@ class DetachController extends AbstractController
      */
     public function detach(string $network, string $identity, Request $request, Detach\Handler $handler): Response
     {
-        if (!$this->isCsrfTokenValid('delete', $request->query->get('token'))) {
+        if (!$this->isCsrfTokenValid('delete', $request->request->get('token'))) {
             return $this->redirectToRoute('profile');
         }
 
@@ -29,7 +29,7 @@ class DetachController extends AbstractController
             $handler->handle($command);
             $this->addFlash('success','Network was successfully detached');
         } catch (\Exception $e) {
-            $this->addFlash('error',$e->getMessage());
+            $this->addFlash('error', $e->getMessage());
         }
         return $this->redirectToRoute('profile');
     }
