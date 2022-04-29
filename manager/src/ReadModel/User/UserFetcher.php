@@ -121,4 +121,18 @@ class UserFetcher
 
         return $result ?: null;
     }
+
+    public function all(): array
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select(
+                'id', 'email', 'date',  'role', 'status',
+                'TRIM(CONCAT(name_first, \' \', name_last)) as name'
+            )
+            ->from('user_users')
+            ->execute();
+
+        $stmt->setFetchMode(FetchMode::ASSOCIATIVE);
+        return $stmt->fetchAll();
+    }
 }

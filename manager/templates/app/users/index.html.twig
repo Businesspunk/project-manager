@@ -1,0 +1,62 @@
+{% extends 'app/index.html.twig' %}
+
+{% block title %}Users{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('home') }}">Home</a></span>
+    </li>
+    <li class="breadcrumb-item active"><span>Users</span></li>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">Users</div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table border mb-0">
+                    <thead class="table-light fw-semibold">
+                        <tr class="align-middle">
+                            <th class="text-center">
+                                <svg class="icon">
+                                    <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-people') }}"></use>
+                                </svg>
+                            </th>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for user in users %}
+                        <tr class="align-middle">
+                            <td></td>
+                            <td>
+                                <div>{{ user.name }}</div>
+                                <div class="small text-medium-emphasis">Registered: {{ user.date|date('d.m.Y') }}</div>
+                            </td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user_role(user.role) }}</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-transparent p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <svg class="icon">
+                                            <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-options') }}"></use>
+                                        </svg>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end" style="">
+                                        <a class="dropdown-item" href="#">Info</a>
+                                        <a class="dropdown-item text-danger" href="#">Delete</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

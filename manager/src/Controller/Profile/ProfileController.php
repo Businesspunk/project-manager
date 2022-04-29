@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Profile;
 
 use App\ReadModel\User\UserFetcher;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
