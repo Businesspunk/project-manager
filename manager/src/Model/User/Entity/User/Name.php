@@ -45,4 +45,9 @@ class Name
     {
         return $this->last;
     }
+
+    public function __toString()
+    {
+        return sprintf('%s %s', $this->getFirstName(), $this->getLastName());
+    }
 }

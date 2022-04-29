@@ -66,14 +66,13 @@
                     <tbody>
                     {% for network in detail.networks %}
                         <tr>
-                            <th scope="row">{{ network.network }}</th>
+                            <td>{{ network.network }}</td>
                             <td class="d-flex justify-content-between">
                                 <span>{{ network.identity }}</span>
                                 <form
                                         action="{{ path('profile.auth.detach', {network: 'facebook', identity: network.identity}) }}"
                                         method="post"
-                                        onsubmit="return confirm('Are you sure you want to delete Facebook network?')"
-                                >
+                                        onsubmit="return confirm('Are you sure you want to delete Facebook network?')">
                                     <input type="hidden" name="_method" value="DELETE">
                                     <input type="hidden" name="token" value="{{ csrf_token('delete') }}"/>
                                     <button type="submit" class="btn btn-danger text-white btn-small-icon">

@@ -1,0 +1,71 @@
+{% extends 'app/index.html.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('home') }}">Home</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('users') }}">Users</a></span>
+    </li>
+    <li class="breadcrumb-item active"><span>{{ user.name }}</span></li>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">Profile</div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th scope="row">ID</th>
+                        <td>{{ user.id }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Created</th>
+                        <td>{{ user.date.format('d.m.Y') }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Name</th>
+                        <td>
+                            <span>{{ user.name }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Email</th>
+                        <td>
+                            <span>{{ user.email }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Role</th>
+                        <td>{{ user_role(user.role) }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Status</th>
+                        <td>{{ user_status(user.status) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mt-5">
+        <div class="card-header">Networks</div>
+        <div class="card-body">
+            {% if user.networks %}
+                <table class="table table-bordered">
+                    <tbody>
+                    {% for network in user.networks %}
+                        <tr>
+                            <td>{{ network.network }}</td>
+                            <td>{{ network.identity }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -34,7 +34,9 @@
                         <tr class="align-middle">
                             <td></td>
                             <td>
-                                <div>{{ user.name }}</div>
+                                <div>
+                                    <a class="btn-link" href="{{ path('users.show', {id: user.id}) }}">{{ user.name }}</a>
+                                </div>
                                 <div class="small text-medium-emphasis">Registered: {{ user.date|date('d.m.Y') }}</div>
                             </td>
                             <td>{{ user.email }}</td>
