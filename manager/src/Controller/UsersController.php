@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Model\User\Entity\User\User;
 use App\Model\User\UseCase\Create;
 use App\Model\User\UseCase\Edit;
+use App\Model\User\UseCase\Role;
 use App\ReadModel\User\UserFetcher;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -82,6 +83,37 @@ class UsersController extends AbstractController
         }
 
         return $this->render('app/users/edit.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user
+        ]);
+    }
+
+    /**
+     * @Route ("/{id}/change/role", name="users.change.role")
+     */
+    public function editRole(User $user, Request $request, Role\Handler $handler)
+    {
+        if ($user->getId()->getValue() === $this->getUser()->getId()) {
+            $this->addFlash('error', 'You cannot change your role by yourself');
+            return $this->redirectToRoute('users');
+        }
+
+        $command = Role\Command::createFromUser($user);
+        $form = $this->createForm(Role\Form::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $handler->handle($command);
+                $this->addFlash('success', 'Role was successfully changed');
+                return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
+            } catch (\DomainException $e) {
+                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
+                $this->logger->error($e->getMessage());
+            }
+        }
+
+        return $this->render('app/users/change_role.html.twig', [
             'form' => $form->createView(),
             'user' => $user
         ]);

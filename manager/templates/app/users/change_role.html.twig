@@ -12,33 +12,19 @@
     <li class="breadcrumb-item">
         <span><a href="{{ path('users.show', {id: user.id}) }}">{{ user.name }}</a></span>
     </li>
-    <li class="breadcrumb-item active"><span>Edit</span></li>
+    <li class="breadcrumb-item active"><span>Edit role</span></li>
 {% endblock %}
 
 {% block content %}
     <div class="card">
-        <div class="card-header">Edit {{ user.name }}</div>
+        <div class="card-header">Edit role {{ user.name }}</div>
         <div class="card-body">
             {{ form_start(form) }}
                 <div class="input-group mb-3">
                     <span class="input-group-text">
                         <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-user') }}"></use></svg>
                     </span>
-                        {{ form_widget(form.firstName, {'attr': {'placeholder': 'First name'}}) }}
-                </div>
-
-                <div class="input-group mb-3">
-                    <span class="input-group-text">
-                        <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-user') }}"></use></svg>
-                    </span>
-                    {{ form_widget(form.lastName, {'attr': {'placeholder': 'Last name'}}) }}
-                </div>
-
-                <div class="input-group mb-3">
-                    <span class="input-group-text">
-                        <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-envelope-closed') }}"></use></svg>
-                    </span>
-                    {{ form_widget(form.email, {'attr': {'placeholder': 'Email'}}) }}
+                        {{ form_widget(form.role) }}
                 </div>
                 <button class="btn btn-block btn-info text-white" type="submit">Save</button>
             {{ form_end(form) }}
