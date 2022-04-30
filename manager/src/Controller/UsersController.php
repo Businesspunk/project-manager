@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Model\User\Entity\User\User;
 use App\Model\User\UseCase\Create;
+use App\Model\User\UseCase\Edit;
 use App\ReadModel\User\UserFetcher;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,7 +37,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route ("/create", name="users.show")
+     * @Route ("/create", name="users.create")
      */
     public function create(Request $request, Create\Handler $handler): Response
     {
@@ -48,7 +49,7 @@ class UsersController extends AbstractController
             try {
                 $handler->handle($command);
                 $this->addFlash('success', 'User was successfully added');
-                return $this->redirectToRoute('users.show');
+                return $this->redirectToRoute('users');
             } catch (\DomainException $e) {
                 $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
                 $this->logger->error($e->getMessage());
@@ -57,6 +58,32 @@ class UsersController extends AbstractController
 
         return $this->render('app/users/create.html.twig', [
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route ("/{id}/edit", name="users.edit")
+     */
+    public function edit(User $user, Request $request, Edit\Handler $handler)
+    {
+        $command = Edit\Command::createFromUser($user);
+        $form = $this->createForm(Edit\Form::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $handler->handle($command);
+                $this->addFlash('success', 'User was successfully edited');
+                return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
+            } catch (\DomainException $e) {
+                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
+                $this->logger->error($e->getMessage());
+            }
+        }
+
+        return $this->render('app/users/edit.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user
         ]);
     }
 

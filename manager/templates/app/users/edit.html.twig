@@ -1,0 +1,44 @@
+{% extends 'app/index.html.twig' %}
+
+{% block title %}Create user{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('home') }}">Home</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('users') }}">Users</a></span>
+    </li>
+    <li class="breadcrumb-item active"><span>Edit {{ user.name }}</span></li>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">Edit {{ user.name }}</div>
+        <div class="card-body">
+            {{ form_start(form) }}
+                <div class="input-group mb-3">
+                    <span class="input-group-text">
+                        <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-user') }}"></use></svg>
+                    </span>
+                        {{ form_widget(form.firstName, {'attr': {'placeholder': 'First name'}}) }}
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">
+                        <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-user') }}"></use></svg>
+                    </span>
+                    {{ form_widget(form.lastName, {'attr': {'placeholder': 'Last name'}}) }}
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">
+                        <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-envelope-closed') }}"></use></svg>
+                    </span>
+                    {{ form_widget(form.email, {'attr': {'placeholder': 'Email'}}) }}
+                </div>
+                <button class="btn btn-block btn-info text-white" type="submit">Save</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

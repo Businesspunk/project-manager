@@ -315,7 +315,7 @@ class User
         return $this->newEmailToken;
     }
 
-    public function changeEmail(string $token)
+    public function changeEmail(string $token): void
     {
         if ( is_null($this->newEmailToken) || is_null($this->newEmail)) {
             throw new \DomainException('Change email was not requested');
@@ -330,8 +330,14 @@ class User
         $this->newEmail = null;
     }
 
-    public function changeName(Name $name)
+    public function changeName(Name $name): void
     {
         $this->name = $name;
+    }
+
+    public function edit(Email $email, Name $name): void
+    {
+        $this->email = $email;
+        $this->changeName($name);
     }
 }
