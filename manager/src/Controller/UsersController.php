@@ -23,6 +23,8 @@ use App\Model\User\UseCase\SignUp\Confirm;
  */
 class UsersController extends AbstractController
 {
+    private const PER_PAGE = 10;
+
     private $logger;
     private $translator;
 
@@ -41,7 +43,7 @@ class UsersController extends AbstractController
         $form = $this->createForm(Filter\Form::class, $filter);
 
         $form->handleRequest($request);
-        $users = $users->all($filter);
+        $users = $users->all($filter, $request->query->getInt('page', 1), self::PER_PAGE);
 
         return $this->render('app/users/index.html.twig', [
             'users' => $users,

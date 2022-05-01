@@ -35,7 +35,7 @@ class Form extends AbstractType
                 ]
             )
             ->add('role', Type\ChoiceType::class, [
-                'placeholder' => 'Role',
+                'placeholder' => 'All roles',
                 'choices' => [
                     'User' => Role::ROLE_USER,
                     'Admin' => Role::ROLE_ADMIN
@@ -47,7 +47,7 @@ class Form extends AbstractType
                 'required' => false
             ])
             ->add('status', Type\ChoiceType::class, [
-                'placeholder' => 'Status',
+                'placeholder' => 'All statuses',
                 'choices' => [
                     'Active' => User::STATUS_ACTIVE,
                     'Wait' => User::STATUS_WAIT,
