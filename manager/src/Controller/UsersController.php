@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Model\User\Entity\User\User;
 use App\Model\User\UseCase\Create;
 use App\Model\User\UseCase\Edit;
+use App\Model\User\UseCase\Block;
+use App\Model\User\UseCase\Activate;
 use App\Model\User\UseCase\Role;
 use App\ReadModel\User\UserFetcher;
 use Psr\Log\LoggerInterface;
@@ -66,7 +68,7 @@ class UsersController extends AbstractController
     /**
      * @Route ("/{id}/edit", name="users.edit")
      */
-    public function edit(User $user, Request $request, Edit\Handler $handler)
+    public function edit(User $user, Request $request, Edit\Handler $handler): Response
     {
         $command = Edit\Command::createFromUser($user);
         $form = $this->createForm(Edit\Form::class, $command);
@@ -92,7 +94,7 @@ class UsersController extends AbstractController
     /**
      * @Route ("/{id}/confirm", name="users.confirm")
      */
-    public function confirm(User $user, Request $request, Confirm\Manually\Handler $handler)
+    public function confirm(User $user, Request $request, Confirm\Manually\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('confirm', $request->request->get('token'))) {
             return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
@@ -111,9 +113,56 @@ class UsersController extends AbstractController
     }
 
     /**
+     * @Route ("/{id}/block", name="users.block")
+     */
+    public function block(User $user, Request $request, Block\Handler $handler): Response
+    {
+        if ($user->getId()->getValue() === $this->getUser()->getId()) {
+            $this->addFlash('error', 'Unable to block yourself');
+            return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
+        }
+
+        if (!$this->isCsrfTokenValid('block', $request->request->get('token'))) {
+            return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
+        }
+
+        $command = new Block\Command($user->getId());
+
+        try {
+            $handler->handle($command);
+        } catch (\DomainException $e){
+            $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
+            $this->logger->error($e->getMessage());
+        }
+
+        return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
+    }
+
+    /**
+     * @Route ("/{id}/activate", name="users.activate")
+     */
+    public function activate(User $user, Request $request, Activate\Handler $handler): Response
+    {
+        if (!$this->isCsrfTokenValid('activate', $request->request->get('token'))) {
+            return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
+        }
+
+        $command = new Activate\Command($user->getId());
+
+        try {
+            $handler->handle($command);
+        } catch (\DomainException $e){
+            $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
+            $this->logger->error($e->getMessage());
+        }
+
+        return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
+    }
+
+    /**
      * @Route ("/{id}/change/role", name="users.change.role")
      */
-    public function editRole(User $user, Request $request, Role\Handler $handler)
+    public function editRole(User $user, Request $request, Role\Handler $handler): Response
     {
         if ($user->getId()->getValue() === $this->getUser()->getId()) {
             $this->addFlash('error', 'You cannot change your role by yourself');

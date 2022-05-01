@@ -20,13 +20,33 @@
             <a href="{{ path('users.change.role', {id: user.id}) }}" class="btn-info btn text-white">Change role</a>
         {% endif %}
 
-        {% if user.status != 'active' %}
+        {% if user.wait %}
             <form action="{{ path('users.confirm', {id: user.id}) }}"
                   method="post"
                   class="d-inline"
                   onsubmit="return confirm('Are you sure to confirm this user?')">
                 <button type="submit" class="btn btn-info text-white">Confirm</button>
                 <input type="hidden" name="token" value="{{ csrf_token('confirm') }}"/>
+            </form>
+        {% endif %}
+
+        {% if user.active and user.id != app.user.id %}
+            <form action="{{ path('users.block', {id: user.id}) }}"
+                  method="post"
+                  class="d-inline"
+                  onsubmit="return confirm('Are you sure to block this user?')">
+                <button type="submit" class="btn btn-danger text-white">Block</button>
+                <input type="hidden" name="token" value="{{ csrf_token('block') }}"/>
+            </form>
+        {% endif %}
+
+        {% if user.blocked %}
+            <form action="{{ path('users.activate', {id: user.id}) }}"
+                  method="post"
+                  class="d-inline"
+                  onsubmit="return confirm('Are you sure to active this user?')">
+                <button type="submit" class="btn btn-success text-white">Activate</button>
+                <input type="hidden" name="token" value="{{ csrf_token('activate') }}"/>
             </form>
         {% endif %}
     </div>

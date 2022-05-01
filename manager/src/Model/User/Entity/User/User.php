@@ -17,8 +17,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User
 {
-    public const STATUS_WAIT = 'wait';
     public const STATUS_ACTIVE = 'active';
+    public const STATUS_WAIT = 'wait';
+    public const STATUS_BLOCK = 'block';
     /**
      * @var Id
      * @ORM\Column (type="user_user_id")
@@ -184,20 +185,19 @@ class User
         return $this->confirmationToken;
     }
 
-    /**
-     * @return bool
-     */
     public function isWait(): bool
     {
         return $this->status === self::STATUS_WAIT;
     }
 
-    /**
-     * @return bool
-     */
     public function isActive(): bool
     {
         return $this->status === self::STATUS_ACTIVE;
+    }
+
+    public function isBlocked(): bool
+    {
+        return $this->status === self::STATUS_BLOCK;
     }
 
     public function confirmRegistration(): void
@@ -339,5 +339,23 @@ class User
     {
         $this->email = $email;
         $this->changeName($name);
+    }
+
+    public function activate(): void
+    {
+        if ($this->isActive()) {
+            throw new \DomainException('User is already active');
+        }
+
+        $this->status = self::STATUS_ACTIVE;
+    }
+
+    public function block(): void
+    {
+        if ($this->isBlocked()) {
+            throw new \DomainException('User is already blocked');
+        }
+
+        $this->status = self::STATUS_BLOCK;
     }
 }
