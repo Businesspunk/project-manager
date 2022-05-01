@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Model\User\UseCase\SignUp\Confirm;
 
 /**
  * @Route ("/users")
@@ -89,13 +90,34 @@ class UsersController extends AbstractController
     }
 
     /**
+     * @Route ("/{id}/confirm", name="users.confirm")
+     */
+    public function confirm(User $user, Request $request, Confirm\Manually\Handler $handler)
+    {
+        if (!$this->isCsrfTokenValid('confirm', $request->request->get('token'))) {
+            return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
+        }
+
+        $command = new Confirm\Manually\Command($user->getId());
+
+        try {
+            $handler->handle($command);
+        } catch (\DomainException $e){
+            $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
+            $this->logger->error($e->getMessage());
+        }
+
+        return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
+    }
+
+    /**
      * @Route ("/{id}/change/role", name="users.change.role")
      */
     public function editRole(User $user, Request $request, Role\Handler $handler)
     {
         if ($user->getId()->getValue() === $this->getUser()->getId()) {
             $this->addFlash('error', 'You cannot change your role by yourself');
-            return $this->redirectToRoute('users');
+            return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
         }
 
         $command = Role\Command::createFromUser($user);

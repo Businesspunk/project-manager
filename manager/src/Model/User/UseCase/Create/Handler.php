@@ -17,19 +17,16 @@ class Handler
     private $users;
     private $flusher;
     private $passwordGenerator;
-    private $tokenizer;
 
     public function __construct(
         UserRepository $users,
         Flusher $flusher,
-        PasswordGenerator $passwordGenerator,
-        ConfirmTokenizer $tokenizer
+        PasswordGenerator $passwordGenerator
     )
     {
         $this->users = $users;
         $this->flusher = $flusher;
         $this->passwordGenerator = $passwordGenerator;
-        $this->tokenizer = $tokenizer;
     }
 
     public function handle(Command $command)
@@ -37,10 +34,10 @@ class Handler
         $user = User::signUpByEmail(
             Id::next(),
             new \DateTimeImmutable(),
-            $email = new Email($command->email),
+            new Email($command->email),
             new Name($command->firstName, $command->lastName),
             $this->passwordGenerator::generate(),
-            $token = $this->tokenizer->generate()
+            null
         );
 
         $this->users->add($user);

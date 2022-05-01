@@ -96,7 +96,7 @@ class User
     }
 
     public static function signUpByEmail(
-        Id $id, DateTimeImmutable $date, Email $email, Name $name, string $passwordHash, string $confirmationToken): self
+        Id $id, DateTimeImmutable $date, Email $email, Name $name, string $passwordHash, ?string $confirmationToken): self
     {
         $user = new self($id, $date, $name);
         $user->status = self::STATUS_WAIT;

@@ -26,7 +26,7 @@ class Handler
     public function handle(Command $command)
     {
         if (!$user = $this->users->find(new Id($command->id))) {
-            throw new \DomainException('No users with this confirmation token');
+            throw new \DomainException('No users with this id');
         }
 
         $user->confirmRegistration();

@@ -19,6 +19,16 @@
         {% if user.id != app.user.id %}
             <a href="{{ path('users.change.role', {id: user.id}) }}" class="btn-info btn text-white">Change role</a>
         {% endif %}
+
+        {% if user.status != 'active' %}
+            <form action="{{ path('users.confirm', {id: user.id}) }}"
+                  method="post"
+                  class="d-inline"
+                  onsubmit="return confirm('Are you sure to confirm this user?')">
+                <button type="submit" class="btn btn-info text-white">Confirm</button>
+                <input type="hidden" name="token" value="{{ csrf_token('confirm') }}"/>
+            </form>
+        {% endif %}
     </div>
 
     <div class="card">
