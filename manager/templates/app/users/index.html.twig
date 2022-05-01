@@ -14,9 +14,19 @@
         <a class="btn-success btn text-white" href="{{ path('users.create') }}">Create user</a>
     </div>
 
-    <div class="card">
+    <div class="card all-users">
         <div class="card-header">Users</div>
         <div class="card-body">
+            <div class="filter mb-3">
+                {{ form_start(form) }}
+                        {{ form_widget(form.name) }}
+                        {{ form_widget(form.email) }}
+                        {{ form_widget(form.status) }}
+                        {{ form_widget(form.role) }}
+                        <input type="submit" class="btn btn-success text-white" value="Search">
+                        <a href="{{ path('users') }}" class="btn btn-outline-secondary">Reset</a>
+                {{ form_end(form) }}
+            </div>
             <div class="table-responsive">
                 <table class="table border mb-0">
                     <thead class="table-light fw-semibold">

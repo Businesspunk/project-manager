@@ -22,3 +22,12 @@ html:not([dir=rtl]) .wrapper {
 .btn-small-icon{
   padding: ($btn-padding-y / 2) ($btn-padding-x / 2)
 }
+
+.card.all-users .filter{
+  input, select{
+    width: unset;
+  }
+  input[type=submit], a{
+    margin-bottom: 2px;
+  }
+}

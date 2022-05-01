@@ -8,6 +8,7 @@ use App\Model\User\UseCase\Edit;
 use App\Model\User\UseCase\Block;
 use App\Model\User\UseCase\Activate;
 use App\Model\User\UseCase\Role;
+use App\ReadModel\User\Filter;
 use App\ReadModel\User\UserFetcher;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,10 +35,18 @@ class UsersController extends AbstractController
     /**
      * @Route ("/", name="users")
      */
-    public function index(UserFetcher $users): Response
+    public function index(Request $request, UserFetcher $users): Response
     {
-        $users = $users->all();
-        return $this->render('app/users/index.html.twig', compact('users'));
+        $filter = new Filter\Filter();
+        $form = $this->createForm(Filter\Form::class, $filter);
+
+        $form->handleRequest($request);
+        $users = $users->all($filter);
+
+        return $this->render('app/users/index.html.twig', [
+            'users' => $users,
+            'form' => $form->createView()
+        ]);
     }
 
     /**
