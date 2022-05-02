@@ -9,9 +9,10 @@ RUN composer install --no-dev --no-scripts --prefer-dist --optimize-autoloader
 
 FROM node:17-alpine AS node-builder
 RUN apk add --no-cache git openssh
-RUN npm install -g npm@8.7.0
+RUN npm install -g npm@8.8.0
 WORKDIR /app
-COPY ./ ./
+COPY ./webpack.config.js ./package.json ./yarn.lock ./
+COPY ./assets ./assets
 RUN yarn install
 RUN npm run build
 
