@@ -29,7 +29,7 @@ class Command
      */
     public $email;
 
-    public function __construct(string $id, string $firstName, string $lastName, string $email)
+    public function __construct(string $id, string $firstName, string $lastName, ?string $email)
     {
         $this->id = $id;
         $this->firstName = $firstName;
