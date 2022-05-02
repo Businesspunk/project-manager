@@ -36,9 +36,9 @@
                                     <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-people') }}"></use>
                                 </svg>
                             </th>
-                            <th>User</th>
-                            <th>Email</th>
-                            <th>Role</th>
+                            <th>{{ knp_pagination_sortable(users, 'Name', 'name') }}</th>
+                            <th>{{ knp_pagination_sortable(users, 'Email', 'email') }}</th>
+                            <th>{{ knp_pagination_sortable(users, 'Role', 'role') }}</th>
                             <th></th>
                         </tr>
                     </thead>

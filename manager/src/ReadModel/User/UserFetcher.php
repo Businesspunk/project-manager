@@ -130,15 +130,14 @@ class UserFetcher
         return $result ?: null;
     }
 
-    public function all(Filter $filter, int $page, int $perPage): PaginationInterface
+    public function all(Filter $filter, int $page, int $perPage, string $sortBy, string $direction): PaginationInterface
     {
         $qb = $this->connection->createQueryBuilder()
             ->select(
                 'id', 'email', 'date',  'role', 'status',
                 'TRIM(CONCAT(name_first, \' \', name_last)) as name'
             )
-            ->from('user_users')
-            ->orderBy('date', 'desc');
+            ->from('user_users');
 
         if ($name = $filter->name) {
             $qb->andWhere($qb->expr()->like('LOWER(TRIM(CONCAT(name_first, \' \', name_last)))',  ':name'));
@@ -159,6 +158,12 @@ class UserFetcher
             $qb->andWhere('role = :role');
             $qb->setParameter(':role', $role);
         }
+
+        if (!in_array($sortBy, ['name', 'email', 'role'],true)) {
+            throw new \DomainException('Unable to sort');
+        }
+
+        $qb->orderBy($sortBy, $direction === 'desc' ? 'desc' : 'asc');
 
         return $this->paginator->paginate($qb, $page, $perPage);
     }

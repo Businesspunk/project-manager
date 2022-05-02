@@ -1,0 +1,12 @@
+<a{% for attr, value  in options %} {{ attr }}="{{ value }}"{% endfor %}>
+<span>
+        {% if sorted %}
+            {% if direction == 'desc' %}
+                <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-sort-descending') }}"></use></svg>
+            {% else %}
+                <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-sort-ascending') }}"></use></svg>
+            {% endif %}
+        {% endif %}
+</span>
+{{ title }}
+</a>
