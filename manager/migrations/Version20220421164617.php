@@ -24,8 +24,6 @@ final class Version20220421164617 extends AbstractMigration
         $this->addSql('ALTER TABLE user_user_networks ALTER user_id DROP DEFAULT');
         $this->addSql('ALTER TABLE user_users ADD new_email VARCHAR(255) DEFAULT NULL');
         $this->addSql('ALTER TABLE user_users ADD new_email_token VARCHAR(255) DEFAULT NULL');
-        $this->addSql('ALTER TABLE user_users DROP requested_new_email');
-        $this->addSql('ALTER TABLE user_users DROP requested_new_email_token');
         $this->addSql('ALTER TABLE user_users ALTER id TYPE VARCHAR(255)');
         $this->addSql('ALTER TABLE user_users ALTER id DROP DEFAULT');
         $this->addSql('ALTER TABLE user_users ALTER email TYPE VARCHAR(255)');
@@ -40,14 +38,13 @@ final class Version20220421164617 extends AbstractMigration
         $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE user_user_networks ALTER user_id TYPE VARCHAR(255)');
         $this->addSql('ALTER TABLE user_user_networks ALTER user_id DROP DEFAULT');
-        $this->addSql('ALTER TABLE user_users ADD requested_new_email_token VARCHAR(255) DEFAULT NULL');
         $this->addSql('ALTER TABLE user_users DROP new_email');
+        $this->addSql('ALTER TABLE user_users DROP new_email_token');
         $this->addSql('ALTER TABLE user_users ALTER id TYPE VARCHAR(255)');
         $this->addSql('ALTER TABLE user_users ALTER id DROP DEFAULT');
         $this->addSql('ALTER TABLE user_users ALTER email TYPE VARCHAR(255)');
         $this->addSql('ALTER TABLE user_users ALTER email DROP DEFAULT');
         $this->addSql('ALTER TABLE user_users ALTER role TYPE VARCHAR(255)');
         $this->addSql('ALTER TABLE user_users ALTER role DROP DEFAULT');
-        $this->addSql('ALTER TABLE user_users RENAME COLUMN new_email_token TO requested_new_email');
     }
 }
