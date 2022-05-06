@@ -21,7 +21,7 @@
                     </tr>
                     <tr>
                         <th scope="row">Created</th>
-                        <td>{{ detail.date }}</td>
+                        <td>{{ detail.date|date('Y-m-d H:i:s') }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Name</th>

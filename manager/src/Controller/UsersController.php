@@ -17,9 +17,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Model\User\UseCase\SignUp\Confirm;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route ("/users")
+ * @IsGranted("ROLE_MANAGE_USERS")
  */
 class UsersController extends AbstractController
 {
