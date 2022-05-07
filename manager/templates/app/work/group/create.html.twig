@@ -1,0 +1,27 @@
+{% extends 'app/index.html.twig' %}
+
+{% block title %}Create group{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('home') }}">Home</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.members.groups') }}">Groups</a></span>
+    </li>
+    <li class="breadcrumb-item active"><span>Create</span></li>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">Create new group</div>
+        <div class="card-body">
+            {{ form_start(form) }}
+                <div class="input-group mb-3">
+                    {{ form_widget(form.name, {'attr': {'placeholder': 'Name'}}) }}
+                </div>
+                <button class="btn btn-block btn-info text-white" type="submit">Create</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

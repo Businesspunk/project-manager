@@ -1,0 +1,55 @@
+{% extends 'app/index.html.twig' %}
+
+{% block title %}Groups{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('home') }}">Home</a></span>
+    </li>
+    <li class="breadcrumb-item active"><span>Groups</span></li>
+{% endblock %}
+
+{% block content %}
+    <div class="actions mb-3">
+        <a class="btn-success btn text-white" href="{{ path('work.members.groups.create') }}">Create</a>
+    </div>
+
+    <div class="card all-users">
+        <div class="card-header">Groups</div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table mb-0 table-bordered">
+                    <thead class="table-light fw-semibold">
+                        <tr class="align-middle">
+                            <th>Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for group in groups %}
+                        <tr class="align-middle">
+                            <td>{{ group.name }}</td>
+                            <td>
+                                <a href="{{ path('work.members.groups.edit', {id: group.id}) }}" class="btn btn-info text-white">
+                                    <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-pencil') }}"></use></svg>
+                                </a>
+
+                                <form method="post"
+                                      action="{{ path('work.members.groups.delete', {id: group.id}) }}"
+                                      onsubmit="return confirm('Are you sure?')"
+                                      class="d-inline-block">
+                                        <input type="hidden" name="token" value="{{ csrf_token('delete') }}"/>
+                                        <button class="btn btn-danger text-white" type="submit">
+                                            <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-trash') }}"></use></svg>
+                                        </button>
+                                </form>
+
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
