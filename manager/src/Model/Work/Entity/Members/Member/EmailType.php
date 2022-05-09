@@ -2,7 +2,7 @@
 
 namespace App\Model\Work\Entity\Members\Member;
 
-use App\Model\User\Entity\User\Email;
+use App\Model\Work\Entity\Members\Member\Email;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\StringType;
 

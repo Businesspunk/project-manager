@@ -2,6 +2,8 @@
     <span class="badge bg-success">active</span>
 {% elseif status == 'wait' %}
     <span class="badge bg-warning">waiting</span>
+{% elseif status == 'archived' %}
+    <span class="badge bg-danger">archived</span>
 {% elseif status == 'block' %}
     <span class="badge bg-danger">blocked</span>
 {% endif %}

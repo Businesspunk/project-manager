@@ -30,6 +30,10 @@
             </form>
         {% endif %}
 
+        {% if is_granted('ROLE_WORK_MEMBERS_MANAGE') %}
+            <a class="btn btn-info text-white" href="{{ path('work.members.members.create', {id: user.id}) }}">Create member</a>
+        {% endif %}
+
         {% if user.active and user.id != app.user.id %}
             <form action="{{ path('users.block', {id: user.id}) }}"
                   method="post"

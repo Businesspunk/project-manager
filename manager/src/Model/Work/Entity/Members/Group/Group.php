@@ -43,4 +43,14 @@ class Group
     {
         return $this->id;
     }
+
+    public function isEqualId(Group $group): bool
+    {
+        return $this->getId()->getValue() === $group->getId()->getValue();
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
 }

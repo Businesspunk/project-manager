@@ -48,6 +48,11 @@ class Member
         $this->status = $status;
     }
 
+    public function getId(): Id
+    {
+        return $this->id;
+    }
+
     public function getName(): Name
     {
         return $this->name;
@@ -58,6 +63,21 @@ class Member
         return $this->status;
     }
 
+    public function getGroup(): Group
+    {
+        return $this->group;
+    }
+
+    public function getFullName(): string
+    {
+        return sprintf('%s %s', $this->name->getFirstName(), $this->name->getLastName());
+    }
+
+    public function getEmail(): Email
+    {
+        return $this->email;
+    }
+
     public function isActive(): bool
     {
         return $this->status->isActive();
@@ -66,11 +86,6 @@ class Member
     public function isArchived(): bool
     {
         return $this->status->isArchived();
-    }
-
-    public function getGroup(): Group
-    {
-        return $this->group;
     }
 
     public function move(Group $group): void

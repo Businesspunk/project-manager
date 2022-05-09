@@ -3,7 +3,6 @@
 namespace App\ReadModel\Work\Group;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
 
 class GroupFetcher
 {
@@ -17,12 +16,25 @@ class GroupFetcher
     public function all(): ?array
     {
         $stmt = $this->connection->createQueryBuilder()
-            ->select('id', 'name')
-            ->from('work_members_groups')
+            ->select('g.id', 'g.name', 'COUNT(m.id) as members')
+            ->from('work_members_groups', 'g')
+            ->leftJoin('g', 'work_members_members', 'm', 'g.id = m.group_id')
+            ->groupBy('g.id')
             ->execute();
 
-        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, GroupView::class);
-        $result = $stmt->fetchAll();
+        $result = $stmt->fetchAllAssociative();
         return $result ?: null;
+    }
+
+    public function assoc(): ?array
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select('id', 'name')
+            ->from('work_members_groups')
+            ->orderBy('name')
+            ->execute();
+
+        $result = $stmt->fetchAllAssociative();
+        return $result ? array_column($result, 'name', 'id') : null;
     }
 }

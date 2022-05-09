@@ -22,6 +22,7 @@
                     <thead class="table-light fw-semibold">
                         <tr class="align-middle">
                             <th>Name</th>
+                            <th>Members</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -29,6 +30,7 @@
                     {% for group in groups %}
                         <tr class="align-middle">
                             <td>{{ group.name }}</td>
+                            <td>{{ group.members }}</td>
                             <td>
                                 <a href="{{ path('work.members.groups.edit', {id: group.id}) }}" class="btn btn-info text-white">
                                     <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-pencil') }}"></use></svg>

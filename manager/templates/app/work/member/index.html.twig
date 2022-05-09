@@ -1,0 +1,55 @@
+{% extends 'app/index.html.twig' %}
+
+{% block title %}Members{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('home') }}">Home</a></span>
+    </li>
+    <li class="breadcrumb-item active"><span>Members</span></li>
+{% endblock %}
+
+{% block content %}
+    <div class="card all-users">
+        <div class="card-header">Members</div>
+        <div class="card-body">
+            <div class="filter mb-3">
+                {{ form_start(form) }}
+                {{ form_widget(form.name) }}
+                {{ form_widget(form.email) }}
+                {{ form_widget(form.group) }}
+                {{ form_widget(form.status) }}
+                <input type="submit" class="btn btn-success text-white" value="Search">
+                <a href="{{ path('work.members.members') }}" class="btn btn-outline-secondary">Reset</a>
+                {{ form_end(form) }}
+            </div>
+            <div class="table-responsive">
+                <table class="table border mb-0">
+                    <thead class="table-light fw-semibold">
+                        <tr class="align-middle">
+                            <th>{{ knp_pagination_sortable(members, 'Name', 'name') }}</th>
+                            <th>{{ knp_pagination_sortable(members, 'Email', 'email') }}</th>
+                            <th>{{ knp_pagination_sortable(members, 'Group', 'group_id') }}</th>
+                            <th>{{ knp_pagination_sortable(members, 'Status', 'status') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for member in members %}
+                        <tr class="align-middle">
+                            <td><a class="btn-link" href="{{ path('work.members.members.show', {id: member.id}) }}">{{ member.name }}</a></td>
+                            <td>{{ member.email }}</td>
+                            <td>{{ member.group }}</td>
+                            <td>{{ user_status(member.status) }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="navigation mt-3">
+                    {{ knp_pagination_render(members) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

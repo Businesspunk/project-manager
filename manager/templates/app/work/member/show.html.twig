@@ -1,0 +1,74 @@
+{% extends 'app/index.html.twig' %}
+
+{% block title %}Member{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('home') }}">Home</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.members.members') }}">Members</a></span>
+    </li>
+    <li class="breadcrumb-item active"><span>{{ member.name }}</span></li>
+{% endblock %}
+
+{% block content %}
+
+    <div class="actions mb-3">
+        <a href="{{ path('work.members.members.move', {id: member.id}) }}" class="btn-info btn text-white">Move</a>
+        <a href="{{ path('work.members.members.edit', {id: member.id}) }}" class="btn-info btn text-white">Edit</a>
+        {% if member.active %}
+            <form class="d-inline-block"
+                  method="post"
+                  action="{{ path('work.members.members.archive', {id: member.id}) }}"
+                  onsubmit="return confirm('Are you sure?')">
+                <button type="submit" class="btn btn-danger text-white">Archive</button>
+                <input type="hidden" name="token" value="{{ csrf_token('archive') }}">
+            </form>
+        {% endif %}
+        {% if member.archived %}
+            <form class="d-inline-block"
+                  method="post"
+                  action="{{ path('work.members.members.reinstate', {id: member.id}) }}">
+                <button type="submit" class="btn btn-success text-white">Reinstate</button>
+                <input type="hidden" name="token" value="{{ csrf_token('reinstate') }}">
+            </form>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <div class="card-header">Member</div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th scope="row">ID</th>
+                        <td>{{ member.id }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Name</th>
+                        <td>
+                            <span>{{ member.fullName }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Email</th>
+                        <td>
+                            <span>{{ member.email }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Group</th>
+                        <td>
+                            <span>{{ member.group }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Status</th>
+                        <td>{{ user_status(member.status) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
