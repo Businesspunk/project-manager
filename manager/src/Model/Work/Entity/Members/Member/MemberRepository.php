@@ -2,6 +2,7 @@
 
 namespace App\Model\Work\Entity\Members\Member;
 
+use App\Model\Work\Entity\Members\Group\Group;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 
@@ -46,6 +47,15 @@ class MemberRepository
                 ->select('COUNT(t.email)')
                 ->andWhere('t.email = :email')
                 ->setParameter(':email', $email)
+                ->getQuery()->getSingleScalarResult() > 0;
+    }
+
+    public function hasByGroup(Group $group): bool
+    {
+        return $this->repo->createQueryBuilder('t')
+                ->select('COUNT(t.group)')
+                ->andWhere('t.group = :group')
+                ->setParameter(':group', $group)
                 ->getQuery()->getSingleScalarResult() > 0;
     }
 

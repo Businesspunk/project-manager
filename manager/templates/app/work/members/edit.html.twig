@@ -7,10 +7,10 @@
         <span><a href="{{ path('home') }}">Home</a></span>
     </li>
     <li class="breadcrumb-item">
-        <span><a href="{{ path('work.members.members') }}">Members</a></span>
+        <span><a href="{{ path('work.members') }}">Members</a></span>
     </li>
     <li class="breadcrumb-item">
-        <span><a href="{{ path('work.members.members.show', {id: member.id}) }}">{{ member.fullName }}</a></span>
+        <span><a href="{{ path('work.members.show', {id: member.id}) }}">{{ member.fullName }}</a></span>
     </li>
     <li class="breadcrumb-item active"><span>Edit</span></li>
 {% endblock %}

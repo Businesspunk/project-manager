@@ -52,9 +52,9 @@
 
         {% if is_granted('ROLE_WORK_MEMBERS_MANAGE') %}
             {% if member %}
-                <a class="btn btn-info text-white" href="{{ path('work.members.members.show', {id: member.id}) }}">View member</a>
+                <a class="btn btn-info text-white" href="{{ path('work.members.show', {id: member.id}) }}">View member</a>
             {%  else %}
-                <a class="btn btn-info text-white" href="{{ path('work.members.members.create', {id: user.id}) }}">Create member</a>
+                <a class="btn btn-info text-white" href="{{ path('work.members.create', {id: user.id}) }}">Create member</a>
             {% endif %}
         {% endif %}
     </div>

@@ -29,7 +29,7 @@
                     <tbody>
                     {% for group in groups %}
                         <tr class="align-middle">
-                            <td>{{ group.name }}</td>
+                            <td><a href="{{ path('work.members', {form: {group: group.id }}) }}">{{ group.name }}</a></td>
                             <td>{{ group.members }}</td>
                             <td>
                                 <a href="{{ path('work.members.groups.edit', {id: group.id}) }}" class="btn btn-info text-white">

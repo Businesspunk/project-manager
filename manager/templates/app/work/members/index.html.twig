@@ -20,7 +20,7 @@
                 {{ form_widget(form.group) }}
                 {{ form_widget(form.status) }}
                 <input type="submit" class="btn btn-success text-white" value="Search">
-                <a href="{{ path('work.members.members') }}" class="btn btn-outline-secondary">Reset</a>
+                <a href="{{ path('work.members') }}" class="btn btn-outline-secondary">Reset</a>
                 {{ form_end(form) }}
             </div>
             <div class="table-responsive">
@@ -37,7 +37,7 @@
 
                     {% for member in members %}
                         <tr class="align-middle">
-                            <td><a class="btn-link" href="{{ path('work.members.members.show', {id: member.id}) }}">{{ member.name }}</a></td>
+                            <td><a class="btn-link" href="{{ path('work.members.show', {id: member.id}) }}">{{ member.name }}</a></td>
                             <td>{{ member.email }}</td>
                             <td>{{ member.group }}</td>
                             <td>{{ member_status(member.status) }}</td>

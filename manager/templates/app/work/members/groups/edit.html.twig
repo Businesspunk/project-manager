@@ -10,7 +10,7 @@
         <span><a href="{{ path('work.members.groups') }}">Groups</a></span>
     </li>
     <li class="breadcrumb-item">
-        <span>{{ group.name }}</span>
+        <span><a href="{{ path('work.members', {form: {group: group.id }}) }}">{{ group.name }}</a></span>
     </li>
     <li class="breadcrumb-item active"><span>Edit</span></li>
 {% endblock %}

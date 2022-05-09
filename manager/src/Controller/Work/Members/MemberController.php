@@ -21,7 +21,7 @@ use App\Model\Work\UseCase\Members\Member\Reinstate;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Route("/work/members/members", name="work.members.members")
+ * @Route("/work/members", name="work.members")
  * @IsGranted ("ROLE_WORK_MEMBERS_MANAGE")
  */
 class MemberController extends AbstractController
@@ -54,7 +54,7 @@ class MemberController extends AbstractController
             $request->query->get('direction', 'asc')
         );
 
-        return $this->render('app/work/members/member/index.html.twig', [
+        return $this->render('app/work/members/index.html.twig', [
             'members' => $members,
             'form' => $form->createView()
         ]);
@@ -66,7 +66,7 @@ class MemberController extends AbstractController
     public function show(Member $member, UserFetcher $fetcher): Response
     {
         $user = $fetcher->find($member->getId());
-        return $this->render('app/work/members/member/show.html.twig', compact('member', 'user'));
+        return $this->render('app/work/members/show.html.twig', compact('member', 'user'));
     }
 
     /**
@@ -86,14 +86,14 @@ class MemberController extends AbstractController
             try {
                 $handler->handle($command);
                 $this->addFlash('success', 'Member was successfully created');
-                return $this->redirectToRoute('work.members.members');
+                return $this->redirectToRoute('work.members');
             } catch (\DomainException $e){
                 $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
                 $this->logger->error($e->getMessage());
             }
         }
 
-        return $this->render('app/work/members/member/create.html.twig', [
+        return $this->render('app/work/members/create.html.twig', [
             'form' => $form->createView()
         ]);
     }
@@ -111,14 +111,14 @@ class MemberController extends AbstractController
             try {
                 $handler->handle($command);
                 $this->addFlash('success', 'Member was successfully updated');
-                return $this->redirectToRoute('work.members.members.show', ['id' => $member->getId()]);
+                return $this->redirectToRoute('work.members.show', ['id' => $member->getId()]);
             } catch (\DomainException $e){
                 $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
                 $this->logger->error($e->getMessage());
             }
         }
 
-        return $this->render('app/work/members/member/edit.html.twig', [
+        return $this->render('app/work/members/edit.html.twig', [
             'form' => $form->createView(),
             'member' => $member
         ]);
@@ -141,14 +141,14 @@ class MemberController extends AbstractController
             try {
                 $handler->handle($command);
                 $this->addFlash('success', 'Member was successfully moved');
-                return $this->redirectToRoute('work.members.members.show', ['id' => $member->getId()]);
+                return $this->redirectToRoute('work.members.show', ['id' => $member->getId()]);
             } catch (\DomainException $e){
                 $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
                 $this->logger->error($e->getMessage());
             }
         }
 
-        return $this->render('app/work/members/member/move.html.twig', [
+        return $this->render('app/work/members/move.html.twig', [
             'form' => $form->createView(),
             'member' => $member
         ]);
@@ -160,7 +160,7 @@ class MemberController extends AbstractController
     public function archive(string $id, Request $request, Archive\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('archive', $request->request->get('token'))) {
-            return $this->redirectToRoute('work.members.members.show', ['id' => $id]);
+            return $this->redirectToRoute('work.members.show', ['id' => $id]);
         }
 
         $command = new Archive\Command($id);
@@ -172,7 +172,7 @@ class MemberController extends AbstractController
             $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
             $this->logger->error($e->getMessage());
         }
-        return $this->redirectToRoute('work.members.members.show', ['id' => $id]);
+        return $this->redirectToRoute('work.members.show', ['id' => $id]);
     }
 
     /**
@@ -181,7 +181,7 @@ class MemberController extends AbstractController
     public function reinstate(string $id, Request $request, Reinstate\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('reinstate', $request->request->get('token'))) {
-            return $this->redirectToRoute('work.members.members.show', ['id' => $id]);
+            return $this->redirectToRoute('work.members.show', ['id' => $id]);
         }
 
         $command = new Reinstate\Command($id);
@@ -193,6 +193,6 @@ class MemberController extends AbstractController
             $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
             $this->logger->error($e->getMessage());
         }
-        return $this->redirectToRoute('work.members.members.show', ['id' => $id]);
+        return $this->redirectToRoute('work.members.show', ['id' => $id]);
     }
 }

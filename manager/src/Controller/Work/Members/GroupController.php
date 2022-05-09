@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Route("/work/members/groups", name="work.members.groups")
+ * @Route("/work/members/groupss", name="work.members.groups")
  * @IsGranted ("ROLE_WORK_MEMBERS_MANAGE")
  */
 class GroupController extends AbstractController
@@ -36,7 +36,7 @@ class GroupController extends AbstractController
     public function index(GroupFetcher $fetcher): Response
     {
         $groups = $fetcher->all();
-        return $this->render('app/work/members/group/index.html.twig', compact('groups'));
+        return $this->render('app/work/members/groups/index.html.twig', compact('groups'));
     }
 
     /**
@@ -59,7 +59,7 @@ class GroupController extends AbstractController
              }
          }
 
-         return $this->render('app/work/members/group/create.html.twig', [
+         return $this->render('app/work/members/groups/create.html.twig', [
              'form' => $form->createView()
          ]);
     }
@@ -84,7 +84,7 @@ class GroupController extends AbstractController
             }
         }
 
-        return $this->render('app/work/members/group/edit.html.twig', [
+        return $this->render('app/work/members/groups/edit.html.twig', [
             'form' => $form->createView(),
             'group' => $group
         ]);

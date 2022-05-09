@@ -7,7 +7,7 @@
         <span><a href="{{ path('home') }}">Home</a></span>
     </li>
     <li class="breadcrumb-item">
-        <span><a href="{{ path('work.members.members') }}">Members</a></span>
+        <span><a href="{{ path('work.members') }}">Members</a></span>
     </li>
     <li class="breadcrumb-item active"><span>{{ member.name }}</span></li>
 {% endblock %}
@@ -15,15 +15,15 @@
 {% block content %}
 
     <div class="actions mb-3">
-        <a href="{{ path('work.members.members.move', {id: member.id}) }}" class="btn-info btn text-white">Move</a>
-        <a href="{{ path('work.members.members.edit', {id: member.id}) }}" class="btn-info btn text-white">Edit</a>
+        <a href="{{ path('work.members.move', {id: member.id}) }}" class="btn-info btn text-white">Move</a>
+        <a href="{{ path('work.members.edit', {id: member.id}) }}" class="btn-info btn text-white">Edit</a>
         {% if user %}
             <a class="btn btn-info text-white" href="{{ path('users.show', {id: user.id}) }}">View user</a>
         {% endif %}
         {% if member.active %}
             <form class="d-inline-block"
                   method="post"
-                  action="{{ path('work.members.members.archive', {id: member.id}) }}"
+                  action="{{ path('work.members.archive', {id: member.id}) }}"
                   onsubmit="return confirm('Are you sure?')">
                 <button type="submit" class="btn btn-danger text-white">Archive</button>
                 <input type="hidden" name="token" value="{{ csrf_token('archive') }}">
@@ -32,7 +32,7 @@
         {% if member.archived %}
             <form class="d-inline-block"
                   method="post"
-                  action="{{ path('work.members.members.reinstate', {id: member.id}) }}">
+                  action="{{ path('work.members.reinstate', {id: member.id}) }}">
                 <button type="submit" class="btn btn-success text-white">Reinstate</button>
                 <input type="hidden" name="token" value="{{ csrf_token('reinstate') }}">
             </form>
