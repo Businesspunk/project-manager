@@ -10,8 +10,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class="card all-users">
-        <div class="card-header">Members</div>
+    {% include 'app/work/members/_tabs.html.twig' with {'active': 'members'} %}
+    <div class="card all-users mt-3">
         <div class="card-body">
             <div class="filter mb-3">
                 {{ form_start(form) }}

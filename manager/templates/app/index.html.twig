@@ -28,17 +28,9 @@
                                 <li class="nav-title">Work</li>
                                 {% if is_granted('ROLE_WORK_MEMBERS_MANAGE') %}
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('work.members.groups') }}">
-                                            <svg class="nav-icon">
-                                                <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-people') }}"></use>
-                                            </svg>
-                                            Groups
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
                                         <a class="nav-link" href="{{ path('work.members') }}">
                                             <svg class="nav-icon">
-                                                <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-user') }}"></use>
+                                                <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-people') }}"></use>
                                             </svg>
                                             Members
                                         </a>

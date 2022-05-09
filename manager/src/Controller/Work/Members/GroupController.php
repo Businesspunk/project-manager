@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Route("/work/members/groupss", name="work.members.groups")
+ * @Route("/work/members/groups", name="work.members.groups")
  * @IsGranted ("ROLE_WORK_MEMBERS_MANAGE")
  */
 class GroupController extends AbstractController

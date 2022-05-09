@@ -6,16 +6,20 @@
     <li class="breadcrumb-item">
         <span><a href="{{ path('home') }}">Home</a></span>
     </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.members') }}">Members</a></span>
+    </li>
     <li class="breadcrumb-item active"><span>Groups</span></li>
 {% endblock %}
 
 {% block content %}
-    <div class="actions mb-3">
+    {% include 'app/work/members/_tabs.html.twig' with {'active': 'groups'} %}
+
+    <div class="actions mb-3 mt-3">
         <a class="btn-success btn text-white" href="{{ path('work.members.groups.create') }}">Create</a>
     </div>
 
     <div class="card all-users">
-        <div class="card-header">Groups</div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table mb-0 table-bordered">
