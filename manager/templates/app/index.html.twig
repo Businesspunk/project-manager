@@ -16,47 +16,7 @@
                     <div class="simplebar-offset">
                         <div class="simplebar-content-wrapper">
                             <div class="simplebar-content">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('home') }}">
-                                        <svg class="nav-icon">
-                                            <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-speedometer') }}"></use>
-                                        </svg>
-                                        Dashboard
-                                    </a>
-                                </li>
-
-                                <li class="nav-title">Work</li>
-                                {% if is_granted('ROLE_WORK_MEMBERS_MANAGE') %}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('work.members') }}">
-                                            <svg class="nav-icon">
-                                                <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-people') }}"></use>
-                                            </svg>
-                                            Members
-                                        </a>
-                                    </li>
-                                {% endif %}
-
-                                <li class="nav-title">Control</li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('profile') }}">
-                                        <svg class="nav-icon">
-                                            <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-user') }}"></use>
-                                        </svg>
-                                        Profile
-                                    </a>
-                                </li>
-
-                                {% if is_granted('ROLE_MANAGE_USERS') %}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('users') }}">
-                                            <svg class="nav-icon">
-                                                <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-people') }}"></use>
-                                            </svg>
-                                            Users
-                                        </a>
-                                    </li>
-                                {% endif %}
+                                {{ knp_menu_render('sidebar', {currentClass: 'active'}) }}
                             </div>
                         </div>
                     </div>

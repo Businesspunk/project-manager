@@ -31,3 +31,8 @@ html:not([dir=rtl]) .wrapper {
     margin-bottom: 2px;
   }
 }
+
+.simplebar-content .nav{
+  display: block;
+  flex-wrap: initial;
+}

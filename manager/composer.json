@@ -12,6 +12,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.11",
         "finesse/swiftmailer-defaults-plugin": "^2.0",
+        "knplabs/knp-menu-bundle": "^3.2",
         "knplabs/knp-paginator-bundle": "^5.3",
         "knpuniversity/oauth2-client-bundle": "^2.10",
         "league/oauth2-facebook": "^2.0",
