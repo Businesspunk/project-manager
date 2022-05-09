@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Widget\User;
+namespace App\Widget\Member;
 
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
@@ -11,12 +11,12 @@ class StatusWidget extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('user_status', [$this, 'status'], ['needs_environment' => true, 'is_safe' => ['html']])
+            new TwigFunction('member_status', [$this, 'status'], ['needs_environment' => true, 'is_safe' => ['html']])
         ];
     }
 
     public function status(Environment $twig, string $status)
     {
-        return $twig->render('app/widget/user/status.html.twig', compact('status'));
+        return $twig->render('app/widget/work/members/member/status.html.twig', compact('status'));
     }
 }

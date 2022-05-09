@@ -13,52 +13,39 @@ class Form extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $defaultOptions = [
+            'attr' => [
+                'class' => 'd-inline',
+                'onChange' => 'this.form.submit()'
+            ],
+            'required' => false
+        ];
+
         $builder
-            ->add('name', Type\TextType::class,
+            ->add('name', Type\TextType::class, array_merge_recursive(
+                $defaultOptions, ['attr' => ['placeholder' => 'Name']]
+            ))->add('email', Type\TextType::class, array_merge_recursive(
+                $defaultOptions, ['attr' => ['placeholder' => 'E-mail']]
+            ))->add('role', Type\ChoiceType::class, array_merge_recursive(
+                $defaultOptions,
                 [
-                    'attr'=> [
-                        'class' => 'd-inline',
-                        'placeholder' => 'Name',
-                        'onChange' => 'this.form.submit()'
-                    ],
-                    'required' => false,
+                    'placeholder' => 'All roles',
+                    'choices' => [
+                        'User' => Role::ROLE_USER,
+                        'Admin' => Role::ROLE_ADMIN
+                    ]
                 ]
-            )
-            ->add('email', Type\TextType::class,
-                [
-                    'attr'=> [
-                        'class' => 'd-inline',
-                        'placeholder' => 'Email',
-                        'onChange' => 'this.form.submit()'
-                    ],
-                    'required' => false
-                ]
-            )
-            ->add('role', Type\ChoiceType::class, [
-                'placeholder' => 'All roles',
-                'choices' => [
-                    'User' => Role::ROLE_USER,
-                    'Admin' => Role::ROLE_ADMIN
-                ],
-                'attr'=> [
-                    'class' => 'd-inline',
-                    'onChange' => 'this.form.submit()'
-                ],
-                'required' => false
-            ])
-            ->add('status', Type\ChoiceType::class, [
-                'placeholder' => 'All statuses',
-                'choices' => [
-                    'Active' => User::STATUS_ACTIVE,
-                    'Wait' => User::STATUS_WAIT,
-                    'Block' => User::STATUS_BLOCK
-                ],
-                'attr'=> [
-                    'class' => 'd-inline',
-                    'onChange' => 'this.form.submit()'
-                ],
-                'required' => false
-            ]);
+            ))->add('status', Type\ChoiceType::class, array_merge_recursive(
+                    $defaultOptions,
+                    [
+                        'placeholder' => 'All statuses',
+                        'choices' => [
+                            'Active' => User::STATUS_ACTIVE,
+                            'Wait' => User::STATUS_WAIT,
+                            'Block' => User::STATUS_BLOCK
+                        ]
+                    ])
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver)

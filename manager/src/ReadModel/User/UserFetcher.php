@@ -137,4 +137,17 @@ class UserFetcher
 
         return $this->paginator->paginate($qb, $page, $perPage);
     }
+
+    public function find(string $id): ?array
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select('id')
+            ->from('work_members_members')
+            ->where('id = :id')
+            ->setParameter(':id', $id)
+            ->execute();
+
+        $result = $stmt->fetchAssociative();
+        return $result ?: null;
+    }
 }

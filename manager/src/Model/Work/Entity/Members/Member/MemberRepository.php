@@ -31,7 +31,7 @@ class MemberRepository
         return $this->repo->find($id->getValue());
     }
 
-    public function hasById(Id $id): bool
+    public function has(Id $id): bool
     {
         return $this->repo->createQueryBuilder('t')
                 ->select('COUNT(t.id)')

@@ -17,6 +17,6 @@ class RoleWidget extends AbstractExtension
 
     public function role(Environment $twig, string $role)
     {
-        return $twig->render('app/widget/role.html.twig', compact('role'));
+        return $twig->render('app/widget/user/role.html.twig', compact('role'));
     }
 }

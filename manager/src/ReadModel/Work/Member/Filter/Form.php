@@ -20,48 +20,33 @@ class Form extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $defaultOptions = [
+            'attr' => [
+                'class' => 'd-inline',
+                'onChange' => 'this.form.submit()'
+            ],
+            'required' => false
+        ];
+
         $builder
-            ->add('name', Type\TextType::class,
-                [
-                    'attr'=> [
-                        'class' => 'd-inline',
-                        'placeholder' => 'Name',
-                        'onChange' => 'this.form.submit()'
-                    ],
-                    'required' => false,
+            ->add('name', Type\TextType::class, array_merge_recursive(
+                $defaultOptions, ['attr' => ['placeholder' => 'Name']]
+            ))->add('email', Type\TextType::class, array_merge_recursive(
+                $defaultOptions, ['attr' => ['placeholder' => 'E-mail']]
+            ))->add('group', Type\ChoiceType::class, array_merge_recursive(
+                $defaultOptions, [
+                    'placeholder' => 'All groups',
+                    'choices' => array_flip($this->groups->assoc()),
                 ]
-            )
-            ->add('email', Type\TextType::class,
-                [
-                    'attr'=> [
-                        'class' => 'd-inline',
-                        'placeholder' => 'Email',
-                        'onChange' => 'this.form.submit()'
-                    ],
-                    'required' => false
+            ))->add('status', Type\ChoiceType::class, array_merge_recursive(
+                $defaultOptions, [
+                    'placeholder' => 'All statuses',
+                    'choices' => [
+                        'Active' => Status::STATUS_ACTIVE,
+                        'Archived' => Status::STATUS_ARCHIVED,
+                    ]
                 ]
-            )
-            ->add('group', Type\ChoiceType::class, [
-                'placeholder' => 'All groups',
-                'choices' => array_flip($this->groups->assoc()),
-                'attr'=> [
-                    'class' => 'd-inline',
-                    'onChange' => 'this.form.submit()'
-                ],
-                'required' => false
-            ])
-            ->add('status', Type\ChoiceType::class, [
-                'placeholder' => 'All statuses',
-                'choices' => [
-                    'Active' => Status::STATUS_ACTIVE,
-                    'Archived' => Status::STATUS_ARCHIVED,
-                ],
-                'attr'=> [
-                    'class' => 'd-inline',
-                    'onChange' => 'this.form.submit()'
-                ],
-                'required' => false
-            ]);
+            ));
     }
 
     public function configureOptions(OptionsResolver $resolver)

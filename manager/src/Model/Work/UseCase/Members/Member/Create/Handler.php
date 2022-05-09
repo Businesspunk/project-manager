@@ -27,7 +27,7 @@ class Handler
 
     public function handle(Command $command): void
     {
-        if ($this->members->hasById($id = new Id($command->id))) {
+        if ($this->members->has($id = new Id($command->id))) {
             throw new \DomainException('This Id is already in use');
         }
 
