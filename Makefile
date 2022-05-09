@@ -1,5 +1,5 @@
 REGISTRY := $(shell echo businesspunk)
-TAG := $(shell echo 3.4)
+TAG := $(shell echo 3.5)
 USER_HOST := $(shell echo ec2-user@44.203.151.26)
 PEM_KEY_PATH := $(shell echo /Users/nikitakazakevich/Downloads/Manager.pem)
 REDIS_SECRET := $(shell echo secret)
@@ -46,7 +46,7 @@ dev-build:
 	docker-compose build
 
 prod-up:
-	REGISTRY=$(REGISTRY) TAG=$(TAG) docker-compose -f docker-compose-production.yml up -d
+	REGISTRY=$(REGISTRY) TAG=$(TAG) REDIS_SECRET=$(REDIS_SECRET) docker-compose -f docker-compose-production.yml up -d
 
 manager-migrations-prod:
 	docker-compose run --rm $(REGISTRY)/manager-php-cli:$(TAG) bin/console doctrine:migrations:migrate --no-interaction
