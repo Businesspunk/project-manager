@@ -4,6 +4,7 @@ namespace App\Controller\Work\Members;
 
 use App\Model\User\Entity\User\User;
 use App\Model\Work\Entity\Members\Member\Member;
+use App\ReadModel\User\UserFetcher;
 use App\ReadModel\Work\Member\Filter;
 use App\ReadModel\Work\Member\MemberFetcher;
 use Psr\Log\LoggerInterface;
@@ -53,7 +54,7 @@ class MemberController extends AbstractController
             $request->query->get('direction', 'asc')
         );
 
-        return $this->render('app/work/member/index.html.twig', [
+        return $this->render('app/work/members/member/index.html.twig', [
             'members' => $members,
             'form' => $form->createView()
         ]);
@@ -62,9 +63,10 @@ class MemberController extends AbstractController
     /**
      * @Route ("/{id}", name=".show")
      */
-    public function show(Member $member): Response
+    public function show(Member $member, UserFetcher $fetcher): Response
     {
-        return $this->render('app/work/member/show.html.twig', compact('member'));
+        $user = $fetcher->find($member->getId());
+        return $this->render('app/work/members/member/show.html.twig', compact('member', 'user'));
     }
 
     /**
@@ -91,7 +93,7 @@ class MemberController extends AbstractController
             }
         }
 
-        return $this->render('app/work/member/create.html.twig', [
+        return $this->render('app/work/members/member/create.html.twig', [
             'form' => $form->createView()
         ]);
     }
@@ -116,7 +118,7 @@ class MemberController extends AbstractController
             }
         }
 
-        return $this->render('app/work/member/edit.html.twig', [
+        return $this->render('app/work/members/member/edit.html.twig', [
             'form' => $form->createView(),
             'member' => $member
         ]);
@@ -146,7 +148,7 @@ class MemberController extends AbstractController
             }
         }
 
-        return $this->render('app/work/member/move.html.twig', [
+        return $this->render('app/work/members/member/move.html.twig', [
             'form' => $form->createView(),
             'member' => $member
         ]);

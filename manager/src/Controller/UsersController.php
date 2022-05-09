@@ -10,6 +10,7 @@ use App\Model\User\UseCase\Activate;
 use App\Model\User\UseCase\Role;
 use App\ReadModel\User\Filter;
 use App\ReadModel\User\UserFetcher;
+use App\ReadModel\Work\Member\MemberFetcher;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -212,8 +213,9 @@ class UsersController extends AbstractController
     /**
      * @Route ("/{id}", name="users.show")
      */
-    public function show(User $user): Response
+    public function show(User $user, MemberFetcher $fetcher): Response
     {
-        return $this->render('app/users/show.html.twig', compact('user'));
+        $member = $fetcher->find($user->getId());
+        return $this->render('app/users/show.html.twig', compact('user', 'member'));
     }
 }

@@ -36,7 +36,7 @@ class GroupController extends AbstractController
     public function index(GroupFetcher $fetcher): Response
     {
         $groups = $fetcher->all();
-        return $this->render('app/work/group/index.html.twig', compact('groups'));
+        return $this->render('app/work/members/group/index.html.twig', compact('groups'));
     }
 
     /**
@@ -59,7 +59,7 @@ class GroupController extends AbstractController
              }
          }
 
-         return $this->render('app/work/group/create.html.twig', [
+         return $this->render('app/work/members/group/create.html.twig', [
              'form' => $form->createView()
          ]);
     }
@@ -84,7 +84,7 @@ class GroupController extends AbstractController
             }
         }
 
-        return $this->render('app/work/group/edit.html.twig', [
+        return $this->render('app/work/members/group/edit.html.twig', [
             'form' => $form->createView(),
             'group' => $group
         ]);

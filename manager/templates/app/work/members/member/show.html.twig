@@ -17,6 +17,9 @@
     <div class="actions mb-3">
         <a href="{{ path('work.members.members.move', {id: member.id}) }}" class="btn-info btn text-white">Move</a>
         <a href="{{ path('work.members.members.edit', {id: member.id}) }}" class="btn-info btn text-white">Edit</a>
+        {% if user %}
+            <a class="btn btn-info text-white" href="{{ path('users.show', {id: user.id}) }}">View user</a>
+        {% endif %}
         {% if member.active %}
             <form class="d-inline-block"
                   method="post"
@@ -65,7 +68,7 @@
                     </tr>
                     <tr>
                         <th scope="row">Status</th>
-                        <td>{{ user_status(member.status) }}</td>
+                        <td>{{ member_status(member.status) }}</td>
                     </tr>
                 </tbody>
             </table>
