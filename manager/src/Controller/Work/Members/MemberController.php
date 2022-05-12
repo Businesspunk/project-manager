@@ -89,7 +89,7 @@ class MemberController extends AbstractController
                 return $this->redirectToRoute('work.members');
             } catch (\DomainException $e){
                 $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->error($e->getMessage());
+                $this->logger->warning($e->getMessage());
             }
         }
 
@@ -114,7 +114,7 @@ class MemberController extends AbstractController
                 return $this->redirectToRoute('work.members.show', ['id' => $member->getId()]);
             } catch (\DomainException $e){
                 $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->error($e->getMessage());
+                $this->logger->warning($e->getMessage());
             }
         }
 
@@ -144,7 +144,7 @@ class MemberController extends AbstractController
                 return $this->redirectToRoute('work.members.show', ['id' => $member->getId()]);
             } catch (\DomainException $e){
                 $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->error($e->getMessage());
+                $this->logger->warning($e->getMessage());
             }
         }
 
@@ -170,7 +170,7 @@ class MemberController extends AbstractController
             $this->addFlash('success', 'Member was successfully archived');
         } catch (\DomainException $e){
             $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-            $this->logger->error($e->getMessage());
+            $this->logger->warning($e->getMessage());
         }
         return $this->redirectToRoute('work.members.show', ['id' => $id]);
     }
@@ -191,7 +191,7 @@ class MemberController extends AbstractController
             $this->addFlash('success', 'Member was successfully reinstated');
         } catch (\DomainException $e){
             $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-            $this->logger->error($e->getMessage());
+            $this->logger->warning($e->getMessage());
         }
         return $this->redirectToRoute('work.members.show', ['id' => $id]);
     }

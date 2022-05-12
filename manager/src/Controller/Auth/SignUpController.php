@@ -49,7 +49,7 @@ class SignUpController extends AbstractController
                 $this->addFlash('success', 'Check your email');
                 return $this->redirectToRoute('auth.signup');
             } catch (\DomainException $e) {
-                $this->logger->error($e->getMessage(), ['exception' => $e]);
+                $this->logger->warning($e->getMessage(), ['exception' => $e]);
                 $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
             }
         }
@@ -87,7 +87,7 @@ class SignUpController extends AbstractController
                 $request
             );
         } catch (\DomainException $e) {
-            $this->logger->error($e->getMessage(), ['exception' => $e]);
+            $this->logger->warning($e->getMessage(), ['exception' => $e]);
             $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
         }
         return $this->redirectToRoute('home');

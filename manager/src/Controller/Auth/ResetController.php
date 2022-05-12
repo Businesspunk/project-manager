@@ -47,7 +47,7 @@ class ResetController extends AbstractController
                 return $this->redirectToRoute('home');
             } catch (\DomainException $e) {
                 $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->error($e->getMessage());
+                $this->logger->warning($e->getMessage());
             }
         }
 
@@ -81,7 +81,7 @@ class ResetController extends AbstractController
                 return $this->redirectToRoute('home');
             } catch (\DomainException $e) {
                 $this->addFlash('error', $e->getMessage());
-                $this->logger->error($e->getMessage());
+                $this->logger->warning($e->getMessage());
             }
         }
 
