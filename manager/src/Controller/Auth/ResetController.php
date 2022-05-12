@@ -11,15 +11,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @Route("/reset", name="auth.reset")
+ */
 class ResetController extends AbstractController
 {
-    /**
-     * @var LoggerInterface
-     */
     private $logger;
-    /**
-     * @var TranslatorInterface
-     */
     private $translator;
 
     public function __construct(LoggerInterface $logger, TranslatorInterface $translator)
@@ -27,12 +24,8 @@ class ResetController extends AbstractController
         $this->logger = $logger;
         $this->translator = $translator;
     }
-
     /**
-     * @Route ("/reset", name="auth.reset")
-     * @param Request $request
-     * @param Reset\Request\Handler $handler
-     * @return Response
+     * @Route("", name="", methods={"GET","POST"})
      */
     public function request(Request $request, Reset\Request\Handler $handler): Response
     {
@@ -55,13 +48,8 @@ class ResetController extends AbstractController
             'form' => $form->createView()
         ]);
     }
-
     /**
-     * @Route ("/reset/{token}", name="auth.reset.reset")
-     * @param string $token
-     * @param Request $request
-     * @param Reset\Reset\Handler $handler
-     * @return Response
+     * @Route("/{token}", name=".reset", methods={"GET","POST"})
      */
     public function reset(string $token, Request $request, Reset\Reset\Handler $handler, UserFetcher $users): Response
     {

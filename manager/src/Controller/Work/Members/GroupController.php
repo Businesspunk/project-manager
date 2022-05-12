@@ -31,7 +31,7 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route ("", name="")
+     * @Route("", name="", methods={"GET"})
      */
     public function index(GroupFetcher $fetcher): Response
     {
@@ -40,7 +40,7 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route ("/create", name=".create")
+     * @Route("/create", name=".create", methods={"GET", "POST"})
      */
     public function create(Request $request, Create\Handler $handler): Response
     {
@@ -65,7 +65,7 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route ("/{id}/edit", name=".edit")
+     * @Route("/{id}/edit", name=".edit", methods={"GET", "POST"})
      */
     public function edit(Group $group, Request $request, Edit\Handler $handler): Response
     {
@@ -91,7 +91,7 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route ("/{id}/delete", name=".delete")
+     * @Route("/{id}/delete", name=".delete", methods={"POST"})
      */
     public function delete(string $id, Request $request, Delete\Handler $handler): Response
     {

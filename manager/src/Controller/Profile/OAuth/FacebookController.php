@@ -9,12 +9,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/profile")
+ * @Route("/profile/oauth/facebook", name="profile.auth.facebook")
  */
 class FacebookController extends AbstractController
 {
     /**
-     * @Route("/oauth/facebook", name="profile.auth.facebook")
+     * @Route("", name="", methods={"GET"})
      */
     public function connect(ClientRegistry $clientRegistry)
     {
@@ -22,9 +22,8 @@ class FacebookController extends AbstractController
             ->getClient('facebook_attach')
             ->redirect(['public_profile', 'email']);
     }
-
     /**
-     * @Route("/oauth/facebook/check", name="profile.auth.facebook.attach")
+     * @Route("/check", name=".attach", methods={"GET"})
      */
     public function attach(ClientRegistry $clientRegistry, Attach\Handler $handler): Response
     {

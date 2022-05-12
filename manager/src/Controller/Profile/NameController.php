@@ -10,12 +10,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route ("/profile")
+ * @Route("/profile", name="profile")
  */
 class NameController extends AbstractController
 {
     /**
-     * @Route ("/name", name="profile.name")
+     * @Route("/name", name=".name", methods={"GET","POST"})
      */
     public function index(Request $request, Handler $handler)
     {

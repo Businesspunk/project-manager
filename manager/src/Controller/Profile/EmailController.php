@@ -11,12 +11,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/profile/email")
+ * @Route("/profile/email", name="profile")
  */
 class EmailController extends AbstractController
 {
     /**
-     * @Route("/", name="profile.email")
+     * @Route("", name=".email", methods={"GET","POST"})
      */
     public function index(Request $request, ChangeEmail\Handler $handler): Response
     {
@@ -43,9 +43,8 @@ class EmailController extends AbstractController
             'form' => $form->createView()
         ]);
     }
-
     /**
-     * @Route ("/confirm_new/{token}", name="profile.email.confirm_new")
+     * @Route("/confirm_new/{token}", name=".email.confirm_new", methods={"GET","POST"})
      */
     public function confirm(string $token, ConfirmEmail\Handler $handler, UserRepository $users): Response
     {

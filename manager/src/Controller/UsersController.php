@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Annotation\GuidAnnotation;
 use App\Model\User\Entity\User\User;
 use App\Model\User\UseCase\Create;
 use App\Model\User\UseCase\Edit;
@@ -21,7 +22,7 @@ use App\Model\User\UseCase\SignUp\Confirm;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
- * @Route ("/users")
+ * @Route("/users", name="users")
  * @IsGranted("ROLE_MANAGE_USERS")
  */
 class UsersController extends AbstractController
@@ -38,7 +39,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route ("/", name="users")
+     * @Route("", name="", methods={"GET"})
      */
     public function index(Request $request, UserFetcher $users): Response
     {
@@ -61,7 +62,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route ("/create", name="users.create")
+     * @Route("/create", name=".create", methods={"GET","POST"})
      */
     public function create(Request $request, Create\Handler $handler): Response
     {
@@ -86,7 +87,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route ("/{id}/edit", name="users.edit")
+     * @Route("/{id}/edit", name=".edit", methods={"GET","POST"})
      */
     public function edit(User $user, Request $request, Edit\Handler $handler): Response
     {
@@ -112,7 +113,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route ("/{id}/confirm", name="users.confirm")
+     * @Route("/{id}/confirm", name=".confirm", methods={"POST"})
      */
     public function confirm(User $user, Request $request, Confirm\Manually\Handler $handler): Response
     {
@@ -133,7 +134,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route ("/{id}/block", name="users.block")
+     * @Route("/{id}/block", name=".block", methods={"POST"})
      */
     public function block(User $user, Request $request, Block\Handler $handler): Response
     {
@@ -159,7 +160,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route ("/{id}/activate", name="users.activate")
+     * @Route("/{id}/activate", name=".activate", methods={"POST"})
      */
     public function activate(User $user, Request $request, Activate\Handler $handler): Response
     {
@@ -180,7 +181,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route ("/{id}/change/role", name="users.change.role")
+     * @Route("/{id}/change/role", name=".change.role", methods={"GET", "POST"})
      */
     public function editRole(User $user, Request $request, Role\Handler $handler): Response
     {
@@ -211,7 +212,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route ("/{id}", name="users.show")
+     * @Route("/{id}", name=".show", requirements={"id"=GuidAnnotation::PATTERN}, methods={"GET"})
      */
     public function show(User $user, MemberFetcher $fetcher): Response
     {

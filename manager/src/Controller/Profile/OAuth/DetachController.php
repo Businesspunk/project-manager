@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DetachController extends AbstractController
 {
     /**
-     * @Route("/oauth/detach/{network}/{identity}", name="profile.auth.detach")
+     * @Route("/oauth/detach/{network}/{identity}", name="profile.auth.detach", methods={"POST"})
      */
     public function detach(string $network, string $identity, Request $request, Detach\Handler $handler): Response
     {

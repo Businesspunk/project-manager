@@ -2,6 +2,7 @@
 
 namespace App\Controller\Work\Members;
 
+use App\Annotation\GuidAnnotation;
 use App\Model\User\Entity\User\User;
 use App\Model\Work\Entity\Members\Member\Member;
 use App\ReadModel\User\UserFetcher;
@@ -36,9 +37,8 @@ class MemberController extends AbstractController
         $this->logger = $logger;
         $this->translator = $translator;
     }
-
     /**
-     * @Route ("", name="")
+     * @Route("", name="", methods={"GET"})
      */
     public function index(Request $request, MemberFetcher $fetcher): Response
     {
@@ -59,18 +59,8 @@ class MemberController extends AbstractController
             'form' => $form->createView()
         ]);
     }
-
     /**
-     * @Route ("/{id}", name=".show")
-     */
-    public function show(Member $member, UserFetcher $fetcher): Response
-    {
-        $user = $fetcher->find($member->getId());
-        return $this->render('app/work/members/show.html.twig', compact('member', 'user'));
-    }
-
-    /**
-     * @Route ("/create/{id}", name=".create")
+     * @Route("/create/{id}", name=".create", methods={"GET","POST"})
      */
     public function create(User $user, Request $request, Create\Handler $handler): Response
     {
@@ -97,9 +87,8 @@ class MemberController extends AbstractController
             'form' => $form->createView()
         ]);
     }
-
     /**
-     * @Route ("/{id}/edit", name=".edit")
+     * @Route("/{id}/edit", name=".edit", methods={"GET","POST"})
      */
     public function edit(Member $member, Request $request, Edit\Handler $handler): Response
     {
@@ -123,9 +112,8 @@ class MemberController extends AbstractController
             'member' => $member
         ]);
     }
-
     /**
-     * @Route ("/{id}/move", name=".move")
+     * @Route("/{id}/move", name=".move", methods={"GET","POST"})
      */
     public function move(Member $member, Request $request, Move\Handler $handler): Response
     {
@@ -153,9 +141,8 @@ class MemberController extends AbstractController
             'member' => $member
         ]);
     }
-
     /**
-     * @Route ("/{id}/archive", name=".archive")
+     * @Route("/{id}/archive", name=".archive", methods={"POST"})
      */
     public function archive(string $id, Request $request, Archive\Handler $handler): Response
     {
@@ -174,9 +161,8 @@ class MemberController extends AbstractController
         }
         return $this->redirectToRoute('work.members.show', ['id' => $id]);
     }
-
     /**
-     * @Route ("/{id}/reinstate", name=".reinstate")
+     * @Route("/{id}/reinstate", name=".reinstate", methods={"POST"})
      */
     public function reinstate(string $id, Request $request, Reinstate\Handler $handler): Response
     {
@@ -194,5 +180,13 @@ class MemberController extends AbstractController
             $this->logger->warning($e->getMessage());
         }
         return $this->redirectToRoute('work.members.show', ['id' => $id]);
+    }
+    /**
+     * @Route("/{id}", name=".show", requirements={"id"=GuidAnnotation::PATTERN}, methods={"GET"})
+     */
+    public function show(Member $member, UserFetcher $fetcher): Response
+    {
+        $user = $fetcher->find($member->getId());
+        return $this->render('app/work/members/show.html.twig', compact('member', 'user'));
     }
 }

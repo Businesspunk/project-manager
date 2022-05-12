@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/profile")
+ * @Route("/profile", name="profile")
  */
 class ProfileController extends AbstractController
 {
@@ -19,10 +19,8 @@ class ProfileController extends AbstractController
     {
         $this->users = $users;
     }
-
     /**
-     * @Route("/", name="profile")
-     * @return Response
+     * @Route("", name="", methods={"GET"})
      */
     public function index(): Response
     {

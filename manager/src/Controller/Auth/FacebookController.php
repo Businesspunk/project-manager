@@ -7,10 +7,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/login/facebook", name="auth.facebook")
+ */
 class FacebookController extends AbstractController
 {
     /**
-     * @Route("/login/facebook", name="auth.facebook.start")
+     * @Route("", name=".start")
      */
     public function connect(ClientRegistry $clientRegistry)
     {
@@ -18,9 +21,8 @@ class FacebookController extends AbstractController
             ->getClient('facebook_main')
             ->redirect(['public_profile', 'email']);
     }
-
     /**
-     * @Route("/login/facebook/check", name="auth.facebook.check")
+     * @Route("/check", name=".check")
      */
     public function check(Request $request, ClientRegistry $clientRegistry)
     {

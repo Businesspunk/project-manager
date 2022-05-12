@@ -14,15 +14,12 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @Route("/signup", name="auth.signup")
+ */
 class SignUpController extends AbstractController
 {
-    /**
-     * @var LoggerInterface
-     */
     private $logger;
-    /**
-     * @var TranslatorInterface
-     */
     private $translator;
 
     public function __construct(LoggerInterface $logger, TranslatorInterface $translator)
@@ -30,12 +27,8 @@ class SignUpController extends AbstractController
         $this->logger = $logger;
         $this->translator = $translator;
     }
-
     /**
-     * @Route ("/signup", name="auth.signup")
-     * @param Request $request
-     * @param SignUp\Request\Handler $handler
-     * @return Response
+     * @Route("", name="")
      */
     public function request(Request $request, SignUp\Request\Handler $handler): Response
     {
@@ -58,11 +51,8 @@ class SignUpController extends AbstractController
             'form' => $form->createView()
         ]);
     }
-
     /**
-     * @Route ("/signup/{token}", name="auth.signup.confirm")
-     * @param string $token
-     * @param SignUp\Confirm\byEmail\Handler $handler
+     * @Route("/{token}", name=".confirm")
      */
     public function confirm(
         Request $request,

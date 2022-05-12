@@ -7,10 +7,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+/**
+ * @Route("",name="auth")
+ */
 class AuthController extends AbstractController
 {
     /**
-     * @Route("/login", name="auth.login")
+     * @Route("/login", name=".login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -19,9 +22,8 @@ class AuthController extends AbstractController
 
         return $this->render('app/auth/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
-
     /**
-     * @Route("/logout", name="auth.logout")
+     * @Route("/logout", name=".logout")
      */
     public function logout(): void
     {
