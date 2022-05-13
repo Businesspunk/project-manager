@@ -13,30 +13,71 @@ use App\Model\User\Entity\User\User;
 
 class UserFixture extends Fixture
 {
-    private $hasher;
+    private $password_hash;
 
     public function __construct(PasswordHasher $hasher)
     {
-        $this->hasher = $hasher;
+        $this->password_hash = $hasher->hash('password');
     }
 
     public function load(ObjectManager $manager)
     {
-        $hash = $this->hasher->hash('password');
+        $user = $this->createUserConfirmedByEmail(
+            new Email('admin@app.test'),
+            new Name('admin', 'admin')
+        );
+        $user->changeRole(Role::admin());
+        $manager->persist($user);
 
-        $user = User::signUpByEmail(
+        $user = $this->createUserConfirmedByEmail(
+            new Email('user@app.test'),
+            new Name('User', 'Confirmed')
+        );
+        $manager->persist($user);
+
+        $user = $this->createUserByEmail(
+            new Email('nonconfirmed@app.test'),
+            new Name('User', 'NonConfirmedEmailYet')
+        );
+        $manager->persist($user);
+
+        $user = $this->createUserByNetwork(
+            new Name('User', 'Facebook'),
+            'facebook',
+            '101'
+        );
+        $manager->persist($user);
+
+        $manager->flush();
+    }
+
+    private function createUserConfirmedByEmail(Email $email, Name $name): User
+    {
+        $user = $this->createUserByEmail($email, $name);
+        $user->confirmRegistration();
+        return $user;
+    }
+
+    private function createUserByEmail(Email $email, Name $name): User
+    {
+        return User::signUpByEmail(
             Id::next(),
             new \DateTimeImmutable(),
-            new Email('admin@app.test'),
-            new Name('admin', 'admin'),
-            $hash,
+            $email,
+            $name,
+            $this->password_hash,
             'token'
         );
+    }
 
-        $user->confirmRegistration();
-        $user->changeRole(Role::admin());
-
-        $manager->persist($user);
-        $manager->flush();
+    private function createUserByNetwork(Name $name, string $network, string $identity): User
+    {
+        return User::signUpByNetwork(
+            Id::next(),
+            new \DateTimeImmutable(),
+            $name,
+            $network,
+            $identity
+        );
     }
 }
