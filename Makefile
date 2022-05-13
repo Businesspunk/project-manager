@@ -10,7 +10,7 @@ tests: manager-tests
 down: 
 	docker-compose down --remove-orphans
 
-manager-init: manager-composer-install manager-assets-install ready manager-migrations manager-fixtures
+manager-init: manager-composer-install manager-assets-install ready manager-create-db manager-migrations manager-fixtures
 
 ready:
 	docker run --rm -v $(PWD)/manager:/app -w="/app" alpine touch .ready
@@ -23,6 +23,9 @@ manager-composer-install:
 
 manager-assets-install:
 	docker-compose run --rm manager-node yarn install
+
+manager-create-db:
+	docker-compose run --rm manager-php-cli bin/console doctrine:database:create --if-not-exists --no-interaction
 
 manager-migrations:
 	docker-compose run --rm manager-php-cli bin/console doctrine:migrations:migrate --no-interaction
