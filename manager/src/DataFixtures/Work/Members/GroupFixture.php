@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DataFixtures;
+namespace App\DataFixtures\Work\Members;
 
 use App\Model\Work\Entity\Members\Group\Group;
 use App\Model\Work\Entity\Members\Group\Id;

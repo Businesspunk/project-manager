@@ -1,0 +1,75 @@
+{% extends 'app/index.html.twig' %}
+
+{% block title %}Member{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('home') }}">Home</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects') }}">Projects</a></span>
+    </li>
+    <li class="breadcrumb-item active"><span>{{ project.name }}</span></li>
+{% endblock %}
+
+{% block content %}
+    {% include 'app/work/projects/project/_tabs.html.twig' %}
+
+    <div class="actions mb-3 mt-3">
+        <a href="{{ path('work.projects.project.edit', {id: project.id}) }}" class="btn-info btn text-white">Edit</a>
+        {% if project.active %}
+            <form class="d-inline-block"
+                  method="post"
+                  action="{{ path('work.projects.project.archive', {id: project.id}) }}"
+                  onsubmit="return confirm('Are you sure?')">
+                <button type="submit" class="btn btn-danger text-white">Archive</button>
+                <input type="hidden" name="token" value="{{ csrf_token('archive') }}">
+            </form>
+        {% endif %}
+        {% if project.archived %}
+            <form class="d-inline-block"
+                  method="post"
+                  action="{{ path('work.projects.project.reinstate', {id: project.id}) }}">
+                <button type="submit" class="btn btn-success text-white">Reinstate</button>
+                <input type="hidden" name="token" value="{{ csrf_token('reinstate') }}">
+            </form>
+        {% endif %}
+        <form class="d-inline-block"
+              method="post"
+              action="{{ path('work.projects.project.delete', {id: project.id}) }}"
+              onsubmit="return confirm('Are you sure?')">
+            <button type="submit" class="btn btn-danger text-white">Delete</button>
+            <input type="hidden" name="token" value="{{ csrf_token('delete') }}">
+        </form>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Project</div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th scope="row">ID</th>
+                        <td>{{ project.id }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Name</th>
+                        <td>
+                            <span>{{ project.name }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Status</th>
+                        <td>{{ project_status(project.status) }}</td>
+                    </tr>
+                    <tr class="bg-black bg-opacity-10">
+                        <th scope="row">Sort</th>
+                        <td>
+                            <span>{{ project.sort }}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'app/index.html.twig' %}
+
+{% block title %}Edit {{ project.name }}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('home') }}">Home</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects') }}">Projects</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects.project.edit', {id: project.id}) }}">{{ project.name }}</a></span>
+    </li>
+    <li class="breadcrumb-item active"><span>Edit</span></li>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">Edit {{ project.name }}</div>
+        <div class="card-body">
+            {{ form_start(form) }}
+                <div class="input-group mb-3">
+                    {{ form_widget(form.name, {'attr': {'placeholder': 'Project name'}}) }}
+                </div>
+                <div class="input-group mb-3">
+                    {{ form_widget(form.sort, {'attr': {'placeholder': 'Sort'}}) }}
+                </div>
+                <button class="btn btn-block btn-info text-white" type="submit">Update</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

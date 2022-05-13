@@ -1,0 +1,51 @@
+{% extends 'app/index.html.twig' %}
+
+{% block title %}Projects{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('home') }}">Home</a></span>
+    </li>
+    <li class="breadcrumb-item active"><span>Projects</span></li>
+{% endblock %}
+
+{% block content %}
+
+    <div class="actions mb-3 mt-3">
+        <a class="btn-success btn text-white" href="{{ path('work.projects.create') }}">Create project</a>
+    </div>
+
+    <div class="card all-users mt-3">
+        <div class="card-body">
+            <div class="filter mb-3">
+                {{ form_start(form) }}
+                {{ form_widget(form.name) }}
+                {{ form_widget(form.status) }}
+                <input type="submit" class="btn btn-success text-white" value="Search">
+                <a href="{{ path('work.projects') }}" class="btn btn-outline-secondary">Reset</a>
+                {{ form_end(form) }}
+            </div>
+            <div class="table-responsive">
+                <table class="table border mb-0">
+                    <thead class="table-light fw-semibold">
+                        <tr class="align-middle">
+                            <th>{{ knp_pagination_sortable(projects, 'Name', 'name') }}</th>
+                            <th>{{ knp_pagination_sortable(projects, 'Status', 'status') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for project in projects %}
+                        <tr class="align-middle">
+                            <td><a class="btn-link" href="{{ path('work.projects.project', {id: project.id}) }}">{{ project.name }}</a></td>
+                            <td>{{ project_status(project.status) }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="navigation mt-3">
+                    {{ knp_pagination_render(projects) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

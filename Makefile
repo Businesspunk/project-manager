@@ -48,6 +48,9 @@ dev-up:
 check-code:
 	docker-compose run --rm manager-php-cli ./vendor/bin/phpcs --ignore="tests/bootstrap.php"
 
+run-tests:
+	docker-compose run --rm manager-php-cli bin/phpunit ./tests
+
 dev-build:
 	docker-compose build
 

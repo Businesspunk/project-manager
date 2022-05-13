@@ -13,9 +13,8 @@
 {% endblock %}
 
 {% block content %}
-    {% include 'app/work/members/_tabs.html.twig' with {'active': 'groups'} %}
-
-    <div class="actions mb-3 mt-3">
+    {% include 'app/work/members/_tabs.html.twig' %}
+    <div class="actions mb-3">
         <a class="btn-success btn text-white" href="{{ path('work.members.groups.create') }}">Create</a>
     </div>
 

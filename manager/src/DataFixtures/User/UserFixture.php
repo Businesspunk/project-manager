@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DataFixtures;
+namespace App\DataFixtures\User;
 
 use App\Model\User\Entity\User\Email;
 use App\Model\User\Entity\User\Id;
