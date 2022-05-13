@@ -13,6 +13,9 @@ use App\Model\User\Entity\User\User;
 
 class UserFixture extends Fixture
 {
+    public const USER_ADMIN = 'user_user_admin';
+    public const USER_USER = 'user_user_user';
+
     private $password_hash;
 
     public function __construct(PasswordHasher $hasher)
@@ -28,6 +31,7 @@ class UserFixture extends Fixture
         );
         $user->changeRole(Role::admin());
         $manager->persist($user);
+        $this->setReference(self::USER_ADMIN, $user);
 
         $user = $this->createUserConfirmedByEmail(
             new Email('user@app.test'),
@@ -46,7 +50,10 @@ class UserFixture extends Fixture
             'facebook',
             '101'
         );
+        $user->requestChangeEmail(new Email('facebook@app.test'), $token = 'token');
+        $user->changeEmail($token);
         $manager->persist($user);
+        $this->setReference(self::USER_USER, $user);
 
         $manager->flush();
     }
