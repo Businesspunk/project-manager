@@ -8,7 +8,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserChecker implements UserCheckerInterface
 {
-
     public function checkPreAuth(UserInterface $identity)
     {
         if (!$identity instanceof UserIdentity) {

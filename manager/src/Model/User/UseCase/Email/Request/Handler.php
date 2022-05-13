@@ -21,8 +21,7 @@ class Handler
         Flusher $flusher,
         RequestNewEmailTokenizer $tokenizer,
         RequestNewEmailSender $sender
-    )
-    {
+    ) {
         $this->users = $users;
         $this->flusher = $flusher;
         $this->tokenizer = $tokenizer;
@@ -42,7 +41,7 @@ class Handler
         $user->requestChangeEmail($email, $token);
         if ($user->getEmail()) {
             $this->sender->send($email, $token);
-        } else{
+        } else {
             $user->changeEmail($token);
         }
         $this->flusher->flush();

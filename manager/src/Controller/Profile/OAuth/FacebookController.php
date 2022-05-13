@@ -38,7 +38,7 @@ class FacebookController extends AbstractController
         try {
             $handler->handle($command);
             $this->addFlash('success', 'Facebook was successfully added');
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->addFlash('error', $e->getMessage());
         }
         return $this->redirectToRoute('profile');

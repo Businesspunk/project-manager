@@ -30,17 +30,18 @@ class MemberFetcher
                 'TRIM(CONCAT(m.name_first, \' \', m.name_last)) as name',
                 'g.name as group',
                 'g.id as group_id',
-                'm.status')
+                'm.status'
+            )
             ->from('work_members_members', 'm')
             ->leftJoin('m', 'work_members_groups', 'g', 'g.id = m.group_id');
 
         if ($name = $filter->name) {
-            $qb->andWhere($qb->expr()->like('LOWER(TRIM(CONCAT(name_first, \' \', name_last)))',  ':name'));
+            $qb->andWhere($qb->expr()->like('LOWER(TRIM(CONCAT(name_first, \' \', name_last)))', ':name'));
             $qb->setParameter(':name', '%' . mb_strtolower($name) . '%');
         }
 
         if ($email = $filter->email) {
-            $qb->andWhere($qb->expr()->like('LOWER(email)',  ':email'));
+            $qb->andWhere($qb->expr()->like('LOWER(email)', ':email'));
             $qb->setParameter(':email', '%' . mb_strtolower($email) . '%');
         }
 
@@ -54,7 +55,7 @@ class MemberFetcher
             $qb->setParameter(':status', $status);
         }
 
-        if (!in_array($sortBy, ['name', 'email', 'group_id', 'status'],true)) {
+        if (!in_array($sortBy, ['name', 'email', 'group_id', 'status'], true)) {
             throw new \DomainException('Unable to sort');
         }
 

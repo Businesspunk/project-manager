@@ -25,7 +25,7 @@ class NetworkTest extends KernelTestCase
     public function testSuccessDetachNetwork()
     {
         $user = (new UserBuilder())->viaEmail()->confirm()->build();
-        $user->attachNetwork($network = 'facebook',  $identity ='123');
+        $user->attachNetwork($network = 'facebook', $identity = '123');
         $user->attachNetwork($network2 = 'vk', $identity2 = '124');
         $this->assertCount(2, $user->getNetworks());
         $user->detachNetwork($network, $identity);

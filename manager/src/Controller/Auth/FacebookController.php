@@ -26,6 +26,5 @@ class FacebookController extends AbstractController
      */
     public function check(Request $request, ClientRegistry $clientRegistry)
     {
-
     }
 }

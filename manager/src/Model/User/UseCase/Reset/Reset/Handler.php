@@ -30,7 +30,7 @@ class Handler
 
     public function handle(Command $command)
     {
-        if( !$user = $this->users->findByResetToken($command->token) ){
+        if (!$user = $this->users->findByResetToken($command->token)) {
             throw new \DomainException('No users with this token');
         }
 
@@ -39,6 +39,5 @@ class Handler
             $this->hasher->hash($command->password)
         );
         $this->flusher->flush();
-
     }
 }

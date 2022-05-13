@@ -30,16 +30,20 @@ class Form extends AbstractType
 
         $builder
             ->add('name', Type\TextType::class, array_merge_recursive(
-                $defaultOptions, ['attr' => ['placeholder' => 'Name']]
+                $defaultOptions,
+                ['attr' => ['placeholder' => 'Name']]
             ))->add('email', Type\TextType::class, array_merge_recursive(
-                $defaultOptions, ['attr' => ['placeholder' => 'E-mail']]
+                $defaultOptions,
+                ['attr' => ['placeholder' => 'E-mail']]
             ))->add('group', Type\ChoiceType::class, array_merge_recursive(
-                $defaultOptions, [
+                $defaultOptions,
+                [
                     'placeholder' => 'All groups',
                     'choices' => array_flip($this->groups->assoc()),
                 ]
             ))->add('status', Type\ChoiceType::class, array_merge_recursive(
-                $defaultOptions, [
+                $defaultOptions,
+                [
                     'placeholder' => 'All statuses',
                     'choices' => [
                         'Active' => Status::STATUS_ACTIVE,

@@ -14,16 +14,13 @@ class Email
     public function __construct(string $email)
     {
         Assert::notEmpty($email);
-        if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-           throw new Exception('Not valid email');
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new Exception('Not valid email');
         }
 
         $this->value = mb_strtolower($email);
     }
 
-    /**
-     * @return string
-     */
     public function getValue(): string
     {
         return $this->value;

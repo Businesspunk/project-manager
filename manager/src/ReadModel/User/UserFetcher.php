@@ -39,7 +39,11 @@ class UserFetcher
     {
         $stmt = $this->connection->createQueryBuilder()
             ->select(
-                'id', 'email','password_hash', 'role', 'status',
+                'id',
+                'email',
+                'password_hash',
+                'role',
+                'status',
                 'TRIM(CONCAT(name_first, \' \', name_last)) as name'
             )
             ->from('user_users')
@@ -56,7 +60,11 @@ class UserFetcher
     {
         $stmt = $this->connection->createQueryBuilder()
             ->select(
-                'u.id', 'u.email', 'u.password_hash', 'u.role', 'u.status',
+                'u.id',
+                'u.email',
+                'u.password_hash',
+                'u.role',
+                'u.status',
                 'TRIM(CONCAT(name_first, \' \', name_last)) as name'
             )
             ->from('user_users', 'u')
@@ -104,18 +112,22 @@ class UserFetcher
     {
         $qb = $this->connection->createQueryBuilder()
             ->select(
-                'id', 'email', 'date',  'role', 'status',
+                'id',
+                'email',
+                'date',
+                'role',
+                'status',
                 'TRIM(CONCAT(name_first, \' \', name_last)) as name'
             )
             ->from('user_users');
 
         if ($name = $filter->name) {
-            $qb->andWhere($qb->expr()->like('LOWER(TRIM(CONCAT(name_first, \' \', name_last)))',  ':name'));
+            $qb->andWhere($qb->expr()->like('LOWER(TRIM(CONCAT(name_first, \' \', name_last)))', ':name'));
             $qb->setParameter(':name', '%' . mb_strtolower($name) . '%');
         }
 
         if ($email = $filter->email) {
-            $qb->andWhere($qb->expr()->like('LOWER(email)',  ':email'));
+            $qb->andWhere($qb->expr()->like('LOWER(email)', ':email'));
             $qb->setParameter(':email', '%' . mb_strtolower($email) . '%');
         }
 
@@ -129,7 +141,7 @@ class UserFetcher
             $qb->setParameter(':role', $role);
         }
 
-        if (!in_array($sortBy, ['name', 'email', 'role'],true)) {
+        if (!in_array($sortBy, ['name', 'email', 'role'], true)) {
             throw new \DomainException('Unable to sort');
         }
 

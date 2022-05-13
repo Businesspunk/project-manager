@@ -77,7 +77,7 @@ class MemberController extends AbstractController
                 $handler->handle($command);
                 $this->addFlash('success', 'Member was successfully created');
                 return $this->redirectToRoute('work.members');
-            } catch (\DomainException $e){
+            } catch (\DomainException $e) {
                 $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
                 $this->logger->warning($e->getMessage());
             }
@@ -101,7 +101,7 @@ class MemberController extends AbstractController
                 $handler->handle($command);
                 $this->addFlash('success', 'Member was successfully updated');
                 return $this->redirectToRoute('work.members.show', ['id' => $member->getId()]);
-            } catch (\DomainException $e){
+            } catch (\DomainException $e) {
                 $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
                 $this->logger->warning($e->getMessage());
             }
@@ -130,7 +130,7 @@ class MemberController extends AbstractController
                 $handler->handle($command);
                 $this->addFlash('success', 'Member was successfully moved');
                 return $this->redirectToRoute('work.members.show', ['id' => $member->getId()]);
-            } catch (\DomainException $e){
+            } catch (\DomainException $e) {
                 $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
                 $this->logger->warning($e->getMessage());
             }
@@ -155,7 +155,7 @@ class MemberController extends AbstractController
         try {
             $handler->handle($command);
             $this->addFlash('success', 'Member was successfully archived');
-        } catch (\DomainException $e){
+        } catch (\DomainException $e) {
             $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
             $this->logger->warning($e->getMessage());
         }
@@ -175,7 +175,7 @@ class MemberController extends AbstractController
         try {
             $handler->handle($command);
             $this->addFlash('success', 'Member was successfully reinstated');
-        } catch (\DomainException $e){
+        } catch (\DomainException $e) {
             $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
             $this->logger->warning($e->getMessage());
         }

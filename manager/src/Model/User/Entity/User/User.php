@@ -87,8 +87,7 @@ class User
         Id $id,
         DateTimeImmutable $date,
         Name $name
-    )
-    {
+    ) {
         $this->id = $id;
         $this->date = $date;
         $this->name = $name;
@@ -97,8 +96,13 @@ class User
     }
 
     public static function signUpByEmail(
-        Id $id, DateTimeImmutable $date, Email $email, Name $name, string $passwordHash, ?string $confirmationToken): self
-    {
+        Id $id,
+        DateTimeImmutable $date,
+        Email $email,
+        Name $name,
+        string $passwordHash,
+        ?string $confirmationToken
+    ): self {
         $user = new self($id, $date, $name);
         $user->status = self::STATUS_WAIT;
         $user->email = $email;
@@ -107,8 +111,13 @@ class User
         return $user;
     }
 
-    public static function signUpByNetwork(Id $id, DateTimeImmutable $date, Name $name, string $network, string $identity): self
-    {
+    public static function signUpByNetwork(
+        Id $id,
+        DateTimeImmutable $date,
+        Name $name,
+        string $network,
+        string $identity
+    ): self {
         $user = new self($id, $date, $name);
         $user->status = self::STATUS_ACTIVE;
         $user->attachNetwork($network, $identity);
@@ -118,6 +127,76 @@ class User
     public function getName(): ?Name
     {
         return $this->name;
+    }
+
+    public function getId(): Id
+    {
+        return $this->id;
+    }
+
+    public function getEmail(): ?Email
+    {
+        return $this->email;
+    }
+
+    public function getPasswordHash(): string
+    {
+        return $this->passwordHash;
+    }
+
+    public function getDate(): DateTimeImmutable
+    {
+        return $this->date;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->confirmationToken;
+    }
+
+    public function getNetworks(): array
+    {
+        return $this->networks->toArray();
+    }
+
+    public function getResetToken(): ?ResetToken
+    {
+        return $this->resetToken;
+    }
+
+    public function getRole(): Role
+    {
+        return $this->role;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function getNewEmail(): ?Email
+    {
+        return $this->newEmail;
+    }
+
+    public function getNewEmailToken(): ?string
+    {
+        return $this->newEmailToken;
+    }
+
+    public function isWait(): bool
+    {
+        return $this->status === self::STATUS_WAIT;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === self::STATUS_ACTIVE;
+    }
+
+    public function isBlocked(): bool
+    {
+        return $this->status === self::STATUS_BLOCK;
     }
 
     public function attachNetwork(string $network, string $identity): void
@@ -145,61 +224,6 @@ class User
         throw new \DomainException('This network is not exist');
     }
 
-    /**
-     * @return Id
-     */
-    public function getId(): Id
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return Email
-     */
-    public function getEmail(): ?Email
-    {
-        return $this->email;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPasswordHash(): string
-    {
-        return $this->passwordHash;
-    }
-
-    /**
-     * @return DateTimeImmutable
-     */
-    public function getDate(): DateTimeImmutable
-    {
-        return $this->date;
-    }
-
-    /**
-     * @return string
-     */
-    public function getToken(): ?string
-    {
-        return $this->confirmationToken;
-    }
-
-    public function isWait(): bool
-    {
-        return $this->status === self::STATUS_WAIT;
-    }
-
-    public function isActive(): bool
-    {
-        return $this->status === self::STATUS_ACTIVE;
-    }
-
-    public function isBlocked(): bool
-    {
-        return $this->status === self::STATUS_BLOCK;
-    }
-
     public function confirmRegistration(): void
     {
         if (!$this->isWait()) {
@@ -208,14 +232,6 @@ class User
 
         $this->status = self::STATUS_ACTIVE;
         $this->confirmationToken = null;
-    }
-
-    /**
-     * @return array
-     */
-    public function getNetworks(): array
-    {
-        return $this->networks->toArray();
     }
 
     public function requestResetPassword(ResetToken $token, DateTimeImmutable $date): void
@@ -232,14 +248,6 @@ class User
         }
 
         $this->resetToken = $token;
-    }
-
-    /**
-     * @return ResetToken
-     */
-    public function getResetToken(): ?ResetToken
-    {
-        return $this->resetToken;
     }
 
     public function resetPassword(DateTimeImmutable $date, string $hash): void
@@ -261,12 +269,6 @@ class User
         }
         $this->role = $role;
     }
-
-    public function getRole(): Role
-    {
-        return $this->role;
-    }
-
     /**
      * @ORM\PostLoad()
      */
@@ -277,17 +279,9 @@ class User
         }
     }
 
-    /**
-     * @return string
-     */
-    public function getStatus(): string
-    {
-        return $this->status;
-    }
-
     public function requestChangeEmail(Email $email, string $token)
     {
-        if ( !is_null($this->getEmail()) && $email->getValue() === $this->getEmail()->getValue()) {
+        if (!is_null($this->getEmail()) && $email->getValue() === $this->getEmail()->getValue()) {
             throw new \DomainException('Email is the same');
         }
 
@@ -299,25 +293,9 @@ class User
         $this->newEmailToken = $token;
     }
 
-    /**
-     * @return Email|null
-     */
-    public function getNewEmail(): ?Email
-    {
-        return $this->newEmail;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getNewEmailToken(): ?string
-    {
-        return $this->newEmailToken;
-    }
-
     public function changeEmail(string $token): void
     {
-        if ( is_null($this->newEmailToken) || is_null($this->newEmail)) {
+        if (is_null($this->newEmailToken) || is_null($this->newEmail)) {
             throw new \DomainException('Change email was not requested');
         }
 

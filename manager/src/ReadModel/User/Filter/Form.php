@@ -23,9 +23,11 @@ class Form extends AbstractType
 
         $builder
             ->add('name', Type\TextType::class, array_merge_recursive(
-                $defaultOptions, ['attr' => ['placeholder' => 'Name']]
+                $defaultOptions,
+                ['attr' => ['placeholder' => 'Name']]
             ))->add('email', Type\TextType::class, array_merge_recursive(
-                $defaultOptions, ['attr' => ['placeholder' => 'E-mail']]
+                $defaultOptions,
+                ['attr' => ['placeholder' => 'E-mail']]
             ))->add('role', Type\ChoiceType::class, array_merge_recursive(
                 $defaultOptions,
                 [
@@ -36,16 +38,16 @@ class Form extends AbstractType
                     ]
                 ]
             ))->add('status', Type\ChoiceType::class, array_merge_recursive(
-                    $defaultOptions,
-                    [
-                        'placeholder' => 'All statuses',
-                        'choices' => [
-                            'Active' => User::STATUS_ACTIVE,
-                            'Wait' => User::STATUS_WAIT,
-                            'Block' => User::STATUS_BLOCK
-                        ]
-                    ])
-            );
+                $defaultOptions,
+                [
+                    'placeholder' => 'All statuses',
+                    'choices' => [
+                        'Active' => User::STATUS_ACTIVE,
+                        'Wait' => User::STATUS_WAIT,
+                        'Block' => User::STATUS_BLOCK
+                    ]
+                ]
+            ));
     }
 
     public function configureOptions(OptionsResolver $resolver)

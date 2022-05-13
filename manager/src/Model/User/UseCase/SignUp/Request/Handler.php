@@ -43,7 +43,7 @@ class Handler
         Flusher $flusher,
         ConfirmTokenizer $tokenizer,
         ConfirmTokenSender $confirmTokenSender
-    ){
+    ) {
         $this->users = $users;
         $this->passwordHasher = $passwordHasher;
         $this->flusher = $flusher;

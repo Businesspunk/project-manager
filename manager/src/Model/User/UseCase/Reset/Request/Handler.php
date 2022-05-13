@@ -28,8 +28,12 @@ class Handler
      */
     private $flusher;
 
-    public function __construct(UserRepository $users, ResetTokenizer $tokenizer, ResetTokenSender $sender, Flusher $flusher)
-    {
+    public function __construct(
+        UserRepository $users,
+        ResetTokenizer $tokenizer,
+        ResetTokenSender $sender,
+        Flusher $flusher
+    ) {
         $this->users = $users;
         $this->tokenizer = $tokenizer;
         $this->sender = $sender;

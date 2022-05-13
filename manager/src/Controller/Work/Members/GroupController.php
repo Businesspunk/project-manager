@@ -44,24 +44,24 @@ class GroupController extends AbstractController
      */
     public function create(Request $request, Create\Handler $handler): Response
     {
-         $command = new Create\Command();
-         $form = $this->createForm(Create\Form::class, $command);
-         $form->handleRequest($request);
+        $command = new Create\Command();
+        $form = $this->createForm(Create\Form::class, $command);
+        $form->handleRequest($request);
 
-         if ($form->isSubmitted() && $form->isValid()) {
-             try {
-                 $handler->handle($command);
-                 $this->addFlash('success', 'Group was successfully created');
-                 return $this->redirectToRoute('work.members.groups');
-             } catch (\DomainException $e){
-                 $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                 $this->logger->warning($e->getMessage());
-             }
-         }
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $handler->handle($command);
+                $this->addFlash('success', 'Group was successfully created');
+                return $this->redirectToRoute('work.members.groups');
+            } catch (\DomainException $e) {
+                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
+                $this->logger->warning($e->getMessage());
+            }
+        }
 
-         return $this->render('app/work/members/groups/create.html.twig', [
-             'form' => $form->createView()
-         ]);
+        return $this->render('app/work/members/groups/create.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**

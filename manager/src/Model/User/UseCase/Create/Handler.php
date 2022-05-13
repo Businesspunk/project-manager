@@ -22,8 +22,7 @@ class Handler
         UserRepository $users,
         Flusher $flusher,
         PasswordGenerator $passwordGenerator
-    )
-    {
+    ) {
         $this->users = $users;
         $this->flusher = $flusher;
         $this->passwordGenerator = $passwordGenerator;

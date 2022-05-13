@@ -31,8 +31,7 @@ class FacebookAuthenticator extends OAuth2Authenticator
         RouterInterface $router,
         UserProviderInterface $userProvider,
         Auth\Handler $handler
-    )
-    {
+    ) {
         $this->clientRegistry = $clientRegistry;
         $this->router = $router;
         $this->userProvider = $userProvider;
@@ -61,7 +60,7 @@ class FacebookAuthenticator extends OAuth2Authenticator
                 $username = sprintf('%s:%s', $network, $identity);
                 try {
                     $user = $this->userProvider->loadUserByUsername($username);
-                } catch (UserNotFoundException  $e){
+                } catch (UserNotFoundException $e) {
                     $this->handler->handle(new Auth\Command($network, $identity, $firstName, $lastName));
                     $user = $this->userProvider->loadUserByUsername($username);
                 }

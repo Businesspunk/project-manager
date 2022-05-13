@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Tests\Model\User\Entity\User\Email;
+
 use App\Model\User\Entity\User\Email;
 use App\Tests\Builder\User\UserBuilder;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

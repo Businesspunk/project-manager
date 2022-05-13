@@ -27,7 +27,7 @@ class DetachController extends AbstractController
 
         try {
             $handler->handle($command);
-            $this->addFlash('success','Network was successfully detached');
+            $this->addFlash('success', 'Network was successfully detached');
         } catch (\Exception $e) {
             $this->addFlash('error', $e->getMessage());
         }

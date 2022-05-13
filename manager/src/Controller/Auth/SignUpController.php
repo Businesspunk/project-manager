@@ -62,8 +62,7 @@ class SignUpController extends AbstractController
         UserAuthenticatorInterface $authenticator,
         UserProviderInterface $userProvider,
         UserFetcher $users
-    ): Response
-    {
+    ): Response {
         if (!$user = $users->findBySignUpConfirmationToken($token)) {
             throw new \DomainException('User is not found');
         }

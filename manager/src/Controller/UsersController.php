@@ -125,7 +125,7 @@ class UsersController extends AbstractController
 
         try {
             $handler->handle($command);
-        } catch (\DomainException $e){
+        } catch (\DomainException $e) {
             $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
             $this->logger->warning($e->getMessage());
         }
@@ -151,7 +151,7 @@ class UsersController extends AbstractController
 
         try {
             $handler->handle($command);
-        } catch (\DomainException $e){
+        } catch (\DomainException $e) {
             $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
             $this->logger->warning($e->getMessage());
         }
@@ -172,7 +172,7 @@ class UsersController extends AbstractController
 
         try {
             $handler->handle($command);
-        } catch (\DomainException $e){
+        } catch (\DomainException $e) {
             $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
             $this->logger->warning($e->getMessage());
         }

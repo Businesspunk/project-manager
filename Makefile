@@ -42,6 +42,9 @@ pull:
 dev-up:
 	docker-compose up -d
 
+check-code:
+	docker-compose run --rm manager-php-cli ./vendor/bin/phpcs --ignore="tests/bootstrap.php"
+
 dev-build:
 	docker-compose build
 

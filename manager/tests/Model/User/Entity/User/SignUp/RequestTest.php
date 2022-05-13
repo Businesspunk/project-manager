@@ -16,8 +16,8 @@ class RequestTest extends KernelTestCase
         $user =
             (new UserBuilder(
                 $id = Id::next(),
-                $date = new DateTimeImmutable())
-            )->viaEmail(
+                $date = new DateTimeImmutable()
+            ))->viaEmail(
                 $email = new Email('n@gmail.com'),
                 $password = 'hash123',
                 $token = 'token'
