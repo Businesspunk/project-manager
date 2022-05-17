@@ -2,6 +2,9 @@
 
 namespace App\Model\Work\Entity\Projects\Project;
 
+use App\Model\Work\Entity\Projects\Department\Department;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Model\Work\Entity\Projects\Department\Id as DepartmentId;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +34,12 @@ class Project
      * @ORM\Column(type="work_projects_project_status")
      */
     private $status;
+    /**
+     * @var ArrayCollection|Department
+     * @ORM\OneToMany(targetEntity=Department::class, mappedBy="project", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OrderBy({"name" = "ASC"})
+     */
+    private $departments;
 
     public function __construct(Id $id, string $name, int $sort, Status $status)
     {
@@ -38,6 +47,7 @@ class Project
         $this->name = $name;
         $this->sort = $sort;
         $this->status = $status;
+        $this->departments = new ArrayCollection();
     }
 
     public function getId(): Id
@@ -90,5 +100,45 @@ class Project
     {
         $this->name = $name;
         $this->sort = $sort;
+    }
+
+    public function addDepartment(DepartmentId $id, string $name)
+    {
+        foreach ($this->departments as $department) {
+            if ($department->isEqualName($name)) {
+                throw new \DomainException('Department already exists');
+            }
+        }
+        $this->departments->add(new Department($this, $id, $name));
+    }
+
+    public function editDepartment(DepartmentId $id, string $name)
+    {
+        foreach ($this->departments as $department) {
+            if ($department->getId()->isEqual($id)) {
+                $department->edit($name);
+                return;
+            }
+        }
+        throw new \DomainException('Department is not found');
+    }
+
+    public function removeDepartment(DepartmentId $id)
+    {
+        foreach ($this->departments as $department) {
+            if ($department->getId()->isEqual($id)) {
+                $this->departments->removeElement($department);
+                return;
+            }
+        }
+        throw new \DomainException('Department is not found');
+    }
+
+    /**
+     * @return Department|ArrayCollection
+     */
+    public function getDepartments()
+    {
+        return $this->departments;
     }
 }
