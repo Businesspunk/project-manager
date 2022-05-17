@@ -102,6 +102,16 @@ class Project
         $this->sort = $sort;
     }
 
+    public function getDepartment(DepartmentId $id)
+    {
+        foreach ($this->departments as $department) {
+            if ($department->getId()->isEqual($id)) {
+                return $department;
+            }
+        }
+        throw new \DomainException('Department does not exist');
+    }
+
     public function addDepartment(DepartmentId $id, string $name)
     {
         foreach ($this->departments as $department) {

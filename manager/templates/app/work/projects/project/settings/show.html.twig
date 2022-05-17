@@ -9,7 +9,12 @@
     <li class="breadcrumb-item">
         <span><a href="{{ path('work.projects') }}">Projects</a></span>
     </li>
-    <li class="breadcrumb-item active"><span>{{ project.name }}</span></li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects.project', {id: project.id}) }}">{{ project.name }}</a></span>
+    </li>
+    <li class="breadcrumb-item active">
+        <span>Settings</span>
+    </li>
 {% endblock %}
 
 {% block content %}
@@ -41,6 +46,7 @@
             <button type="submit" class="btn btn-danger text-white">Delete</button>
             <input type="hidden" name="token" value="{{ csrf_token('delete') }}">
         </form>
+        <a href="{{ path('work.projects.project.settings.departments', {id: project.id}) }}" class="btn-info btn text-white">Departments</a>
     </div>
 
     <div class="card">
