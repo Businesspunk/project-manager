@@ -19,6 +19,9 @@
 {% endblock %}
 
 {% block content %}
+    {% include 'app/work/projects/project/_tabs.html.twig' %}
+    {% include 'app/work/projects/project/settings/_tabs.html.twig' %}
+
     <div class="actions mb-3 mt-3">
         <a class="btn-success btn text-white" href="{{ path('work.projects.project.settings.departments.create', {id: project.id}) }}">Create</a>
     </div>

@@ -65,3 +65,7 @@ services:
     App\Menu\Work\MemberMenu:
         tags:
             - { name: knp_menu.menu_builder, method: build, alias: work_members }
+
+    App\Menu\Work\ProjectSettingsMenu:
+        tags:
+            - { name: knp_menu.menu_builder, method: build, alias: work_project_menu }

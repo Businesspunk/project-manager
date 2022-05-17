@@ -19,7 +19,7 @@
 
 {% block content %}
     {% include 'app/work/projects/project/_tabs.html.twig' %}
-
+    {% include 'app/work/projects/project/settings/_tabs.html.twig' %}
     <div class="actions mb-3 mt-3">
         <a href="{{ path('work.projects.project.edit', {id: project.id}) }}" class="btn-info btn text-white">Edit</a>
         {% if project.active %}
@@ -46,7 +46,6 @@
             <button type="submit" class="btn btn-danger text-white">Delete</button>
             <input type="hidden" name="token" value="{{ csrf_token('delete') }}">
         </form>
-        <a href="{{ path('work.projects.project.settings.departments', {id: project.id}) }}" class="btn-info btn text-white">Departments</a>
     </div>
 
     <div class="card">
