@@ -13,9 +13,11 @@ use App\Model\Work\UseCase\Projects\Project\Department\Create;
 use App\Model\Work\UseCase\Projects\Project\Department\Edit;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/work/projects/{id}/settings/departments", name="work.projects.project.settings.departments")
+ * @IsGranted("ROLE_WORK_PROJECTS_MANAGE")
  */
 class DepartmentController extends AbstractController
 {
