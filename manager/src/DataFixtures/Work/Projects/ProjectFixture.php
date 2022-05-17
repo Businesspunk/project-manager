@@ -3,6 +3,7 @@
 namespace App\DataFixtures\Work\Projects;
 
 use App\Model\Work\Entity\Projects\Project\Id;
+use App\Model\Work\Entity\Projects\Department\Id as DepartmentId;
 use App\Model\Work\Entity\Projects\Project\Project;
 use App\Model\Work\Entity\Projects\Project\Status;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -13,6 +14,8 @@ class ProjectFixture extends Fixture
     public function load(ObjectManager $manager)
     {
         $project = $this->createActiveProject('First', 1);
+        $project->addDepartment(DepartmentId::next(), 'Development');
+        $project->addDepartment(DepartmentId::next(), 'Marketing');
         $manager->persist($project);
 
         $project = $this->createActiveProject('Second', 2);
