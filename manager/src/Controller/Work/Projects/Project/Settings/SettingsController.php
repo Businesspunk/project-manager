@@ -31,6 +31,14 @@ class SettingsController extends AbstractController
     }
 
     /**
+     * @Route("", name="")
+     */
+    public function settings(Project $project): Response
+    {
+        return $this->render('app/work/projects/project/settings/show.html.twig', compact('project'));
+    }
+
+    /**
      * @Route("/archive", name=".archive")
      */
     public function archive(string $id, Request $request, Archive\Handler $handler): Response
