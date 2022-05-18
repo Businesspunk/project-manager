@@ -50,6 +50,13 @@ class Role
         return $this->permissions;
     }
 
+    public function getNamesOfPermissions(): array
+    {
+        return array_map(function (Permission $e) {
+            return $e->getName();
+        }, $this->getPermissions()->toArray());
+    }
+
     public function edit(string $name, array $permissions): void
     {
         $this->name = $name;
@@ -63,9 +70,9 @@ class Role
         });
     }
 
-    public function clone(Id $id): self
+    public function clone(Id $id, string $name): self
     {
-        return new self($id, $this->name, $this->permissions->toArray());
+        return new self($id, $name, $this->getNamesOfPermissions());
     }
 
     private function setPermissions(array $permissions): void

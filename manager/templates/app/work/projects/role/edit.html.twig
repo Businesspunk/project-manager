@@ -1,0 +1,36 @@
+{% extends 'app/index.html.twig' %}
+
+{% block title %}Edit {{ role.name }}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('home') }}">Home</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects') }}">Projects</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects.roles') }}">Roles</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects.roles.show', {id: role.id}) }}">{{ role.name }}</a></span>
+    </li>
+    <li class="breadcrumb-item active"><span>Edit</span></li>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">Edit {{ role.name }}</div>
+        <div class="card-body">
+            {{ form_start(form) }}
+                <div class="input-group mb-3">
+                    {{ form_widget(form.name, {'attr': {'placeholder': 'Role name'}}) }}
+                </div>
+                <div class="input-group mb-3">
+                    {{ form_widget(form.permissions) }}
+                </div>
+                <button class="btn btn-block btn-info text-white" type="submit">Update</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

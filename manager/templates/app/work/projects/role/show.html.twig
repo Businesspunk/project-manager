@@ -1,0 +1,61 @@
+{% extends 'app/index.html.twig' %}
+
+{% block title %}{{ role.name }}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('home') }}">Home</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects') }}">Projects</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects.roles') }}">Roles</a></span>
+    </li>
+    <li class="breadcrumb-item active">
+        <span>{{ role.name }}</span>
+    </li>
+{% endblock %}
+
+{% block content %}
+    <div class="actions mb-3 mt-3">
+        <a href="{{ path('work.projects.roles.edit', {id: role.id}) }}" class="btn-info btn text-white">Edit</a>
+        <a href="{{ path('work.projects.roles.clone', {id: role.id}) }}" class="btn-info btn text-white">Clone</a>
+        <form class="d-inline-block"
+              method="post"
+              action="{{ path('work.projects.roles.delete', {id: role.id}) }}"
+              onsubmit="return confirm('Are you sure?')">
+            <button type="submit" class="btn btn-danger text-white">Delete</button>
+            <input type="hidden" name="token" value="{{ csrf_token('delete') }}">
+        </form>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Role</div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th scope="row">ID</th>
+                        <td>{{ role.id }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Name</th>
+                        <td>{{ role.name }}</td>
+                    </tr>
+                    <tr class="bg-black bg-opacity-10">
+                        <th scope="row">Permissions</th>
+                        <td>
+                            <span>
+                                {% for permision in role.permissions %}
+                                    {{ permision.name|trans({}, 'work_permissions') }}
+                                    {% if loop.last == false %}, {% endif %}
+                                {% endfor %}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

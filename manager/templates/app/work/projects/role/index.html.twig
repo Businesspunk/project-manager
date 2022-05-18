@@ -1,0 +1,53 @@
+{% extends 'app/index.html.twig' %}
+
+{% block title %}Roles{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('home') }}">Home</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects') }}">Projects</a></span>
+    </li>
+    <li class="breadcrumb-item active"><span>Roles</span></li>
+{% endblock %}
+
+{% block content %}
+
+    <div class="actions mb-3 mt-3">
+        <a class="btn-success btn text-white" href="{{ path('work.projects.roles.create') }}">Create role</a>
+    </div>
+
+    <div class="card all-users mt-3">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered mb-0">
+                    <thead class="table-light fw-semibold">
+                        <tr class="align-middle">
+                            <th></th>
+                            {% for role in roles %}
+                                <th class="text-center"><a class="link-info" href="{{ path('work.projects.roles.show', {id: role.id}) }}">{{ role.name }}</a></th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for permission in permissions %}
+                        <tr class="align-middle">
+                            <td>{{ permission|trans({}, 'work_permissions') }}</td>
+                            {% for role in roles %}
+                                <td class="text-center">
+                                    {% if role.hasPermission(permission) %}
+                                        <svg class="icon color-green">
+                                            <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-check-alt') }}"></use>
+                                        </svg>
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -16,9 +16,18 @@ class RoleRepository
         $this->repo = $em->getRepository(Role::class);
     }
 
-    public function findAll(): array
+    public function hasByName(string $name): bool
     {
-        return $this->repo->findAll();
+        return !is_null($this->repo->findOneBy(['name' => $name]));
+    }
+
+    public function getAll(): array
+    {
+        $query = $this->repo->createQueryBuilder('t')
+            ->orderBy('t.name', 'ASC')
+            ->getQuery();
+
+        return $query->getResult();
     }
 
     public function add(Role $role): void

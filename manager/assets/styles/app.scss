@@ -36,3 +36,7 @@ html:not([dir=rtl]) .wrapper {
   display: block;
   flex-wrap: initial;
 }
+
+.color-green{
+  color: $green;
+}
