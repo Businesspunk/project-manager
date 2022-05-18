@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-
+    {{ knp_menu_render('work_projects', {currentClass: 'active'}) }}
     <div class="actions mb-3 mt-3">
         <a class="btn-success btn text-white" href="{{ path('work.projects.create') }}">Create project</a>
     </div>
