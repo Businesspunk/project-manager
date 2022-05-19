@@ -2,6 +2,7 @@
 
 namespace App\Model\Work\Entity\Projects\Project;
 
+use App\Model\Work\Entity\Projects\Role\Role;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 
@@ -14,6 +15,14 @@ class ProjectRepository
     {
         $this->em = $em;
         $this->repo = $em->getRepository(Project::class);
+    }
+
+    public function get(Id $id): ?Project
+    {
+        if (!$project = $this->repo->find($id->getValue())) {
+            throw new EntityNotFoundException('Project is not exist');
+        }
+        return $project;
     }
 
     public function add(Project $project): void
@@ -31,11 +40,14 @@ class ProjectRepository
         return $this->repo->find($id->getValue());
     }
 
-    public function get(Id $id): ?Project
+    public function hasMembersWithRole(Role $role)
     {
-        if (!$project = $this->repo->find($id->getValue())) {
-            throw new EntityNotFoundException('Project is not exist');
-        }
-        return $project;
+        return $this->repo->createQueryBuilder('t')
+                ->select('COUNT(t.id)')
+                ->innerJoin('t.memberships', 'm')
+                ->innerJoin('m.roles', 'r')
+                ->andWhere('r.id = :role')
+                ->setParameter(':role', $role->getId()->getValue())
+                ->getQuery()->getSingleScalarResult() > 0;
     }
 }

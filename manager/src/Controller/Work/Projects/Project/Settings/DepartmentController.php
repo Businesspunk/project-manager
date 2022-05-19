@@ -71,7 +71,7 @@ class DepartmentController extends AbstractController
         ]);
     }
     /**
-     * @Route("{departmentId}/edit", name=".edit", methods={"GET", "POST"})
+     * @Route("/{departmentId}/edit", name=".edit", methods={"GET", "POST"})
      */
     public function edit(Project $project, string $departmentId, Request $request, Edit\Handler $handler): Response
     {
@@ -99,7 +99,7 @@ class DepartmentController extends AbstractController
         ]);
     }
     /**
-     * @Route("{departmentId}/delete", name=".delete", methods={"POST"})
+     * @Route("/{departmentId}/delete", name=".delete", methods={"POST"})
      */
     public function delete(Project $project, string $departmentId, Request $request, Delete\Handler $handler): Response
     {

@@ -50,6 +50,11 @@ class Department
         return $this->project;
     }
 
+    public function isEqual(self $other): bool
+    {
+        return $this->getId()->isEqual($other->getId());
+    }
+
     public function isEqualName(string $name): bool
     {
         return $this->getName() === $name;

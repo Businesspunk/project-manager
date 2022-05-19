@@ -88,6 +88,11 @@ class Member
         return $this->status->isArchived();
     }
 
+    public function isEqual(self $other): bool
+    {
+        return $this->getId()->isEqual($other->getId());
+    }
+
     public function move(Group $group): void
     {
         $this->group = $group;
