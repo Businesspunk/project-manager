@@ -16,10 +16,18 @@ class RoleFetcher
     public function all(): array
     {
         $stmt = $this->connection->createQueryBuilder()
-            ->select('id', 'name', 'permissions')
-            ->from('work_projects_roles')
+            ->select('r.id', 'r.name', 'r.permissions', 'COUNT(mr.role_id) as role_count')
+            ->from('work_projects_roles', 'r')
+            ->leftJoin('r', 'work_projects_memberships_roles', 'mr', 'r.id = mr.role_id')
+            ->groupBy('r.id')
+            ->orderBy('r.name')
             ->execute();
 
-        return $stmt->fetchAll();
+        $rows = $stmt->fetchAll();
+
+        return array_map(static function ($row) {
+            $row['permissions'] = $row['permissions'] ? json_decode($row['permissions'], true) : [];
+            return $row;
+        }, $rows);
     }
 }

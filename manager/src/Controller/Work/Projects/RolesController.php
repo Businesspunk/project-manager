@@ -10,6 +10,7 @@ use App\Model\Work\UseCase\Projects\Role\Create;
 use App\Model\Work\UseCase\Projects\Role\Edit;
 use App\Model\Work\UseCase\Projects\Role\Copy;
 use App\Model\Work\UseCase\Projects\Role\Delete;
+use App\ReadModel\Work\Project\RoleFetcher;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,10 +35,10 @@ class RolesController extends AbstractController
     /**
      * @Route("", name="")
      */
-    public function index(RoleRepository $roles): Response
+    public function index(RoleFetcher $fetcher): Response
     {
         return $this->render('app/work/projects/role/index.html.twig', [
-            'roles' => $roles->getAll(),
+            'roles' => $fetcher->all(),
             'permissions' => Permission::getNames()
         ]);
     }

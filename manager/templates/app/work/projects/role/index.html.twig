@@ -26,7 +26,12 @@
                         <tr class="align-middle">
                             <th></th>
                             {% for role in roles %}
-                                <th class="text-center"><a class="link-info" href="{{ path('work.projects.roles.show', {id: role.id}) }}">{{ role.name }}</a></th>
+                                <th class="text-center">
+                                    <a class="link-info" href="{{ path('work.projects.roles.show', {id: role.id}) }}">
+                                        {{ role.name }}
+                                        <span class="text-black text-opacity-50">({{ role.role_count }})</span>
+                                    </a>
+                                </th>
                             {% endfor %}
                         </tr>
                     </thead>
@@ -36,7 +41,7 @@
                             <td>{{ permission|trans({}, 'work_permissions') }}</td>
                             {% for role in roles %}
                                 <td class="text-center">
-                                    {% if role.hasPermission(permission) %}
+                                    {% if permission in role.permissions %}
                                         <svg class="icon color-green">
                                             <use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-check-alt') }}"></use>
                                         </svg>
