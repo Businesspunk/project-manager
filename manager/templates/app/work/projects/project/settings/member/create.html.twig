@@ -1,0 +1,42 @@
+{% extends 'app/index.html.twig' %}
+
+{% block title %}Assign member{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('home') }}">Home</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects') }}">Projects</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects.project', {id: project.id}) }}">{{ project.name }}</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects.project.settings', {id: project.id}) }}">Settings</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects.project.settings.members', {id: project.id}) }}">Members</a></span>
+    </li>
+    <li class="breadcrumb-item active"><span>Assign</span></li>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">Assign new member</div>
+        <div class="card-body">
+            {{ form_start(form) }}
+                <div class="input-group mb-3">
+                    {{ form_row(form.member, {'attr': {'placeholder': 'Member'}}) }}
+                </div>
+                <div class="input-group mb-3">
+                    {{ form_row(form.departments) }}
+                </div>
+                <div class="input-group mb-3">
+                    {{ form_row(form.roles) }}
+                </div>
+                <button class="btn btn-block btn-info text-white" type="submit">Create</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

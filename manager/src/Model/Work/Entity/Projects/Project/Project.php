@@ -94,6 +94,11 @@ class Project
         return $this->departments;
     }
 
+    public function getMemberships()
+    {
+        return $this->memberships;
+    }
+
     public function isActive(): bool
     {
         return $this->status->isActive();
@@ -189,6 +194,15 @@ class Project
         $this->memberships->removeElement($membership);
     }
 
+    public function getMembershipByMember(Member $member): Membership
+    {
+        $member = $this->findMembershipByMember($member);
+        if (!is_null($member)) {
+            return $member;
+        }
+        throw new \DomainException('Member does not exist');
+    }
+
     private function findMembershipByMember(Member $member): ?Membership
     {
         /** @var Membership $membership */
@@ -198,14 +212,5 @@ class Project
             }
         }
         return null;
-    }
-
-    private function getMembershipByMember(Member $member): Membership
-    {
-        $member = $this->findMembershipByMember($member);
-        if (!is_null($member)) {
-            return $member;
-        }
-        throw new \DomainException('Member does not exist');
     }
 }

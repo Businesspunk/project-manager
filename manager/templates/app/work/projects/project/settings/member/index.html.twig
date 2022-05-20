@@ -1,0 +1,79 @@
+{% extends 'app/index.html.twig' %}
+
+{% block title %}Members{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('home') }}">Home</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects') }}">Projects</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects.project', {id: project.id}) }}">{{ project.name }}</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects.project.settings', {id: project.id}) }}">Settings</a></span>
+    </li>
+    <li class="breadcrumb-item active"><span>Members</span></li>
+{% endblock %}
+
+{% block content %}
+    {% include 'app/work/projects/project/_tabs.html.twig' %}
+    {% include 'app/work/projects/project/settings/_tabs.html.twig' %}
+
+    <div class="actions mb-3 mt-3">
+        <a class="btn-success btn text-white" href="{{ path('work.projects.project.settings.members.assign', {id: project.id}) }}">Assign</a>
+    </div>
+
+    <div class="card all-users mt-3">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table border mb-0">
+                    <thead class="table-light fw-semibold">
+                        <tr class="align-middle">
+                            <th>Name</th>
+                            <th>Departments</th>
+                            <th>Roles</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for membership in project.memberships %}
+                            <tr>
+                                <td>{{ membership.member.name }}</td>
+                                <td>
+                                    {% for department in membership.departments %}
+                                        <span class="d-block">{{ department.name }}</span>
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {% for role in membership.roles %}
+                                        <span class="d-block">{{ role.name }}</span>
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    <form class="d-inline-block"
+                                          method="post"
+                                          action="{{ path('work.projects.project.settings.members.delete', {
+                                              id: project.id,
+                                              memberId: membership.member.id
+                                          }) }}"
+                                          onsubmit="return confirm('Are you sure?')">
+                                        <button class="btn btn-danger text-white" type="submit">
+                                            <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-trash') }}"></use></svg>
+                                        </button>
+                                        <input type="hidden" name="token" value="{{ csrf_token('delete') }}">
+                                    </form>
+                                    <a href="{{ path('work.projects.project.settings.members.edit', {id: project.id, member: membership.member.id}) }}" class="btn btn-info text-white">
+                                        <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-pencil') }}"></use></svg>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

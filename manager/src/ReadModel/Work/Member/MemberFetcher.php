@@ -64,6 +64,22 @@ class MemberFetcher
         return $this->paginator->paginate($qb, $page, $perPage);
     }
 
+    public function listWithGroups(): array
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select(
+                'm.id',
+                'TRIM(CONCAT(m.name_first, \' \', m.name_last)) as name',
+                'g.name as group'
+            )
+            ->from('work_members_members', 'm')
+            ->innerJoin('m', 'work_members_groups', 'g', 'm.group_id = g.id')
+            ->orderBy('g.name')
+            ->execute();
+
+        return $stmt->fetchAllAssociative();
+    }
+
     public function find(string $id): ?array
     {
         $stmt = $this->connection->createQueryBuilder()

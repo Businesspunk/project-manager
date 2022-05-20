@@ -7,6 +7,7 @@ use App\Model\Work\Entity\Projects\Department\Department;
 use App\Model\Work\Entity\Projects\Role\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Ramsey\Uuid\Uuid;
 use Webmozart\Assert\Assert;
 
@@ -37,13 +38,13 @@ class Membership
      */
     private $member;
     /**
-     * @var ArrayCollection|Department[]
+     * @var PersistentCollection|Department[]
      * @ORM\ManyToMany(targetEntity=Department::class)
      * @ORM\JoinTable(name="work_projects_memberships_departments")
      */
     private $departments;
     /**
-     * @var ArrayCollection|Role[]
+     * @var PersistentCollection|Role[]
      * @ORM\ManyToMany(targetEntity=Role::class)
      * @ORM\JoinTable(name="work_projects_memberships_roles")
      */
@@ -66,6 +67,21 @@ class Membership
         $this->roles = new ArrayCollection($roles);
     }
 
+    public function getMember(): Member
+    {
+        return $this->member;
+    }
+
+    public function getDepartments(): PersistentCollection
+    {
+        return $this->departments;
+    }
+
+    public function getRoles(): PersistentCollection
+    {
+        return $this->roles;
+    }
+
     public function isEqualMember(Member $member): bool
     {
         return $this->member->isEqual($member);
@@ -76,6 +92,11 @@ class Membership
         return $this->departments->exists(static function ($key, Department $item) use ($department) {
             return $item->isEqual($department);
         });
+    }
+
+    public function hasMember(Member $member): bool
+    {
+        return $this->member->isEqual($member);
     }
 
     /**

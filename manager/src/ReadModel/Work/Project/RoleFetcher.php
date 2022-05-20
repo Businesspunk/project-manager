@@ -30,4 +30,16 @@ class RoleFetcher
             return $row;
         }, $rows);
     }
+
+    public function assoc(): ?array
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select('id', 'name')
+            ->from('work_projects_roles')
+            ->orderBy('name')
+            ->execute();
+
+        $result = $stmt->fetchAllAssociative();
+        return $result ? array_column($result, 'name', 'id') : null;
+    }
 }

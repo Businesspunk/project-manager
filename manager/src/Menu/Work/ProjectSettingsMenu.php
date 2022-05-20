@@ -37,6 +37,17 @@ class ProjectSettingsMenu
             ['pattern' => '/^work.projects.project.settings.departments\..*/']
         ]);
 
+        $itemsContainLink[] = $menu->addChild(
+            'Members',
+            [
+                'route' => 'work.projects.project.settings.members',
+                'routeParameters' => ['id' => $options['project_id']]
+            ]
+        )->setExtra('routes', [
+            ['route' => 'work.projects.project.settings.members'],
+            ['pattern' => '/^work.projects.project.settings.members\..*/']
+        ]);
+
         $this->setSettingsForItemsContainLinks($itemsContainLink);
         return $menu;
     }

@@ -36,4 +36,21 @@ class DepartmentFetcher
 
         return $stmt->fetchAllAssociative();
     }
+
+    public function assoc(string $project): ?array
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select(
+                'd.id',
+                'd.name'
+            )
+            ->from('work_projects_departments', 'd')
+            ->andWhere('project_id = :project')
+            ->setParameter(':project', $project)
+            ->orderBy('name')
+            ->execute();
+
+        $result = $stmt->fetchAllAssociative();
+        return $result ? array_column($result, 'name', 'id') : null;
+    }
 }

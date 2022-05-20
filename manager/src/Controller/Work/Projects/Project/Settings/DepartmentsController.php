@@ -4,7 +4,6 @@ namespace App\Controller\Work\Projects\Project\Settings;
 
 use App\Model\Work\Entity\Projects\Department\Id;
 use App\Model\Work\Entity\Projects\Project\Project;
-use App\Model\Work\Entity\Projects\Project\ProjectRepository;
 use App\ReadModel\Work\Project\DepartmentFetcher;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,7 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  * @Route("/work/projects/{id}/settings/departments", name="work.projects.project.settings.departments")
  * @IsGranted("ROLE_WORK_PROJECTS_MANAGE")
  */
-class DepartmentController extends AbstractController
+class DepartmentsController extends AbstractController
 {
     private $logger;
     private $translator;
@@ -36,6 +35,7 @@ class DepartmentController extends AbstractController
     {
         return $this->redirectToRoute('work.projects.project.settings.departments', ['id' => $project->getId()]);
     }
+
     /**
      * @Route("", name="", methods={"GET"})
      */
@@ -47,6 +47,7 @@ class DepartmentController extends AbstractController
             ['departments' => $departments, 'project' => $project]
         );
     }
+
     /**
      * @Route("/create", name=".create", methods={"GET", "POST"})
      */
@@ -72,6 +73,7 @@ class DepartmentController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
     /**
      * @Route("/{departmentId}/edit", name=".edit", methods={"GET", "POST"})
      */
@@ -100,6 +102,7 @@ class DepartmentController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
     /**
      * @Route("/{departmentId}/delete", name=".delete", methods={"POST"})
      */
