@@ -5,13 +5,13 @@ namespace App\Controller\Work\Projects\Project\Settings;
 use App\Annotation\GuidAnnotation;
 use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Projects\Project\Project;
+use App\Security\Voter\Work\ProjectAccess;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Model\Work\UseCase\Projects\Project\Member\Assign;
 use App\Model\Work\UseCase\Projects\Project\Member\Edit;
 use App\Model\Work\UseCase\Projects\Project\Member\Delete;
@@ -20,9 +20,8 @@ use App\Model\Work\UseCase\Projects\Project\Member\Delete;
  * @Route(
  *     "/work/projects/{id}/settings/members",
  *     name="work.projects.project.settings.members",
- *     requirements={"id"=GuidAnnotation::PATTERN
- * })
- * @IsGranted("ROLE_WORK_PROJECTS_MANAGE")
+ *     requirements={"id"=GuidAnnotation::PATTERN}
+ * )
  */
 class MembersController extends AbstractController
 {
@@ -40,8 +39,10 @@ class MembersController extends AbstractController
      */
     public function index(Project $project): Response
     {
+        $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
         return $this->render('app/work/projects/project/settings/member/index.html.twig', [
-            'project' => $project
+            'project' => $project,
+            'actionsGranted' => ProjectAccess::MANAGE_MEMBERS
         ]);
     }
 
@@ -50,6 +51,7 @@ class MembersController extends AbstractController
      */
     public function assign(Project $project, Request $request, Assign\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
         $redirect = $this->redirectToRoute(
             'work.projects.project.settings.members',
             ['id' => $project->getId()]
@@ -85,6 +87,7 @@ class MembersController extends AbstractController
      */
     public function edit(Project $project, Member $member, Request $request, Edit\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
         $redirect = $this->redirectToRoute(
             'work.projects.project.settings.members',
             ['id' => $project->getId()]
@@ -129,7 +132,17 @@ class MembersController extends AbstractController
      */
     public function delete(Project $project, string $memberId, Request $request, Delete\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
         $redirect = $this->getDefaultRedirectUrl($project);
+
+        if ($this->getUser()->getId() === $memberId) {
+            $this->addFlash(
+                'error',
+                $this->translator->trans('Can not delete yourself from the project', [], 'exceptions')
+            );
+            return $redirect;
+        }
+
         if (!$this->isCsrfTokenValid('delete', $request->request->get('token'))) {
             return $redirect;
         }
@@ -146,7 +159,7 @@ class MembersController extends AbstractController
         return $redirect;
     }
 
-    public function getDefaultRedirectUrl(Project $project): Response
+    private function getDefaultRedirectUrl(Project $project): Response
     {
         return $this->redirectToRoute('work.projects.project.settings.members', ['id' => $project->getId()]);
     }

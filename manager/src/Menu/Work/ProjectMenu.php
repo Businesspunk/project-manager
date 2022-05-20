@@ -2,6 +2,7 @@
 
 namespace App\Menu\Work;
 
+use App\Security\Voter\Work\ProjectAccess;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -29,15 +30,13 @@ class ProjectMenu
             ['route' => 'work.projects.project']
         ]);
 
-        if ($this->auth->isGranted('ROLE_WORK_PROJECTS_MANAGE')) {
-            $itemsContainLink[] = $menu->addChild(
-                'Settings',
-                ['route' => 'work.projects.project.settings', 'routeParameters' => ['id' => $options['project_id']]]
-            )->setExtra('routes', [
-                ['route' => 'work.projects.project.settings'],
-                ['pattern' => '/^work.projects.project.settings\..*/']
-            ]);
-        }
+        $itemsContainLink[] = $menu->addChild(
+            'Settings',
+            ['route' => 'work.projects.project.settings', 'routeParameters' => ['id' => $options['project_id']]]
+        )->setExtra('routes', [
+            ['route' => 'work.projects.project.settings'],
+            ['pattern' => '/^work.projects.project.settings\..*/']
+        ]);
 
         $this->setSettingsForItemsContainLinks($itemsContainLink);
         return $menu;

@@ -30,14 +30,14 @@ class SidebarMenu
 
         $menu->addChild('Work')->setAttribute('class', 'nav-title');
 
-        if ($this->auth->isGranted('ROLE_WORK_MEMBERS_MANAGE')) {
-            $itemsContainLink[] = $menu->addChild('Projects', ['route' => 'work.projects'])
-                ->setExtra('icon', 'build/coreui/icons/svg/free.svg#cil-briefcase')
-                ->setExtra('routes', [
-                    ['route' => 'work.projects'],
-                    ['pattern' => '/^work.projects\..*/']
-                ]);
+        $itemsContainLink[] = $menu->addChild('Projects', ['route' => 'work.projects'])
+            ->setExtra('icon', 'build/coreui/icons/svg/free.svg#cil-briefcase')
+            ->setExtra('routes', [
+                ['route' => 'work.projects'],
+                ['pattern' => '/^work.projects\..*/']
+            ]);
 
+        if ($this->auth->isGranted('ROLE_WORK_MEMBERS_MANAGE')) {
             $itemsContainLink[] = $menu->addChild('Members', ['route' => 'work.members'])
                 ->setExtra('icon', 'build/coreui/icons/svg/free.svg#cil-people')
                 ->setExtra('routes', [

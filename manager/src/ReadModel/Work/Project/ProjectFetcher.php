@@ -21,16 +21,24 @@ class ProjectFetcher
     public function all(Filter $filter, int $page, int $perPage, string $sortBy, string $direction): PaginationInterface
     {
         $qb = $this->connection->createQueryBuilder()
-            ->select('id', 'name', 'status')
-            ->from('work_projects_projects');
+            ->select('p.id', 'p.name', 'p.status')
+            ->from('work_projects_projects', 'p');
+
+        if ($member = $filter->member) {
+            $qb->andWhere('EXISTS(
+                SELECT ms.member_id FROM work_projects_memberships ms 
+                WHERE ms.project_id = p.id AND ms.member_id = :member
+            )');
+            $qb->setParameter(':member', $member);
+        }
 
         if ($name = $filter->name) {
-            $qb->andWhere($qb->expr()->like('LOWER(name)', ':name'));
+            $qb->andWhere($qb->expr()->like('LOWER(p.name)', ':name'));
             $qb->setParameter(':name', '%' . mb_strtolower($name) . '%');
         }
 
         if ($status = $filter->status) {
-            $qb->andWhere('status = :status');
+            $qb->andWhere('p.status = :status');
             $qb->setParameter(':status', $status);
         }
 

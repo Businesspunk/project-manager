@@ -90,7 +90,12 @@ class Member
 
     public function isEqual(self $other): bool
     {
-        return $this->getId()->isEqual($other->getId());
+        return $this->isEqualId($other->getId());
+    }
+
+    public function isEqualId(Id $id): bool
+    {
+        return $this->getId()->isEqual($id);
     }
 
     public function move(Group $group): void

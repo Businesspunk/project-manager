@@ -2,9 +2,11 @@
 
 namespace App\Controller\Work\Projects;
 
+use App\Model\Work\Entity\Projects\Project\Project;
 use App\ReadModel\Work\Project\Filter;
 use App\ReadModel\Work\Project\ProjectFetcher;
 use App\Model\Work\UseCase\Projects\Project\Create;
+use App\Security\Voter\Work\ProjectAccess;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,7 +35,12 @@ class ProjectsController extends AbstractController
      */
     public function index(Request $request, ProjectFetcher $fetcher): Response
     {
-        $filter = new Filter\Filter();
+        if ($this->isGranted('ROLE_WORK_PROJECTS_MANAGE')) {
+            $filter = Filter\Filter::all();
+        } else {
+            $filter = Filter\Filter::forMember($this->getUser()->getId());
+        }
+
         $form = $this->createForm(Filter\Form::class, $filter);
         $form->handleRequest($request);
 
@@ -47,7 +54,11 @@ class ProjectsController extends AbstractController
 
         return $this->render('app/work/projects/index.html.twig', [
             'projects' => $projects,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'actionsGranted' => [
+                'attribute' => ProjectAccess::CREATE,
+                'subject' => Project::class
+            ]
         ]);
     }
 
@@ -56,6 +67,7 @@ class ProjectsController extends AbstractController
      */
     public function create(Request $request, ProjectFetcher $fetcher, Create\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(ProjectAccess::CREATE, Project::class);
         $command = new Create\Command();
         $command->sort = $fetcher->getMaxSort() + 1;
         $form = $this->createForm(Create\Form::class, $command);

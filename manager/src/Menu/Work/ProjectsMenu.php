@@ -9,10 +9,12 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class ProjectsMenu
 {
     private $factory;
+    private $auth;
 
-    public function __construct(FactoryInterface $factory)
+    public function __construct(FactoryInterface $factory, AuthorizationCheckerInterface $auth)
     {
         $this->factory = $factory;
+        $this->auth = $auth;
     }
 
     public function build(): ItemInterface
@@ -27,13 +29,15 @@ class ProjectsMenu
             ['route' => 'work.projects']
         ]);
 
-        $itemsContainLink[] = $menu->addChild(
-            'Roles',
-            ['route' => 'work.projects.roles']
-        )->setExtra('routes', [
-            ['route' => 'work.projects.roles'],
-            ['pattern' => '/^work.projects.roles\..*/']
-        ]);
+        if ($this->auth->isGranted('ROLE_WORK_ROLES_MANAGE')) {
+            $itemsContainLink[] = $menu->addChild(
+                'Roles',
+                ['route' => 'work.projects.roles']
+            )->setExtra('routes', [
+                ['route' => 'work.projects.roles'],
+                ['pattern' => '/^work.projects.roles\..*/']
+            ]);
+        }
 
         $this->setSettingsForItemsContainLinks($itemsContainLink);
         return $menu;

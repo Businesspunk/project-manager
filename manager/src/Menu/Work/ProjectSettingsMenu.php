@@ -2,16 +2,21 @@
 
 namespace App\Menu\Work;
 
+use App\Model\Work\Entity\Projects\Project\Project;
+use App\Security\Voter\Work\ProjectAccess;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ProjectSettingsMenu
 {
     private $factory;
+    private $auth;
 
-    public function __construct(FactoryInterface $factory)
+    public function __construct(FactoryInterface $factory, AuthorizationCheckerInterface $auth)
     {
         $this->factory = $factory;
+        $this->auth = $auth;
     }
 
     public function build(array $options): ItemInterface
@@ -19,9 +24,13 @@ class ProjectSettingsMenu
         $menu = $this->factory->createItem('root')->setChildrenAttribute('class', 'nav nav-tabs mb-4');
         $itemsContainLink = [];
 
+        /** @var Project $project */
+        $project = $options['project'];
+        $defaultRouteParameters = ['id' => $project->getId()];
+
         $itemsContainLink[] = $menu->addChild(
             'Common',
-            ['route' => 'work.projects.project.settings', 'routeParameters' => ['id' => $options['project_id']]]
+            ['route' => 'work.projects.project.settings', 'routeParameters' => $defaultRouteParameters]
         )->setExtra('routes', [
             ['route' => 'work.projects.project.settings'],
         ]);
@@ -30,7 +39,7 @@ class ProjectSettingsMenu
             'Departments',
             [
                 'route' => 'work.projects.project.settings.departments',
-                'routeParameters' => ['id' => $options['project_id']]
+                'routeParameters' => $defaultRouteParameters
             ]
         )->setExtra('routes', [
             ['route' => 'work.projects.project.settings.departments'],
@@ -41,7 +50,7 @@ class ProjectSettingsMenu
             'Members',
             [
                 'route' => 'work.projects.project.settings.members',
-                'routeParameters' => ['id' => $options['project_id']]
+                'routeParameters' => $defaultRouteParameters
             ]
         )->setExtra('routes', [
             ['route' => 'work.projects.project.settings.members'],

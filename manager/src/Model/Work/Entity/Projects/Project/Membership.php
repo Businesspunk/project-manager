@@ -5,6 +5,7 @@ namespace App\Model\Work\Entity\Projects\Project;
 use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Projects\Department\Department;
 use App\Model\Work\Entity\Projects\Role\Role;
+use App\Model\Work\Entity\Members\Member\Id as MemberId;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
@@ -85,6 +86,18 @@ class Membership
     public function isEqualMember(Member $member): bool
     {
         return $this->member->isEqual($member);
+    }
+
+    public function isEqualMemberId(MemberId $id): bool
+    {
+        return $this->member->isEqualId($id);
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        return $this->roles->exists(static function ($key, Role $role) use ($permission) {
+            return $role->hasPermission($permission);
+        });
     }
 
     public function hasDepartment(Department $department): bool

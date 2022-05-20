@@ -20,33 +20,38 @@
 {% block content %}
     {% include 'app/work/projects/project/_tabs.html.twig' %}
     {% include 'app/work/projects/project/settings/_tabs.html.twig' %}
-    <div class="actions mb-3 mt-3">
-        <a href="{{ path('work.projects.project.settings.edit', {id: project.id}) }}" class="btn-info btn text-white">Edit</a>
-        {% if project.active %}
+
+    {% set canPerformActions = is_granted(actionsGranted, project) %}
+
+    {% if canPerformActions %}
+        <div class="actions mb-3 mt-3">
+            <a href="{{ path('work.projects.project.settings.edit', {id: project.id}) }}" class="btn-info btn text-white">Edit</a>
+            {% if project.active %}
+                <form class="d-inline-block"
+                      method="post"
+                      action="{{ path('work.projects.project.settings.archive', {id: project.id}) }}"
+                      onsubmit="return confirm('Are you sure?')">
+                    <button type="submit" class="btn btn-danger text-white">Archive</button>
+                    <input type="hidden" name="token" value="{{ csrf_token('archive') }}">
+                </form>
+            {% endif %}
+            {% if project.archived %}
+                <form class="d-inline-block"
+                      method="post"
+                      action="{{ path('work.projects.project.settings.reinstate', {id: project.id}) }}">
+                    <button type="submit" class="btn btn-success text-white">Reinstate</button>
+                    <input type="hidden" name="token" value="{{ csrf_token('reinstate') }}">
+                </form>
+            {% endif %}
             <form class="d-inline-block"
                   method="post"
-                  action="{{ path('work.projects.project.settings.archive', {id: project.id}) }}"
+                  action="{{ path('work.projects.project.settings.delete', {id: project.id}) }}"
                   onsubmit="return confirm('Are you sure?')">
-                <button type="submit" class="btn btn-danger text-white">Archive</button>
-                <input type="hidden" name="token" value="{{ csrf_token('archive') }}">
+                <button type="submit" class="btn btn-danger text-white">Delete</button>
+                <input type="hidden" name="token" value="{{ csrf_token('delete') }}">
             </form>
-        {% endif %}
-        {% if project.archived %}
-            <form class="d-inline-block"
-                  method="post"
-                  action="{{ path('work.projects.project.settings.reinstate', {id: project.id}) }}">
-                <button type="submit" class="btn btn-success text-white">Reinstate</button>
-                <input type="hidden" name="token" value="{{ csrf_token('reinstate') }}">
-            </form>
-        {% endif %}
-        <form class="d-inline-block"
-              method="post"
-              action="{{ path('work.projects.project.settings.delete', {id: project.id}) }}"
-              onsubmit="return confirm('Are you sure?')">
-            <button type="submit" class="btn btn-danger text-white">Delete</button>
-            <input type="hidden" name="token" value="{{ csrf_token('delete') }}">
-        </form>
-    </div>
+        </div>
+    {% endif %}
 
     <div class="card">
         <div class="card-header">Project</div>

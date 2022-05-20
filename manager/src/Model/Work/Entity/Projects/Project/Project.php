@@ -7,6 +7,7 @@ use App\Model\Work\Entity\Projects\Department\Department;
 use App\Model\Work\Entity\Projects\Role\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Model\Work\Entity\Projects\Department\Id as DepartmentId;
+use App\Model\Work\Entity\Members\Member\Id as MemberId;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -99,6 +100,15 @@ class Project
         return $this->memberships;
     }
 
+    public function getMembershipByMember(Member $member): Membership
+    {
+        $member = $this->findMembershipByMember($member);
+        if (!is_null($member)) {
+            return $member;
+        }
+        throw new \DomainException('Member does not exist');
+    }
+
     public function isActive(): bool
     {
         return $this->status->isActive();
@@ -107,6 +117,21 @@ class Project
     public function isArchived(): bool
     {
         return $this->status->isArchived();
+    }
+
+    public function isMemberGranted(MemberId $id, string $permission): bool
+    {
+        $membership = $this->findMembershipByMemberId($id);
+        if (!$membership instanceof Membership) {
+            return false;
+        }
+
+        return $membership->hasPermission($permission);
+    }
+
+    public function hasMember(MemberId $id): bool
+    {
+        return $this->findMembershipByMemberId($id) instanceof Membership;
     }
 
     public function reinstate(): void
@@ -194,20 +219,22 @@ class Project
         $this->memberships->removeElement($membership);
     }
 
-    public function getMembershipByMember(Member $member): Membership
-    {
-        $member = $this->findMembershipByMember($member);
-        if (!is_null($member)) {
-            return $member;
-        }
-        throw new \DomainException('Member does not exist');
-    }
-
     private function findMembershipByMember(Member $member): ?Membership
     {
         /** @var Membership $membership */
         foreach ($this->memberships as $membership) {
             if ($membership->isEqualMember($member)) {
+                return $membership;
+            }
+        }
+        return null;
+    }
+
+    private function findMembershipByMemberId(MemberId $id): ?Membership
+    {
+        /** @var Membership $membership */
+        foreach ($this->memberships as $membership) {
+            if ($membership->isEqualMemberId($id)) {
                 return $membership;
             }
         }

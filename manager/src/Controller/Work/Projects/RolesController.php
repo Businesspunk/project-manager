@@ -5,7 +5,6 @@ namespace App\Controller\Work\Projects;
 use App\Annotation\GuidAnnotation;
 use App\Model\Work\Entity\Projects\Role\Permission;
 use App\Model\Work\Entity\Projects\Role\Role;
-use App\Model\Work\Entity\Projects\Role\RoleRepository;
 use App\Model\Work\UseCase\Projects\Role\Create;
 use App\Model\Work\UseCase\Projects\Role\Edit;
 use App\Model\Work\UseCase\Projects\Role\Copy;
@@ -17,9 +16,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/work/projects/roles", name="work.projects.roles", requirements={"id"=GuidAnnotation::PATTERN})
+ * @IsGranted("ROLE_WORK_ROLES_MANAGE")
  */
 class RolesController extends AbstractController
 {

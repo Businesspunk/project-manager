@@ -11,9 +11,13 @@
 
 {% block content %}
     {{ knp_menu_render('work_projects', {currentClass: 'active'}) }}
-    <div class="actions mb-3 mt-3">
-        <a class="btn-success btn text-white" href="{{ path('work.projects.create') }}">Create project</a>
-    </div>
+    {% set canPerformActions = is_granted(actionsGranted.attribute, actionsGranted.subject) %}
+
+    {% if canPerformActions %}
+        <div class="actions mb-3 mt-3">
+            <a class="btn-success btn text-white" href="{{ path('work.projects.create') }}">Create project</a>
+        </div>
+    {% endif %}
 
     <div class="card all-users mt-3">
         <div class="card-body">
