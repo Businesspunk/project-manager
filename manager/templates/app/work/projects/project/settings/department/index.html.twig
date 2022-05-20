@@ -33,6 +33,7 @@
                     <thead class="table-light fw-semibold">
                         <tr class="align-middle">
                             <th>Name</th>
+                            <th>Members</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -40,6 +41,7 @@
                     {% for department in departments %}
                         <tr class="align-middle">
                             <td>{{ department.name }}</td>
+                            <td>{{ department.members_count }}</td>
                             <td>
                                 <a href="{{ path('work.projects.project.settings.departments.edit', {id: project.id, departmentId: department.id}) }}" class="btn btn-info text-white"><svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-pencil') }}"></use></svg></a>
                                 <form method="post"

@@ -25,6 +25,18 @@ class ProjectRepository
         return $project;
     }
 
+    public function getDepartments(Project $project): ?array
+    {
+        // @ToDo get Member Email from Query
+        $stmt = $this->repo->createQueryBuilder('t')
+                ->select('t.id as t1', 'membership.id as t2', 'membership.member as t3')
+                ->innerJoin('t.memberships', 'membership')
+                ->getQuery()
+                ->execute();
+
+        return $stmt;
+    }
+
     public function add(Project $project): void
     {
         $this->em->persist($project);

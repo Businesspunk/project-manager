@@ -4,6 +4,8 @@ namespace App\Controller\Work\Projects\Project\Settings;
 
 use App\Model\Work\Entity\Projects\Department\Id;
 use App\Model\Work\Entity\Projects\Project\Project;
+use App\Model\Work\Entity\Projects\Project\ProjectRepository;
+use App\ReadModel\Work\Project\DepartmentFetcher;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,9 +39,9 @@ class DepartmentController extends AbstractController
     /**
      * @Route("", name="", methods={"GET"})
      */
-    public function index(Project $project): Response
+    public function index(Project $project, DepartmentFetcher $fetcher): Response
     {
-        $departments = $project->getDepartments();
+        $departments = $fetcher->allOfProject($project->getId());
         return $this->render(
             'app/work/projects/project/settings/department/index.html.twig',
             ['departments' => $departments, 'project' => $project]
