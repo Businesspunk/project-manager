@@ -25,6 +25,6 @@ class HomeControllerTest extends WebTestCase
 
         $client->request('GET', '/');
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', stripslashes('Hello world! It\'s Symfony'));
+        $this->assertSelectorTextContains('h1', stripslashes('Homepage'));
     }
 }
