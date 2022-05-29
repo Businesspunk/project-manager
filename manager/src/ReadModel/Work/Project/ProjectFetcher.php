@@ -58,6 +58,6 @@ class ProjectFetcher
                 ->from('work_projects_projects')
                 ->execute();
 
-        return $stmt->fetchOne();
+        return $stmt->fetchOne() ?? 0;
     }
 }
