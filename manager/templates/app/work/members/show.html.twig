@@ -17,9 +17,7 @@
     <div class="actions mb-3">
         <a href="{{ path('work.members.move', {id: member.id}) }}" class="btn-info btn text-white">Move</a>
         <a href="{{ path('work.members.edit', {id: member.id}) }}" class="btn-info btn text-white">Edit</a>
-        {% if user %}
-            <a class="btn btn-info text-white" href="{{ path('users.show', {id: user.id}) }}">View user</a>
-        {% endif %}
+        <a class="btn btn-info text-white" href="{{ path('users.show', {id: member.id}) }}">View user</a>
         {% if member.active %}
             <form class="d-inline-block"
                   method="post"
@@ -74,4 +72,24 @@
             </table>
         </div>
     </div>
+
+    {% if departments %}
+        <div class="card mt-3">
+            <div class="card-header">Departments</div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tbody>
+                    {% for department in departments %}
+                    <tr>
+                        <td><a href="{{ path('work.projects.project', {id: department.project_id}) }}">{{ department.project_name }}</a></td>
+                        <td>
+                            <span>{{ department.name }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}

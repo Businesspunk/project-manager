@@ -53,4 +53,25 @@ class DepartmentFetcher
         $result = $stmt->fetchAllAssociative();
         return $result ? array_column($result, 'name', 'id') : null;
     }
+
+    public function allOfMember(string $member): ?array
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select(
+                'd.id',
+                'd.name',
+                'p.name as project_name',
+                'p.id as project_id'
+            )
+            ->from('work_projects_departments', 'd')
+            ->leftJoin('d', 'work_projects_memberships_departments', 'md', 'md.department_id = d.id')
+            ->leftJoin('md', 'work_projects_memberships', 'ms', 'ms.id = md.membership_id')
+            ->leftJoin('ms', 'work_projects_projects', 'p', 'p.id = ms.project_id')
+            ->andWhere('ms.member_id = :member')
+            ->setParameter(':member', $member)
+            ->orderBy('d.name')
+            ->execute();
+
+        return $stmt->fetchAllAssociative();
+    }
 }

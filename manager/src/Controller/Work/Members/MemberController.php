@@ -5,9 +5,9 @@ namespace App\Controller\Work\Members;
 use App\Annotation\GuidAnnotation;
 use App\Model\User\Entity\User\User;
 use App\Model\Work\Entity\Members\Member\Member;
-use App\ReadModel\User\UserFetcher;
 use App\ReadModel\Work\Member\Filter;
 use App\ReadModel\Work\Member\MemberFetcher;
+use App\ReadModel\Work\Project\DepartmentFetcher;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,6 +37,7 @@ class MemberController extends AbstractController
         $this->logger = $logger;
         $this->translator = $translator;
     }
+
     /**
      * @Route("", name="", methods={"GET"})
      */
@@ -59,6 +60,7 @@ class MemberController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
     /**
      * @Route("/create/{id}", name=".create", methods={"GET","POST"})
      */
@@ -87,6 +89,7 @@ class MemberController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
     /**
      * @Route("/{id}/edit", name=".edit", methods={"GET","POST"})
      */
@@ -112,6 +115,7 @@ class MemberController extends AbstractController
             'member' => $member
         ]);
     }
+
     /**
      * @Route("/{id}/move", name=".move", methods={"GET","POST"})
      */
@@ -141,6 +145,7 @@ class MemberController extends AbstractController
             'member' => $member
         ]);
     }
+
     /**
      * @Route("/{id}/archive", name=".archive", methods={"POST"})
      */
@@ -161,6 +166,7 @@ class MemberController extends AbstractController
         }
         return $this->redirectToRoute('work.members.show', ['id' => $id]);
     }
+
     /**
      * @Route("/{id}/reinstate", name=".reinstate", methods={"POST"})
      */
@@ -181,12 +187,13 @@ class MemberController extends AbstractController
         }
         return $this->redirectToRoute('work.members.show', ['id' => $id]);
     }
+
     /**
      * @Route("/{id}", name=".show", requirements={"id"=GuidAnnotation::PATTERN}, methods={"GET"})
      */
-    public function show(Member $member, UserFetcher $fetcher): Response
+    public function show(Member $member, DepartmentFetcher $fetcher): Response
     {
-        $user = $fetcher->find($member->getId());
-        return $this->render('app/work/members/show.html.twig', compact('member', 'user'));
+        $departments = $fetcher->allOfMember($member->getId()->getValue());
+        return $this->render('app/work/members/show.html.twig', compact('member', 'departments'));
     }
 }

@@ -30,7 +30,8 @@ class MemberFetcher
                 'TRIM(CONCAT(m.name_first, \' \', m.name_last)) as name',
                 'g.name as group',
                 'g.id as group_id',
-                'm.status'
+                'm.status',
+                '(SELECT COUNT(*) FROM work_projects_memberships ms WHERE ms.member_id = m.id) as projects'
             )
             ->from('work_members_members', 'm')
             ->leftJoin('m', 'work_members_groups', 'g', 'g.id = m.group_id');
