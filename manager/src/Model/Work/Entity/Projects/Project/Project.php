@@ -109,6 +109,11 @@ class Project
         throw new \DomainException('Member does not exist');
     }
 
+    public function isEqual(self $other): bool
+    {
+        return $this->id->isEqual($other->id);
+    }
+
     public function isActive(): bool
     {
         return $this->status->isActive();
