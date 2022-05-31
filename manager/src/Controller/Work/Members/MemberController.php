@@ -3,12 +3,13 @@
 namespace App\Controller\Work\Members;
 
 use App\Annotation\GuidAnnotation;
+use App\Controller\ControllerFlashTrait;
+use App\Controller\ErrorHandler;
 use App\Model\User\Entity\User\User;
 use App\Model\Work\Entity\Members\Member\Member;
 use App\ReadModel\Work\Member\Filter;
 use App\ReadModel\Work\Member\MemberFetcher;
 use App\ReadModel\Work\Project\DepartmentFetcher;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,14 +28,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class MemberController extends AbstractController
 {
+    use ControllerFlashTrait;
+
     private const PER_PAGE = 10;
 
-    private $logger;
+    private $errorHandler;
     private $translator;
 
-    public function __construct(LoggerInterface $logger, TranslatorInterface $translator)
+    public function __construct(ErrorHandler $errorHandler, TranslatorInterface $translator)
     {
-        $this->logger = $logger;
+        $this->errorHandler = $errorHandler;
         $this->translator = $translator;
     }
 
@@ -80,8 +83,8 @@ class MemberController extends AbstractController
                 $this->addFlash('success', 'Member was successfully created');
                 return $this->redirectToRoute('work.members');
             } catch (\DomainException $e) {
-                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->warning($e->getMessage());
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
             }
         }
 
@@ -105,8 +108,8 @@ class MemberController extends AbstractController
                 $this->addFlash('success', 'Member was successfully updated');
                 return $this->redirectToRoute('work.members.show', ['id' => $member->getId()]);
             } catch (\DomainException $e) {
-                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->warning($e->getMessage());
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
             }
         }
 
@@ -135,8 +138,8 @@ class MemberController extends AbstractController
                 $this->addFlash('success', 'Member was successfully moved');
                 return $this->redirectToRoute('work.members.show', ['id' => $member->getId()]);
             } catch (\DomainException $e) {
-                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->warning($e->getMessage());
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
             }
         }
 
@@ -161,8 +164,8 @@ class MemberController extends AbstractController
             $handler->handle($command);
             $this->addFlash('success', 'Member was successfully archived');
         } catch (\DomainException $e) {
-            $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-            $this->logger->warning($e->getMessage());
+            $this->addExceptionFlash($e);
+            $this->errorHandler->handle($e);
         }
         return $this->redirectToRoute('work.members.show', ['id' => $id]);
     }
@@ -182,8 +185,8 @@ class MemberController extends AbstractController
             $handler->handle($command);
             $this->addFlash('success', 'Member was successfully reinstated');
         } catch (\DomainException $e) {
-            $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-            $this->logger->warning($e->getMessage());
+            $this->addExceptionFlash($e);
+            $this->errorHandler->handle($e);
         }
         return $this->redirectToRoute('work.members.show', ['id' => $id]);
     }

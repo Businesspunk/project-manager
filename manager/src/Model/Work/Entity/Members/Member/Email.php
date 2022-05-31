@@ -12,7 +12,7 @@ class Email
     {
         Assert::notEmpty($email);
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new \Exception('Not valid email');
+            throw new \DomainException('Not valid email');
         }
 
         $this->value = mb_strtolower($email);

@@ -2,11 +2,12 @@
 
 namespace App\Controller\Work\Projects\Project\Settings;
 
+use App\Controller\ControllerFlashTrait;
+use App\Controller\ErrorHandler;
 use App\Model\Work\Entity\Projects\Department\Id;
 use App\Model\Work\Entity\Projects\Project\Project;
 use App\ReadModel\Work\Project\DepartmentFetcher;
 use App\Security\Voter\Work\ProjectAccess;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,12 +22,14 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DepartmentsController extends AbstractController
 {
-    private $logger;
-    private $translator;
+    use ControllerFlashTrait;
 
-    public function __construct(LoggerInterface $logger, TranslatorInterface $translator)
+    private $translator;
+    private $errorHandler;
+
+    public function __construct(ErrorHandler $errorHandler, TranslatorInterface $translator)
     {
-        $this->logger = $logger;
+        $this->errorHandler = $errorHandler;
         $this->translator = $translator;
     }
 
@@ -68,8 +71,8 @@ class DepartmentsController extends AbstractController
                 $this->addFlash('success', 'Department was successfully created');
                 return $this->getDefaultRedirectUrl($project);
             } catch (\DomainException $e) {
-                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->warning($e->getMessage());
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
             }
         }
 
@@ -96,8 +99,8 @@ class DepartmentsController extends AbstractController
                 $this->addFlash('success', 'Department was successfully updated');
                 return $this->getDefaultRedirectUrl($project);
             } catch (\DomainException $e) {
-                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->warning($e->getMessage());
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
                 return $this->getDefaultRedirectUrl($project);
             }
         }
@@ -125,8 +128,8 @@ class DepartmentsController extends AbstractController
             $this->addFlash('success', 'Department was successfully deleted');
             return $redirect;
         } catch (\DomainException $e) {
-            $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-            $this->logger->warning($e->getMessage());
+            $this->addExceptionFlash($e);
+            $this->errorHandler->handle($e);
         }
 
         return $redirect;

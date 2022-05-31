@@ -2,9 +2,10 @@
 
 namespace App\Controller\Work\Projects\Project\Settings;
 
+use App\Controller\ControllerFlashTrait;
+use App\Controller\ErrorHandler;
 use App\Model\Work\Entity\Projects\Project\Project;
 use App\Security\Voter\Work\ProjectAccess;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Model\Work\UseCase\Projects\Project\Archive;
 use App\Model\Work\UseCase\Projects\Project\Edit;
@@ -20,12 +21,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class SettingsController extends AbstractController
 {
-    private $logger;
-    private $translator;
+    use ControllerFlashTrait;
 
-    public function __construct(LoggerInterface $logger, TranslatorInterface $translator)
+    private $translator;
+    private $errorHandler;
+
+    public function __construct(ErrorHandler $errorHandler, TranslatorInterface $translator)
     {
-        $this->logger = $logger;
+        $this->errorHandler = $errorHandler;
         $this->translator = $translator;
     }
 
@@ -58,8 +61,8 @@ class SettingsController extends AbstractController
             $handler->handle($command);
             $this->addFlash('success', 'Project was successfully archived');
         } catch (\DomainException $e) {
-            $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-            $this->logger->warning($e->getMessage());
+            $this->addExceptionFlash($e);
+            $this->errorHandler->handle($e);
         }
         return $this->redirectToRoute('work.projects.project.settings', ['id' => $id]);
     }
@@ -81,8 +84,8 @@ class SettingsController extends AbstractController
             $handler->handle($command);
             $this->addFlash('success', 'Project was successfully reinstated');
         } catch (\DomainException $e) {
-            $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-            $this->logger->warning($e->getMessage());
+            $this->addExceptionFlash($e);
+            $this->errorHandler->handle($e);
         }
         return $this->redirectToRoute('work.projects.project.settings', ['id' => $id]);
     }
@@ -104,8 +107,8 @@ class SettingsController extends AbstractController
             $handler->handle($command);
             $this->addFlash('success', 'Project was successfully deleted');
         } catch (\DomainException $e) {
-            $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-            $this->logger->warning($e->getMessage());
+            $this->addExceptionFlash($e);
+            $this->errorHandler->handle($e);
         }
         return $this->redirectToRoute('work.projects');
     }
@@ -126,8 +129,8 @@ class SettingsController extends AbstractController
                 $this->addFlash('success', 'Project was successfully updated');
                 return $this->redirectToRoute('work.projects.project.settings', ['id' => $project->getId()]);
             } catch (\DomainException $e) {
-                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->warning($e->getMessage());
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
             }
         }
 

@@ -203,7 +203,7 @@ class User
     {
         foreach ($this->networks as $existing) {
             if ($existing->isForNetwork($network)) {
-                throw new \Exception('This network is already attached.');
+                throw new \DomainException('This network is already attached.');
             }
         }
         $this->networks->add(new Network($this, $network, $identity));
@@ -253,7 +253,7 @@ class User
     public function resetPassword(DateTimeImmutable $date, string $hash): void
     {
         if ($this->resetToken === null) {
-            throw new \Exception('Reset password is not requested');
+            throw new \DomainException('Reset password is not requested');
         }
         if ($this->resetToken->isExpiredToDate($date)) {
             throw new \DomainException('Reset token expired.');

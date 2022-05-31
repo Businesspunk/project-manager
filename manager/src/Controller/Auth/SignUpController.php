@@ -2,10 +2,11 @@
 
 namespace App\Controller\Auth;
 
+use App\Controller\ControllerFlashTrait;
+use App\Controller\ErrorHandler;
 use App\Model\User\UseCase\SignUp;
 use App\ReadModel\User\UserFetcher;
 use App\Security\LoginFormAuthenticator;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,12 +20,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class SignUpController extends AbstractController
 {
-    private $logger;
-    private $translator;
+    use ControllerFlashTrait;
 
-    public function __construct(LoggerInterface $logger, TranslatorInterface $translator)
+    private $translator;
+    private $errorHandler;
+
+    public function __construct(ErrorHandler $errorHandler, TranslatorInterface $translator)
     {
-        $this->logger = $logger;
+        $this->errorHandler = $errorHandler;
         $this->translator = $translator;
     }
     /**
@@ -42,8 +45,8 @@ class SignUpController extends AbstractController
                 $this->addFlash('success', 'Check your email');
                 return $this->redirectToRoute('auth.signup');
             } catch (\DomainException $e) {
-                $this->logger->warning($e->getMessage(), ['exception' => $e]);
-                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
             }
         }
 
@@ -76,8 +79,8 @@ class SignUpController extends AbstractController
                 $request
             );
         } catch (\DomainException $e) {
-            $this->logger->warning($e->getMessage(), ['exception' => $e]);
-            $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
+            $this->addExceptionFlash($e);
+            $this->errorHandler->handle($e);
         }
         return $this->redirectToRoute('home');
     }

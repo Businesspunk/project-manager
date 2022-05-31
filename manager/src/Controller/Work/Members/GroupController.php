@@ -2,12 +2,13 @@
 
 namespace App\Controller\Work\Members;
 
+use App\Controller\ControllerFlashTrait;
+use App\Controller\ErrorHandler;
 use App\Model\Work\Entity\Members\Group\Group;
 use App\Model\Work\UseCase\Members\Group\Edit;
 use App\Model\Work\UseCase\Members\Group\Delete;
 use App\Model\Work\UseCase\Members\Group\Create;
 use App\ReadModel\Work\Group\GroupFetcher;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,12 +22,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class GroupController extends AbstractController
 {
-    private $logger;
-    private $translator;
+    use ControllerFlashTrait;
 
-    public function __construct(LoggerInterface $logger, TranslatorInterface $translator)
+    private $translator;
+    private $errorHandler;
+
+    public function __construct(ErrorHandler $errorHandler, TranslatorInterface $translator)
     {
-        $this->logger = $logger;
+        $this->errorHandler = $errorHandler;
         $this->translator = $translator;
     }
 
@@ -54,8 +57,8 @@ class GroupController extends AbstractController
                 $this->addFlash('success', 'Group was successfully created');
                 return $this->redirectToRoute('work.members.groups');
             } catch (\DomainException $e) {
-                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->warning($e->getMessage());
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
             }
         }
 
@@ -79,8 +82,8 @@ class GroupController extends AbstractController
                 $this->addFlash('success', 'Group was successfully edited');
                 return $this->redirectToRoute('work.members.groups');
             } catch (\DomainException $e) {
-                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->warning($e->getMessage());
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
             }
         }
 
@@ -104,8 +107,8 @@ class GroupController extends AbstractController
             $this->addFlash('success', 'Group was successfully deleted');
             return $this->redirectToRoute('work.members.groups');
         } catch (\DomainException $e) {
-            $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-            $this->logger->warning($e->getMessage());
+            $this->addExceptionFlash($e);
+            $this->errorHandler->handle($e);
         }
 
         return $this->redirectToRoute('work.members.groups');

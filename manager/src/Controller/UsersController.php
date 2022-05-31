@@ -12,7 +12,6 @@ use App\Model\User\UseCase\Role;
 use App\ReadModel\User\Filter;
 use App\ReadModel\User\UserFetcher;
 use App\ReadModel\Work\Member\MemberFetcher;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,14 +26,16 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class UsersController extends AbstractController
 {
+    use ControllerFlashTrait;
+
     private const PER_PAGE = 10;
 
-    private $logger;
+    private $errorHandler;
     private $translator;
 
-    public function __construct(LoggerInterface $logger, TranslatorInterface $translator)
+    public function __construct(ErrorHandler $errorHandler, TranslatorInterface $translator)
     {
-        $this->logger = $logger;
+        $this->errorHandler = $errorHandler;
         $this->translator = $translator;
     }
 
@@ -76,8 +77,8 @@ class UsersController extends AbstractController
                 $this->addFlash('success', 'User was successfully added');
                 return $this->redirectToRoute('users');
             } catch (\DomainException $e) {
-                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->warning($e->getMessage());
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
             }
         }
 
@@ -101,8 +102,8 @@ class UsersController extends AbstractController
                 $this->addFlash('success', 'User was successfully edited');
                 return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
             } catch (\DomainException $e) {
-                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->warning($e->getMessage());
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
             }
         }
 
@@ -126,8 +127,8 @@ class UsersController extends AbstractController
         try {
             $handler->handle($command);
         } catch (\DomainException $e) {
-            $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-            $this->logger->warning($e->getMessage());
+            $this->addExceptionFlash($e);
+            $this->errorHandler->handle($e);
         }
 
         return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
@@ -152,8 +153,8 @@ class UsersController extends AbstractController
         try {
             $handler->handle($command);
         } catch (\DomainException $e) {
-            $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-            $this->logger->warning($e->getMessage());
+            $this->addExceptionFlash($e);
+            $this->errorHandler->handle($e);
         }
 
         return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
@@ -173,8 +174,8 @@ class UsersController extends AbstractController
         try {
             $handler->handle($command);
         } catch (\DomainException $e) {
-            $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-            $this->logger->warning($e->getMessage());
+            $this->addExceptionFlash($e);
+            $this->errorHandler->handle($e);
         }
 
         return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
@@ -200,8 +201,8 @@ class UsersController extends AbstractController
                 $this->addFlash('success', 'Role was successfully changed');
                 return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
             } catch (\DomainException $e) {
-                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->warning($e->getMessage());
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
             }
         }
 

@@ -3,6 +3,8 @@
 namespace App\Controller\Work\Projects;
 
 use App\Annotation\GuidAnnotation;
+use App\Controller\ControllerFlashTrait;
+use App\Controller\ErrorHandler;
 use App\Model\Work\Entity\Projects\Role\Permission;
 use App\Model\Work\Entity\Projects\Role\Role;
 use App\Model\Work\UseCase\Projects\Role\Create;
@@ -10,7 +12,6 @@ use App\Model\Work\UseCase\Projects\Role\Edit;
 use App\Model\Work\UseCase\Projects\Role\Copy;
 use App\Model\Work\UseCase\Projects\Role\Delete;
 use App\ReadModel\Work\Project\RoleFetcher;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,12 +25,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class RolesController extends AbstractController
 {
-    private $logger;
-    private $translator;
+    use ControllerFlashTrait;
 
-    public function __construct(LoggerInterface $logger, TranslatorInterface $translator)
+    private $translator;
+    private $errorHandler;
+
+    public function __construct(ErrorHandler $errorHandler, TranslatorInterface $translator)
     {
-        $this->logger = $logger;
+        $this->errorHandler = $errorHandler;
         $this->translator = $translator;
     }
 
@@ -59,8 +62,8 @@ class RolesController extends AbstractController
                 $this->addFlash('success', 'Role was successfully created');
                 return $this->redirectToRoute('work.projects.roles');
             } catch (\DomainException $e) {
-                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->warning($e->getMessage());
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
             }
         }
 
@@ -92,8 +95,8 @@ class RolesController extends AbstractController
                 $this->addFlash('success', 'Role was successfully updated');
                 return $this->redirectToRoute('work.projects.roles.show', ['id' => $role->getId()]);
             } catch (\DomainException $e) {
-                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->warning($e->getMessage());
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
             }
         }
 
@@ -118,8 +121,8 @@ class RolesController extends AbstractController
                 $this->addFlash('success', 'Role was successfully cloned');
                 return $this->redirectToRoute('work.projects.roles');
             } catch (\DomainException $e) {
-                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->warning($e->getMessage());
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
             }
         }
 
@@ -144,8 +147,8 @@ class RolesController extends AbstractController
             $handler->handle($command);
             $this->addFlash('success', 'Role was successfully deleted');
         } catch (\DomainException $e) {
-            $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-            $this->logger->warning($e->getMessage());
+            $this->addExceptionFlash($e);
+            $this->errorHandler->handle($e);
         }
         return $this->redirectToRoute('work.projects.roles');
     }

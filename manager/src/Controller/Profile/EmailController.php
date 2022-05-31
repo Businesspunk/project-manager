@@ -2,6 +2,7 @@
 
 namespace App\Controller\Profile;
 
+use App\Controller\ControllerFlashTrait;
 use App\Model\User\Entity\User\UserRepository;
 use App\Model\User\UseCase\Email\Request as ChangeEmail;
 use App\Model\User\UseCase\Email\Confirm as ConfirmEmail;
@@ -9,12 +10,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/profile/email", name="profile")
  */
 class EmailController extends AbstractController
 {
+    use ControllerFlashTrait;
+
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * @Route("", name=".email", methods={"GET","POST"})
      */
@@ -34,8 +45,8 @@ class EmailController extends AbstractController
 
                 $this->addFlash('success', $message);
                 return $this->redirectToRoute('profile.email');
-            } catch (\Exception $e) {
-                $this->addFlash('error', $e->getMessage());
+            } catch (\DomainException $e) {
+                $this->addExceptionFlash($e);
             }
         }
 
@@ -54,8 +65,8 @@ class EmailController extends AbstractController
             $handler->handle($command);
             $this->addFlash('success', 'Email is successfully changed');
             return $this->redirectToRoute('auth.login');
-        } catch (\Exception $e) {
-            $this->addFlash('error', $e->getMessage());
+        } catch (\DomainException $e) {
+            $this->addExceptionFlash($e);
             return $this->redirectToRoute('profile.email');
         }
     }

@@ -2,12 +2,13 @@
 
 namespace App\Controller\Work\Projects;
 
+use App\Controller\ControllerFlashTrait;
+use App\Controller\ErrorHandler;
 use App\Model\Work\Entity\Projects\Project\Project;
 use App\ReadModel\Work\Project\Filter;
 use App\ReadModel\Work\Project\ProjectFetcher;
 use App\Model\Work\UseCase\Projects\Project\Create;
 use App\Security\Voter\Work\ProjectAccess;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,14 +20,16 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ProjectsController extends AbstractController
 {
+    use ControllerFlashTrait;
+
     public const PER_PAGE = 10;
 
-    private $logger;
+    private $errorHandler;
     private $translator;
 
-    public function __construct(LoggerInterface $logger, TranslatorInterface $translator)
+    public function __construct(ErrorHandler $errorHandler, TranslatorInterface $translator)
     {
-        $this->logger = $logger;
+        $this->errorHandler = $errorHandler;
         $this->translator = $translator;
     }
 
@@ -79,8 +82,8 @@ class ProjectsController extends AbstractController
                 $this->addFlash('success', 'Project was successfully created');
                 return $this->redirectToRoute('work.projects');
             } catch (\DomainException $e) {
-                $this->addFlash('error', $this->translator->trans($e->getMessage(), [], 'exceptions'));
-                $this->logger->warning($e->getMessage());
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
             }
         }
 

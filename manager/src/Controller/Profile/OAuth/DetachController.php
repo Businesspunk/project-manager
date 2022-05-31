@@ -2,14 +2,25 @@
 
 namespace App\Controller\Profile\OAuth;
 
+use App\Controller\ControllerFlashTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Model\User\UseCase\Network\Detach;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DetachController extends AbstractController
 {
+    use ControllerFlashTrait;
+
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * @Route("/oauth/detach/{network}/{identity}", name="profile.auth.detach", methods={"POST"})
      */
@@ -28,8 +39,8 @@ class DetachController extends AbstractController
         try {
             $handler->handle($command);
             $this->addFlash('success', 'Network was successfully detached');
-        } catch (\Exception $e) {
-            $this->addFlash('error', $e->getMessage());
+        } catch (\DomainException $e) {
+            $this->addExceptionFlash($e);
         }
         return $this->redirectToRoute('profile');
     }
