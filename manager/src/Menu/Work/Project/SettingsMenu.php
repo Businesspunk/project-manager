@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Menu\Work;
+namespace App\Menu\Work\Project;
 
 use App\Model\Work\Entity\Projects\Project\Project;
 use App\Security\Voter\Work\ProjectAccess;
@@ -8,7 +8,7 @@ use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class ProjectSettingsMenu
+class SettingsMenu
 {
     private $factory;
     private $auth;

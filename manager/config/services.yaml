@@ -58,7 +58,7 @@ services:
         tags:
             - {name: knp_menu.menu_builder, method: build, alias: sidebar}
 
-    App\Menu\Work\ProjectMenu:
+    App\Menu\Work\Project\MainMenu:
         tags:
             - {name: knp_menu.menu_builder, method: build, alias: work_project}
 
@@ -66,10 +66,10 @@ services:
         tags:
             - { name: knp_menu.menu_builder, method: build, alias: work_projects }
 
-    App\Menu\Work\MemberMenu:
+    App\Menu\Work\MembersMenu:
         tags:
             - { name: knp_menu.menu_builder, method: build, alias: work_members }
 
-    App\Menu\Work\ProjectSettingsMenu:
+    App\Menu\Work\Project\SettingsMenu:
         tags:
             - { name: knp_menu.menu_builder, method: build, alias: work_project_menu }

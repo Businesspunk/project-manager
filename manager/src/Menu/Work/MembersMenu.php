@@ -5,7 +5,7 @@ namespace App\Menu\Work;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 
-class MemberMenu
+class MembersMenu
 {
     private $factory;
 
