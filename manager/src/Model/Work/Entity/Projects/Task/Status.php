@@ -6,10 +6,10 @@ use Webmozart\Assert\Assert;
 
 class Status
 {
-    private const NEW = 'new';
-    private const IN_WORK = 'in work';
-    private const NEED_APPROVE = 'need approve';
-    private const DONE = 'done';
+    public const NEW = 'new';
+    public const IN_WORK = 'in work';
+    public const NEED_APPROVE = 'need approve';
+    public const DONE = 'done';
 
     private $value;
 

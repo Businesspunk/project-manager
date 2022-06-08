@@ -6,16 +6,18 @@ use Webmozart\Assert\Assert;
 
 class Type
 {
-    private const FEATURE = 'feature';
-    private const BUGFIX = 'bugfix';
-    private const CODE_REVIEW = 'code review';
-    private const QA_TEST = 'qa test';
+    public const NONE = 'none';
+    public const FEATURE = 'feature';
+    public const BUGFIX = 'bugfix';
+    public const CODE_REVIEW = 'code review';
+    public const QA_TEST = 'qa test';
 
     private $value;
 
     public function __construct(string $value)
     {
         Assert::oneOf($value, [
+            self::NONE,
             self::FEATURE,
             self::BUGFIX,
             self::CODE_REVIEW,

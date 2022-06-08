@@ -6,23 +6,96 @@ use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Projects\Project\Project;
 use Doctrine\Common\Collections\ArrayCollection;
 use Webmozart\Assert\Assert;
+use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity
+ * @ORM\Table("work_projects_tasks", indexes={
+ *  @ORM\Index(columns={"date"})
+ * })
+ */
 class Task
 {
+    /**
+     * @var Id
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\SequenceGenerator(sequenceName="work_projects_tasks_seq", initialValue=1)
+     * @ORM\Column(type="work_projects_task_id")
+     */
     private $id;
+    /**
+     * @var Project
+     * @ORM\ManyToOne(targetEntity=Project::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
     private $project;
+    /**
+     * @var Member
+     * @ORM\ManyToOne(targetEntity=Member::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
     private $author;
+    /**
+     * @var \DateTimeImmutable
+     * @ORM\Column (type="datetime_immutable")
+     */
     private $date;
+    /**
+     * @var \DateTimeImmutable
+     * @ORM\Column (type="date_immutable", nullable="true")
+     */
     private $planDate;
+    /**
+     * @var string
+     * @ORM\Column (type="string")
+     */
     private $title;
+    /**
+     * @var string
+     * @ORM\Column (type="text", nullable="true")
+     */
     private $content;
+    /**
+     * @var Type
+     * @ORM\Column (type="work_projects_task_type")
+     */
     private $type;
+    /**
+     * @var int
+     * @ORM\Column (type="smallint")
+     */
     private $priority;
+    /**
+     * @var int
+     * @ORM\Column (type="smallint")
+     */
     private $progress;
+    /**
+     * @var Status
+     * @ORM\Column (type="work_projects_task_status")
+     */
     private $status;
+    /**
+     * @var Task
+     * @ORM\ManyToOne (targetEntity="Task")
+     */
     private $parent;
+    /**
+     * @var \DateTimeImmutable
+     * @ORM\Column (type="datetime_immutable", nullable="true")
+     */
     private $startDate;
+    /**
+     * @var \DateTimeImmutable
+     * @ORM\Column (type="date_immutable", nullable="true")
+     */
     private $endDate;
+    /**
+     * @var ArrayCollection|Member[]
+     * @ORM\ManyToMany (targetEntity=Member::class)
+     * @ORM\JoinTable (name="work_projects_tasks_members")
+     */
     private $executors;
 
     public function __construct(
@@ -165,7 +238,7 @@ class Task
         $this->planDate = $date;
     }
 
-    public function setChildOf(self $parent): void
+    public function setChildOf(?self $parent): void
     {
         if ($this->isEqual($parent)) {
             throw new \DomainException('Cycle hierarchy');
@@ -250,6 +323,17 @@ class Task
             }
         }
         $this->executors->add($member);
+    }
+
+    public function hasExecutor(Member $member): bool
+    {
+        /** @var Member $executor */
+        foreach ($this->executors as $executor) {
+            if ($executor->isEqual($member)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function revokeExecutor(Member $member): void
