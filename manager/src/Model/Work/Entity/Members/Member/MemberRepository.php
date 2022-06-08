@@ -66,4 +66,14 @@ class MemberRepository
         }
         return $group;
     }
+
+    public function getByIds(array $ids): ?array
+    {
+        return $this->repo->createQueryBuilder('t')
+                ->select('t.*')
+                ->andWhere('t.id IN (:ids)')
+                ->setParameter('ids', $ids)
+                ->getQuery()
+                ->execute();
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\ReadModel\Work\Member;
 
+use App\Model\Work\Entity\Members\Member\Status;
 use App\ReadModel\Work\Member\Filter\Filter;
 use Doctrine\DBAL\Connection;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -91,6 +92,23 @@ class MemberFetcher
             ->execute();
 
         $result = $stmt->fetchAssociative();
+        return $result ?: null;
+    }
+
+    public function activeDepartmentListForProject(string $project): ?array
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select('m.id', 'CONCAT(m.name_first, " ", m.name_last) as name', 'm.email', 'd.name as department')
+            ->from('work_members_members', 'm')
+            ->innerJoin('m', 'work_projects_memberships', 'mb', 'm.id = mb.member_id')
+            ->innerJoin('mb', 'work_projects_memberships_departments', 'md', 'mb.id = md.membership_id')
+            ->innerJoin('md', 'work_projects_departments', 'd', 'md.department_id = d.id')
+            ->where('m.status = :status and mb.project_id = :project')
+            ->orderBy('d.name')->addOrderBy('m.name')
+            ->setParameters([':status' => Status::STATUS_ACTIVE, ':project' => $project])
+            ->execute();
+
+        $result = $stmt->fetchAllAssociative();
         return $result ?: null;
     }
 }

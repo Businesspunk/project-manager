@@ -60,4 +60,15 @@ class ProjectFetcher
 
         return $stmt->fetchOne() ?? 0;
     }
+
+    public function listAll(): array
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select('id', 'name')
+            ->from('work_projects_projects')
+            ->orderBy('sort')
+            ->execute();
+
+        return $stmt->fetchAllAssociative();
+    }
 }
