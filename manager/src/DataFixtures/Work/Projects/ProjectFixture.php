@@ -15,6 +15,9 @@ use Doctrine\Persistence\ObjectManager;
 
 class ProjectFixture extends Fixture implements DependentFixtureInterface
 {
+    public const REFERENCE_FIRST = 'work_projects_first';
+    public const REFERENCE_SECOND = 'work_projects_second';
+
     public function load(ObjectManager $manager)
     {
         $project = $this->createActiveProject('First', 1);
@@ -31,9 +34,13 @@ class ProjectFixture extends Fixture implements DependentFixtureInterface
         $role = $this->getReference(RoleFixture::GUEST);
         $project->addMember($member, [$developmentId], [$role]);
         $manager->persist($project);
+        $this->setReference(self::REFERENCE_FIRST, $project);
 
         $project = $this->createActiveProject('Second', 2);
+        $project->addDepartment($developmentId = DepartmentId::next(), 'Sales');
+        $project->addMember($member, [$developmentId], [$role]);
         $manager->persist($project);
+        $this->setReference(self::REFERENCE_SECOND, $project);
 
         $project = $this->createArchivedProject('Third', 3);
         $manager->persist($project);

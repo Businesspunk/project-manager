@@ -15,11 +15,11 @@ class RoleFixture extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $role = $this->createRole('Guest', []);
+        $role = $this->createRole('Guest', [Permission::VIEW_TASKS]);
         $this->setReference(self::GUEST, $role);
         $manager->persist($role);
 
-        $role = $this->createRole('Manager', [Permission::MANAGE_PROJECT_MEMBERS]);
+        $role = $this->createRole('Manager', [Permission::MANAGE_PROJECT_MEMBERS, Permission::MANAGE_TASKS]);
         $this->setReference(self::MANAGER, $role);
         $manager->persist($role);
 
