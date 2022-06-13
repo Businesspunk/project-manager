@@ -31,6 +31,14 @@ class MainMenu
         ]);
 
         $itemsContainLink[] = $menu->addChild(
+            'Tasks',
+            ['route' => 'work.projects.project.tasks', 'routeParameters' => ['id' => $options['project_id']]]
+        )->setExtra('routes', [
+            ['route' => 'work.projects.project.tasks'],
+            ['pattern' => '/^work.projects.project.tasks\..*/']
+        ]);
+
+        $itemsContainLink[] = $menu->addChild(
             'Settings',
             ['route' => 'work.projects.project.settings', 'routeParameters' => ['id' => $options['project_id']]]
         )->setExtra('routes', [

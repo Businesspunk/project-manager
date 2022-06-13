@@ -26,6 +26,7 @@ class TaskFetcher
                 't.date',
                 'concat(m.name_first, \' \', m.name_last) as author',
                 'p.name as project',
+                'p.id as project_id',
                 't.title',
                 't.type',
                 't.priority',
@@ -35,6 +36,11 @@ class TaskFetcher
             )->leftJoin('t', 'work_members_members', 'm', 't.author_id = m.id')
             ->leftJoin('t', 'work_projects_projects', 'p', 'p.id = t.project_id')
             ->from('work_projects_tasks', 't');
+
+        if ($project = $filter->project) {
+            $qb->andWhere('t.project_id = :project');
+            $qb->setParameter(':project', $project);
+        }
 
         if ($search = $filter->search) {
             $qb->andWhere($qb->expr()->like('LOWER(t.title)', ':search'));

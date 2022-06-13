@@ -9,11 +9,23 @@
     <li class="breadcrumb-item">
         <span><a href="{{ path('work.projects') }}">Projects</a></span>
     </li>
+
+    {% if project is not null %}
+        <li class="breadcrumb-item">
+            <span><a href="{{ path('work.projects.project', {id: project.id}) }}">{{ project.name }}</a></span>
+        </li>
+    {% endif %}
+
     <li class="breadcrumb-item active"><span>Tasks</span></li>
 {% endblock %}
 
 {% block content %}
-    {{ knp_menu_render('work_projects', {currentClass: 'active'}) }}
+    {% if project is not null %}
+        {% set menu = knp_menu_get('work_project', [], {project_id: project.id}) %}
+        {{ knp_menu_render(menu, {currentClass: 'active'}) }}
+    {% else %}
+        {{ knp_menu_render('work_projects', {currentClass: 'active'}) }}
+    {% endif %}
 
     <div class="card all-users mt-3">
         <div class="card-body">
@@ -35,7 +47,9 @@
                             <th>{{ knp_pagination_sortable(tasks, 'ID', 'id') }}</th>
                             <th>{{ knp_pagination_sortable(tasks, 'Date', 'date') }}</th>
                             <th>{{ knp_pagination_sortable(tasks, 'Author', 'author') }}</th>
-                            <th>{{ knp_pagination_sortable(tasks, 'Project', 'project') }}</th>
+                            {% if project is null %}
+                                <th>{{ knp_pagination_sortable(tasks, 'Project', 'project') }}</th>
+                            {% endif %}
                             <th>{{ knp_pagination_sortable(tasks, 'Name', 'title') }}</th>
                             <th>{{ knp_pagination_sortable(tasks, 'Type', 'type') }}</th>
                             <td>{{ knp_pagination_sortable(tasks, '<svg class="icon"><use xlink:href="{{ asset(\'build/coreui/icons/svg/free.svg#cil-fire\') }}"></use></svg>', 'priority', {'encode': false}) }}</td>
@@ -51,8 +65,10 @@
                             <td>{{ task.id }}</td>
                             <td>{{ task.date }}</td>
                             <td>{{ task.author }}</td>
-                            <td>{{ task.project }}</td>
-                            <td>{{ task.title }}</td>
+                            {% if project is null %}
+                                <td><a href="{{ path('work.projects.project', {id: task.project_id}) }}">{{ task.project }}</a></td>
+                            {% endif %}
+                            <td><a href="{{ path('work.projects.tasks.show', {id: task.id}) }}">{{ task.title }}</a></td>
                             <td>{{ task_type(task.type) }}</td>
                             <td>{{ task_priority(task.priority) }}</td>
                             <td>{{ task_executors(task.executors) }}</td>

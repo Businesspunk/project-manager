@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Controller\Work\Projects;
+namespace App\Controller\Work\Projects\Project;
 
 use App\Controller\ControllerFlashTrait;
 use App\Controller\ErrorHandler;
+use App\Annotation\GuidAnnotation;
+use App\Model\Work\Entity\Projects\Project\Project;
 use App\ReadModel\Work\Task\Filter\Filter;
 use App\ReadModel\Work\Task\Filter\Form;
 use App\ReadModel\Work\Task\TaskFetcher;
+use App\Security\Voter\Work\ProjectAccess;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Route("/work/projects/tasks", name="work.projects.tasks")
+ * @Route("/work/projects/{id}/tasks", name="work.projects.project.tasks", requirements={"id"=GuidAnnotation::PATTERN})
  */
 class TasksController extends AbstractController
 {
@@ -34,15 +37,15 @@ class TasksController extends AbstractController
     /**
      * @Route("", name="")
      */
-    public function index(Request $request, TaskFetcher $tasks): Response
+    public function index(Project $project, Request $request, TaskFetcher $tasks): Response
     {
-        if ($this->isGranted('ROLE_WORK_PROJECTS_MANAGE')) {
-            $filter = Filter::all();
-        } else {
-            $filter = Filter::forMember($this->getUser()->getId());
-        }
+        $this->denyAccessUnlessGranted(ProjectAccess::VIEW, $project);
 
-        $form = $this->createForm(Form::class, $filter, ['project_id' => null]);
+        $filter = Filter::all();
+        $projectId = $project->getId()->getValue();
+
+        $form = $this->createForm(Form::class, $filter, ['project_id' => $projectId]);
+        $filter->project = $projectId;
         $form->handleRequest($request);
 
         $pagination = $tasks->all(
@@ -54,17 +57,9 @@ class TasksController extends AbstractController
         );
 
         return $this->render('app/work/projects/tasks/index.html.twig', [
-                'tasks' => $pagination,
-                'form' => $form->createView(),
-                'project' => null
-            ]);
-    }
-
-    /**
-     * @Route("/{id}", name=".show")
-     */
-    public function show(Request $request): Response
-    {
-        return new Response(1);
+            'tasks' => $pagination,
+            'form' => $form->createView(),
+            'project' => $project
+        ]);
     }
 }

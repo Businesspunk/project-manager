@@ -10,6 +10,7 @@ class Filter
     public $status;
     public $priority;
     public $executor;
+    public $project;
 
     public function __construct(?string $member)
     {
