@@ -1,0 +1,19 @@
+{% if priority == 1 %}
+        {% set class = 'bg-secondary' %}
+{% elseif priority == 2 %}
+        {% set class = 'bg-info' %}
+{% elseif priority == 3 %}
+        {% set class = 'bg-warning' %}
+{% elseif priority == 4 %}
+        {% set class = 'bg-danger' %}
+{% endif %}
+
+<div class="task_priority">
+    {% for i in 1..4 %}
+        {% if i <= priority %}
+                <div class="square {{ class }}"></div>
+        {% else %}
+                <div class="square bg-black bg-opacity-10"></div>
+        {% endif %}
+    {% endfor %}
+</div>

@@ -1,12 +1,24 @@
+{% set ifNotToEncode = options.encode is defined and options.encode == false %}
+
+{% if ifNotToEncode %}
+    {% set options = options | filter((v, k) => k != 'title' and k != 'encode') %}
+{% endif %}
+
+{% set options = options|merge({'class': 'sortable_link ' ~ options.class}) %}
+
 <a{% for attr, value  in options %} {{ attr }}="{{ value }}"{% endfor %}>
 <span>
         {% if sorted %}
-            {% if direction == 'desc' %}
+            {% if direction == 'asc' %}
                 <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-sort-descending') }}"></use></svg>
             {% else %}
                 <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-sort-ascending') }}"></use></svg>
             {% endif %}
         {% endif %}
 </span>
-{{ title }}
+{% if ifNotToEncode %}
+    {{ include(template_from_string(title)) }}
+{% else %}
+    {{ title }}
+{% endif %}
 </a>

@@ -77,3 +77,8 @@ services:
     App\Menu\Work\Project\SettingsMenu:
         tags:
             - { name: knp_menu.menu_builder, method: build, alias: work_project_menu }
+
+    twig.extension.stringloader:
+        class: Twig\Extension\StringLoaderExtension
+        tags:
+            - { name: twig.extension }

@@ -44,7 +44,7 @@ class TaskFixture extends Fixture implements DependentFixtureInterface
                 $project,
                 $date
             );
-            $date = $date->modify('+' . $this->faker->numberBetween(1, 30) . 'days');
+            $date = $date->modify('+' . $this->faker->numberBetween(1, 3) . 'days');
 
             if ($this->faker->boolean) {
                 $task->plan($date->modify('+ 3 months'));

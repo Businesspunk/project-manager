@@ -1,0 +1,15 @@
+{% if progress == 0 %}
+    {% set class = '' %}
+{% elseif progress == 25 %}
+    {% set class = 'bg-secondary' %}
+{% elseif progress == 50 %}
+    {% set class = 'bg-warning' %}
+{% elseif progress == 75 %}
+    {% set class = 'bg-info' %}
+{% elseif progress == 100 %}
+    {% set class = 'bg-success' %}
+{% endif %}
+
+<div class="progress">
+    <div class="progress-bar {{ class }}" role="progressbar" style="width: {{ progress }}%" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+</div>

@@ -1,0 +1,11 @@
+{% if type == 'feature' %}
+    <span class="badge bg-info">Feature</span>
+{% elseif type == 'bugfix' %}
+    <span class="badge bg-primary">Bugfix</span>
+{% elseif type == 'code review' %}
+    <span class="badge bg-warning">Code review</span>
+{% elseif type == 'qa test' %}
+    <span class="badge bg-info">QA test</span>
+{% elseif type == 'none' %}
+    <span class="badge bg-dark">None</span>
+{% endif %}

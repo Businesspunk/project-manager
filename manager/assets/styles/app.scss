@@ -40,3 +40,24 @@ html:not([dir=rtl]) .wrapper {
 .color-green{
   color: $green;
 }
+
+html body .task_priority .icon:not(.icon-c-s):not(.icon-custom-size){
+  width: 0.7em;
+}
+
+.task_priority{
+  display: flex;
+  align-content: flex-start;
+  .square{
+    display: inline-block;
+    width: 0.7em;
+    height: 0.7em;
+    border: 1px;
+    border-radius: 1px;
+    margin-right: 2px;
+  }
+}
+
+.sortable_link{
+  display: flex;
+}

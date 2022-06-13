@@ -1,0 +1,9 @@
+{% if status == 'new' %}
+    <span class="badge bg-info">New</span>
+{% elseif status == 'in work' %}
+    <span class="badge bg-secondary">In work</span>
+{% elseif status == 'need approve' %}
+    <span class="badge bg-warning">Need approve</span>
+{% elseif status == 'done' %}
+    <span class="badge bg-success">Done</span>
+{% endif %}

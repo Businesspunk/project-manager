@@ -104,9 +104,33 @@ class MemberFetcher
             ->innerJoin('mb', 'work_projects_memberships_departments', 'md', 'mb.id = md.membership_id')
             ->innerJoin('md', 'work_projects_departments', 'd', 'md.department_id = d.id')
             ->where('m.status = :status and mb.project_id = :project')
-            ->orderBy('d.name')->addOrderBy('m.name')
+            ->orderBy('d.name')->addOrderBy('name')
             ->setParameters([':status' => Status::STATUS_ACTIVE, ':project' => $project])
             ->execute();
+
+        $result = $stmt->fetchAllAssociative();
+        return $result ?: null;
+    }
+
+    public function activeDepartmentList(string $project = null): ?array
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select('m.id', 'CONCAT(m.name_first, \' \', m.name_last) as name', 'm.email', 'd.name as department')
+            ->from('work_members_members', 'm')
+            ->innerJoin('m', 'work_projects_memberships', 'mb', 'm.id = mb.member_id')
+            ->innerJoin('mb', 'work_projects_memberships_departments', 'md', 'mb.id = md.membership_id')
+            ->innerJoin('md', 'work_projects_departments', 'd', 'md.department_id = d.id')
+            ->where('m.status = :status')
+            ->orderBy('d.name')->addOrderBy('name')
+            ->setParameters([':status' => Status::STATUS_ACTIVE]);
+
+        if ($project) {
+            $stmt = $stmt
+                ->andWhere('mb.project_id = :project')
+                ->setParameters([':project' => $project]);
+        }
+
+        $stmt = $stmt->execute();
 
         $result = $stmt->fetchAllAssociative();
         return $result ?: null;

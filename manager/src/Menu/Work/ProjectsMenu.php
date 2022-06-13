@@ -29,6 +29,14 @@ class ProjectsMenu
             ['route' => 'work.projects']
         ]);
 
+        $itemsContainLink[] = $menu->addChild(
+            'Tasks',
+            ['route' => 'work.projects.tasks']
+        )->setExtra('routes', [
+            ['route' => 'work.projects.tasks'],
+            ['pattern' => '/^work.projects.tasks\..*/']
+        ]);
+
         if ($this->auth->isGranted('ROLE_WORK_ROLES_MANAGE')) {
             $itemsContainLink[] = $menu->addChild(
                 'Roles',
