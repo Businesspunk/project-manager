@@ -4,14 +4,20 @@ namespace App\Controller\Work\Projects;
 
 use App\Controller\ControllerFlashTrait;
 use App\Controller\ErrorHandler;
+use App\Model\Work\Entity\Projects\Task\Task;
 use App\ReadModel\Work\Task\Filter\Filter;
 use App\ReadModel\Work\Task\Filter\Form;
 use App\ReadModel\Work\Task\TaskFetcher;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Model\Work\UseCase\Projects\Task\Type;
+use App\Model\Work\UseCase\Projects\Task\Status;
+use App\Model\Work\UseCase\Projects\Task\Priority;
+use App\Model\Work\UseCase\Projects\Task\Progress;
 
 /**
  * @Route("/work/projects/tasks", name="work.projects.tasks")
@@ -63,8 +69,100 @@ class TasksController extends AbstractController
     /**
      * @Route("/{id}", name=".show")
      */
-    public function show(Request $request): Response
+    public function show(
+        Task $task,
+        Request $request,
+        Type\Handler $typeHandler,
+        Status\Handler $statusHandler,
+        Priority\Handler $priorityHandler,
+        Progress\Handler $progressHandler
+    ): Response {
+        $command = Type\Command::fromTask($task);
+        $command->type = $task->getType()->getValue();
+        $typeForm = $this->createForm(Type\Form::class, $command);
+        $typeForm->handleRequest($request);
+
+        if ($typeForm->isSubmitted() && $typeForm->isValid()) {
+            try {
+                $typeHandler->handle($command);
+                $this->addFlash('success', 'Type was successfully changed');
+                return $this->redirectAfterSuccessAction($task);
+            } catch (\DomainException $e) {
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
+            }
+        }
+
+        $command = Status\Command::fromTask($task);
+        $command->status = $task->getStatus()->getValue();
+        $statusForm = $this->createForm(Status\Form::class, $command);
+        $statusForm->handleRequest($request);
+
+        if ($statusForm->isSubmitted() && $statusForm->isValid()) {
+            try {
+                $statusHandler->handle($command);
+                $this->addFlash('success', 'Status was successfully changed');
+                return $this->redirectAfterSuccessAction($task);
+            } catch (\DomainException $e) {
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
+            }
+        }
+
+        $command = Priority\Command::fromTask($task);
+        $command->priority = $task->getPriority();
+        $priorityForm = $this->createForm(Priority\Form::class, $command);
+        $priorityForm->handleRequest($request);
+
+        if ($priorityForm->isSubmitted() && $priorityForm->isValid()) {
+            try {
+                $priorityHandler->handle($command);
+                $this->addFlash('success', 'Priority was successfully changed');
+                return $this->redirectAfterSuccessAction($task);
+            } catch (\DomainException $e) {
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
+            }
+        }
+
+        $command = Progress\Command::fromTask($task);
+        $command->progress = $task->getProgress();
+        $progressForm = $this->createForm(Progress\Form::class, $command);
+        $progressForm->handleRequest($request);
+
+        if ($progressForm->isSubmitted() && $progressForm->isValid()) {
+            try {
+                $progressHandler->handle($command);
+                $this->addFlash('success', 'Progress was successfully changed');
+                return $this->redirectAfterSuccessAction($task);
+            } catch (\DomainException $e) {
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
+            }
+        }
+
+        return $this->render('app/work/projects/tasks/task/show.html.twig', [
+            'task' => $task,
+            'project' => $task->getProject(),
+            'forms' => [
+                'typeForm' => $typeForm->createView(),
+                'statusForm' => $statusForm->createView(),
+                'priorityForm' => $priorityForm->createView(),
+                'progressForm' => $progressForm->createView()
+            ]
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/assign", name=".assign")
+     */
+    public function assign(): Response
     {
         return new Response(1);
+    }
+
+    private function redirectAfterSuccessAction(Task $task): RedirectResponse
+    {
+        return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()->getValue()]);
     }
 }

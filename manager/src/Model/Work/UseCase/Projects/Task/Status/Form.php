@@ -20,4 +20,9 @@ class Form extends AbstractType
             'attr' => ['onChange' => 'this.form.submit()']
         ]);
     }
+
+    public function getBlockPrefix(): string
+    {
+        return 'status';
+    }
 }
