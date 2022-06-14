@@ -6,6 +6,7 @@ use App\DataFixtures\User\UserFixture;
 use App\Model\User\Entity\User\User;
 use App\Model\Work\Entity\Members\Group\Group;
 use App\Model\Work\Entity\Members\Member\Email;
+use App\Model\User\Entity\User\Id as UserId;
 use App\Model\Work\Entity\Members\Member\Id;
 use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Members\Member\Name;
@@ -28,6 +29,7 @@ class MemberFixture extends Fixture implements DependentFixtureInterface
         $group = $this->getReference(GroupFixture::GROUP_OUR_STAFF);
         $user = $this->getReference(UserFixture::USER_ADMIN);
         $member = $this->createMember(
+            $user->getId(),
             $group,
             new Name($user->getName()->getFirstName(), $user->getName()->getLastName()),
             new Email($user->getEmail()->getValue())
@@ -42,6 +44,7 @@ class MemberFixture extends Fixture implements DependentFixtureInterface
         $group = $this->getReference(GroupFixture::GROUP_CUSTOMERS);
         $user = $this->getReference(UserFixture::USER_USER);
         $member = $this->createMember(
+            $user->getId(),
             $group,
             new Name($user->getName()->getFirstName(), $user->getName()->getLastName()),
             new Email($user->getEmail()->getValue())
@@ -60,10 +63,10 @@ class MemberFixture extends Fixture implements DependentFixtureInterface
         ];
     }
 
-    private function createMember(Group $group, Name $name, Email $email)
+    private function createMember(UserId $id, Group $group, Name $name, Email $email)
     {
         return new Member(
-            Id::next(),
+            new Id($id->getValue()),
             $group,
             $name,
             $email,
