@@ -241,6 +241,11 @@ class Task
 
     public function setChildOf(?self $parent): void
     {
+        if ($parent === null) {
+            $this->parent = $parent;
+            return;
+        }
+
         if ($this->isEqual($parent)) {
             throw new \DomainException('Cycle hierarchy');
         }

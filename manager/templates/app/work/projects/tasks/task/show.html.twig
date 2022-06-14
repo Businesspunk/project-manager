@@ -35,6 +35,7 @@
         <button class="btn btn-info dropdown-toggle text-white" type="button" data-coreui-toggle="dropdown" aria-expanded="false">More...</button>
         <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{{ path('work.projects.tasks.move', {id: task.id}) }}">Move To Project</a></li>
+            <li><a class="dropdown-item" href="{{ path('work.projects.tasks.parent.set', {id: task.id}) }}">Set Child Of</a></li>
         </ul>
     </div>
     <div class="row mt-3">
