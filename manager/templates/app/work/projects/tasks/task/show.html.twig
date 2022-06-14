@@ -29,6 +29,7 @@
     <h3>{{ task.title }}</h3>
     <div class="actions mt-3">
         <a href="{{ path('work.projects.tasks.assign', {id: task.id}) }}" class="btn btn-info text-white">Assign</a>
+        <a href="{{ path('work.projects.tasks.edit', {id: task.id}) }}" class="btn btn-info text-white">Edit</a>
     </div>
     <div class="row mt-3">
         <div class="col-md-8">

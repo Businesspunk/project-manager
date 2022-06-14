@@ -20,6 +20,7 @@ use App\Model\Work\UseCase\Projects\Task\Priority;
 use App\Model\Work\UseCase\Projects\Task\Progress;
 use App\Model\Work\UseCase\Projects\Task\Plan;
 use App\Model\Work\UseCase\Projects\Task\Executor;
+use App\Model\Work\UseCase\Projects\Task\Edit;
 
 /**
  * @Route("/work/projects/tasks", name="work.projects.tasks")
@@ -152,6 +153,33 @@ class TasksController extends AbstractController
                 'priorityForm' => $priorityForm->createView(),
                 'progressForm' => $progressForm->createView()
             ]
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/edit", name=".edit")
+     */
+    public function edit(Task $task, Request $request, Edit\Handler $handler): Response
+    {
+        $command = Edit\Command::fromTask($task);
+        $form = $this->createForm(Edit\Form::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $handler->handle($command);
+                $this->addFlash('success', 'Task was successfully updated');
+                return $this->redirectDefault($task);
+            } catch (\DomainException $e) {
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
+            }
+        }
+
+        return $this->render('app/work/projects/tasks/task/edit.html.twig', [
+            'task' => $task,
+            'project' => $task->getProject(),
+            'form' => $form->createView()
         ]);
     }
 
