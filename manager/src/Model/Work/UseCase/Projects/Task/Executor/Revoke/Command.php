@@ -13,20 +13,18 @@ class Command
      */
     public $id;
     /**
-     * @var array
+     * @var string
      * @Assert\NotBlank
-     * @Assert\Count (min={1})
      */
-    public $members;
+    public $member;
 
-    public function __construct(int $id, array $members)
+    public function __construct(int $id)
     {
         $this->id = $id;
-        $this->members = $members;
     }
 
     public static function fromTask(Task $task): self
     {
-        return new self($task->getId()->getValue(), $task->getExecutors()->toArray());
+        return new self($task->getId()->getValue());
     }
 }

@@ -106,7 +106,43 @@
                 {{ task.content }}
             </div>
         </div>
-        <div class="col-md-4">Users</div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Author</div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <img src="{{ gravatar(task.author.email) }}" class="avatar-sm avatar-img" alt="Author">
+                        <a href="{{ path('work.members.show', {id: task.author.id}) }}" class="ms-1 text-sm-start link-info text-decoration-none">{{ task.author.fullName }}</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">Executors</div>
+                <div class="card-body">
+                    {% for executor in task.executors %}
+                        <div class="d-flex align-items-center justify-content-between {% if not loop.last %} mb-2{% endif %}">
+                            <div class="d-flex align-items-center">
+                                <img src="{{ gravatar(executor.email) }}" class="avatar-sm avatar-img" alt="{{ executor.fullName }}">
+                                <a href="{{ path('work.members.show', {id: executor.id}) }}" class="ms-1 text-sm-start link-info text-decoration-none">{{ executor.fullName }}</a>
+                            </div>
+                            <div>
+                                <form
+                                        action="{{ path('work.projects.tasks.revoke', {id: task.id, executorId: executor.id}) }}"
+                                        method="post"
+                                        onsubmit="return confirm('Are you sure you want to delete executor?')">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="token" value="{{ csrf_token('revoke') }}"/>
+                                    <button type="submit" class="text-black p-0 border-0 bg-transparent">
+                                        <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-x') }}"></use></svg>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
     <div class="h-25"></div>
 {% endblock %}

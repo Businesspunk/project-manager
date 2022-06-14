@@ -188,6 +188,31 @@ class TasksController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/revoke/{executorId}", name=".revoke", methods={"POST"})
+     */
+    public function revokeExecutor(
+        Task $task,
+        string $executorId,
+        Request $request,
+        Executor\Revoke\Handler $handler
+    ): Response {
+        if (!$this->isCsrfTokenValid('revoke', $request->request->get('token'))) {
+            return $this->redirectDefault($task);
+        }
+
+        $command = Executor\Revoke\Command::fromTask($task);
+        $command->member = $executorId;
+
+        try {
+            $handler->handle($command);
+            $this->addFlash('success', 'Executor was successfully deleted');
+        } catch (\DomainException $e) {
+            $this->addExceptionFlash($e);
+        }
+        return $this->redirectDefault($task);
+    }
+
+    /**
      * @Route("/{id}/plan/edit", name=".plan.edit")
      */
     public function planDate(Task $task, Request $request, Plan\Set\Handler $handler): Response
