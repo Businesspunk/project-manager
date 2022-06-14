@@ -69,11 +69,6 @@ class MemberRepository
 
     public function getByIds(array $ids): ?array
     {
-        return $this->repo->createQueryBuilder('t')
-                ->select('t.*')
-                ->andWhere('t.id IN (:ids)')
-                ->setParameter('ids', $ids)
-                ->getQuery()
-                ->execute();
+        return $this->repo->findBy(array('id' => $ids));
     }
 }

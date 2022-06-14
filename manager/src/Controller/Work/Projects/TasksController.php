@@ -19,6 +19,7 @@ use App\Model\Work\UseCase\Projects\Task\Status;
 use App\Model\Work\UseCase\Projects\Task\Priority;
 use App\Model\Work\UseCase\Projects\Task\Progress;
 use App\Model\Work\UseCase\Projects\Task\Plan;
+use App\Model\Work\UseCase\Projects\Task\Executor;
 
 /**
  * @Route("/work/projects/tasks", name="work.projects.tasks")
@@ -157,9 +158,33 @@ class TasksController extends AbstractController
     /**
      * @Route("/{id}/assign", name=".assign")
      */
-    public function assign(): Response
+    public function assign(Task $task, Request $request, Executor\Assign\Handler $handler): Response
     {
-        return new Response(1);
+        $command = Executor\Assign\Command::fromTask($task);
+        $form = $this->createForm(
+            Executor\Assign\Form::class,
+            $command,
+            ['project_id' => $task->getProject()->getId()->getValue()]
+        );
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $handler->handle($command);
+                $this->addFlash('success', 'Executors was successfully added');
+                return $this->redirectDefault($task);
+            } catch (\DomainException $e) {
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
+            }
+        }
+
+        return $this->render('app/work/projects/tasks/task/executor.html.twig', [
+            'task' => $task,
+            'project' => $task->getProject(),
+            'form' => $form->createView()
+        ]);
     }
 
     /**
