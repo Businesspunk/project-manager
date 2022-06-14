@@ -22,7 +22,7 @@ class Handler
     public function handle(Command $command)
     {
         $task = $this->tasks->get(new Id($command->id));
-        $task->plan($command->date);
+        $task->plan($command->plan);
         $this->flusher->flush();
     }
 }

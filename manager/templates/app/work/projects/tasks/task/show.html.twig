@@ -45,7 +45,30 @@
                                 <th>Create date</th>
                                 <td>{{ task.date|date('d-m-Y H:i:s') }}</td>
                                 <th>Plan date</th>
-                                <td>{{ task.planDate|date('d-m-Y') }}</td>
+                                <td class="d-flex justify-content-between">
+                                    {% if task.planDate is not null %}
+                                        {{ task.planDate|date('d-m-Y') }}
+                                    {% endif %}
+                                    <div class="d-flex">
+                                        <a href="{{ path('work.projects.tasks.plan.edit', {id: task.id}) }}" class="text-black me-1">
+                                            <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-pencil') }}"></use></svg>
+                                        </a>
+                                        {% if task.planDate is not null %}
+                                            <div>
+                                                <form
+                                                        action="{{ path('work.projects.tasks.plan.remove', {id: task.id}) }}"
+                                                        method="post"
+                                                        onsubmit="return confirm('Are you sure you want to delete plan date?')">
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <input type="hidden" name="token" value="{{ csrf_token('delete') }}"/>
+                                                    <button type="submit" class="text-black p-0 border-0 bg-transparent">
+                                                        <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-delete') }}"></use></svg>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <th>Type</th>

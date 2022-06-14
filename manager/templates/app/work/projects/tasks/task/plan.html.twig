@@ -1,0 +1,46 @@
+{% extends 'app/index.html.twig' %}
+
+{% block title %}Task {{ task.title }}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('home') }}">Home</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects') }}">Projects</a></span>
+    </li>
+
+    <li class="breadcrumb-item">
+        <span>
+            <a href="{{ path('work.projects.project', {id: project.id}) }}">{{ project.name }}</a>
+        </span>
+    </li>
+
+    <li class="breadcrumb-item">
+        <span>
+            <a href="{{ path('work.projects.project.tasks', {id: project.id}) }}">Tasks</a>
+        </span>
+    </li>
+
+    <li class="breadcrumb-item">
+        <span>
+            <a href="{{ path('work.projects.tasks.show', {id: task.id}) }}">{{ task.title }}</a>
+        </span>
+    </li>
+
+    <li class="breadcrumb-item active"><span>Plan</span></li>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">Setting plan</div>
+        <div class="card-body">
+            {{ form_start(form) }}
+            {{ form_row(form.plan) }}
+            <button class="btn btn-block btn-info text-white mt-2" type="submit">Update plan</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <div class="h-25"></div>
+{% endblock %}

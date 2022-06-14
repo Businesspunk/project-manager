@@ -233,7 +233,7 @@ class Task
         $this->content = $content;
     }
 
-    public function plan(\DateTimeImmutable $date): void
+    public function plan(?\DateTimeImmutable $date): void
     {
         $this->planDate = $date;
     }

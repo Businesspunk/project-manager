@@ -2,6 +2,7 @@
 
 namespace App\Model\Work\UseCase\Projects\Task\Plan\Remove;
 
+use App\Model\Work\Entity\Projects\Task\Task;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
@@ -15,5 +16,10 @@ class Command
     public function __construct(int $id)
     {
         $this->id = $id;
+    }
+
+    public static function fromTask(Task $task): self
+    {
+        return new self($task->getId()->getValue());
     }
 }

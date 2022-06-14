@@ -18,6 +18,7 @@ use App\Model\Work\UseCase\Projects\Task\Type;
 use App\Model\Work\UseCase\Projects\Task\Status;
 use App\Model\Work\UseCase\Projects\Task\Priority;
 use App\Model\Work\UseCase\Projects\Task\Progress;
+use App\Model\Work\UseCase\Projects\Task\Plan;
 
 /**
  * @Route("/work/projects/tasks", name="work.projects.tasks")
@@ -86,7 +87,7 @@ class TasksController extends AbstractController
             try {
                 $typeHandler->handle($command);
                 $this->addFlash('success', 'Type was successfully changed');
-                return $this->redirectAfterSuccessAction($task);
+                return $this->redirectDefault($task);
             } catch (\DomainException $e) {
                 $this->addExceptionFlash($e);
                 $this->errorHandler->handle($e);
@@ -102,7 +103,7 @@ class TasksController extends AbstractController
             try {
                 $statusHandler->handle($command);
                 $this->addFlash('success', 'Status was successfully changed');
-                return $this->redirectAfterSuccessAction($task);
+                return $this->redirectDefault($task);
             } catch (\DomainException $e) {
                 $this->addExceptionFlash($e);
                 $this->errorHandler->handle($e);
@@ -118,7 +119,7 @@ class TasksController extends AbstractController
             try {
                 $priorityHandler->handle($command);
                 $this->addFlash('success', 'Priority was successfully changed');
-                return $this->redirectAfterSuccessAction($task);
+                return $this->redirectDefault($task);
             } catch (\DomainException $e) {
                 $this->addExceptionFlash($e);
                 $this->errorHandler->handle($e);
@@ -134,7 +135,7 @@ class TasksController extends AbstractController
             try {
                 $progressHandler->handle($command);
                 $this->addFlash('success', 'Progress was successfully changed');
-                return $this->redirectAfterSuccessAction($task);
+                return $this->redirectDefault($task);
             } catch (\DomainException $e) {
                 $this->addExceptionFlash($e);
                 $this->errorHandler->handle($e);
@@ -161,7 +162,54 @@ class TasksController extends AbstractController
         return new Response(1);
     }
 
-    private function redirectAfterSuccessAction(Task $task): RedirectResponse
+    /**
+     * @Route("/{id}/plan/edit", name=".plan.edit")
+     */
+    public function planDate(Task $task, Request $request, Plan\Set\Handler $handler): Response
+    {
+        $command = Plan\Set\Command::fromTask($task);
+        $form = $this->createForm(Plan\Set\Form::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $handler->handle($command);
+                $this->addFlash('success', 'Plan was successfully changed');
+                return $this->redirectDefault($task);
+            } catch (\DomainException $e) {
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
+            }
+        }
+
+        return $this->render('app/work/projects/tasks/task/plan.html.twig', [
+            'task' => $task,
+            'project' => $task->getProject(),
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/plan/remove", name=".plan.remove", methods={"POST"})
+     */
+    public function removePlanDate(Task $task, Request $request, Plan\Remove\Handler $handler): Response
+    {
+        if (!$this->isCsrfTokenValid('delete', $request->request->get('token'))) {
+            return $this->redirectDefault($task);
+        }
+
+        $command = Plan\Remove\Command::fromTask($task);
+
+        try {
+            $handler->handle($command);
+            $this->addFlash('success', 'Plan was successfully deleted');
+        } catch (\DomainException $e) {
+            $this->addExceptionFlash($e);
+        }
+        return $this->redirectDefault($task);
+    }
+
+    private function redirectDefault(Task $task): RedirectResponse
     {
         return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()->getValue()]);
     }
