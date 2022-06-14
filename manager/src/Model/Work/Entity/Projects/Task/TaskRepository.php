@@ -9,16 +9,18 @@ class TaskRepository
 {
     private $em;
     private $repo;
+    private $connection;
 
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
         $this->repo = $em->getRepository(Task::class);
+        $this->connection = $em->getConnection();
     }
 
     public function nextId(): Id
     {
-        return new Id($this->em->getConnection()->query('SELECT nextval("work_projects_tasks_seq")')->fetch());
+        return new Id($this->connection->query('SELECT nextval(\'work_projects_tasks_seq\')')->fetchColumn());
     }
 
     public function add(Task $task): void

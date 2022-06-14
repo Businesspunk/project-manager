@@ -62,7 +62,7 @@ class MemberRepository
     public function get(Id $id): ?Member
     {
         if (!$group = $this->repo->find($id->getValue())) {
-            throw new EntityNotFoundException('Group is not exist');
+            throw new EntityNotFoundException('Member is not exist');
         }
         return $group;
     }

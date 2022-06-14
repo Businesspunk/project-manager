@@ -6,6 +6,8 @@ use App\Controller\ControllerFlashTrait;
 use App\Controller\ErrorHandler;
 use App\Annotation\GuidAnnotation;
 use App\Model\Work\Entity\Projects\Project\Project;
+use App\Model\Work\Entity\Projects\Task\Id;
+use App\Model\Work\Entity\Projects\Task\TaskRepository;
 use App\ReadModel\Work\Task\Filter\Filter;
 use App\ReadModel\Work\Task\Filter\Form;
 use App\ReadModel\Work\Task\TaskFetcher;
@@ -15,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Model\Work\UseCase\Projects\Task\Create;
 
 /**
  * @Route("/work/projects/{id}/tasks", name="work.projects.project.tasks", requirements={"id"=GuidAnnotation::PATTERN})
@@ -60,6 +63,39 @@ class TasksController extends AbstractController
             'tasks' => $pagination,
             'form' => $form->createView(),
             'project' => $project
+        ]);
+    }
+
+    /**
+     * @Route("/create", name=".create")
+     */
+    public function create(Project $project, Request $request, TaskRepository $tasks, Create\Handler $handler): Response
+    {
+        $command = new Create\Command($project->getId()->getValue(), $this->getUser()->getId());
+        $parentId = $request->query->get('parent');
+        $command->parent = $parentId;
+        $parent = $parentId ? $tasks->get(new Id($parentId)) : null;
+        $form = $this->createForm(Create\Form::class, $command, ['parentId' => $parentId]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $handler->handle($command);
+                $this->addFlash('success', 'Task was successfully created');
+                return $this->redirectToRoute('work.projects.project.tasks', [
+                    'id' => $project->getId()->getValue()
+                ]);
+            } catch (\DomainException $e) {
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
+            }
+        }
+
+        return $this->render('app/work/projects/tasks/task/create.html.twig', [
+            'parent' => $parent,
+            'project' => $project,
+            'form' => $form->createView()
         ]);
     }
 }

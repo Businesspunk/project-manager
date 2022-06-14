@@ -38,18 +38,17 @@ class Command
     public $type;
     /**
      * @var string
-     * @Assert\NotBlank
      */
     public $parent;
     /**
      * @var \DateTimeImmutable
-     * @Assert\Date()
+     * @Assert\Type("\DateTimeInterface")
      */
     public $plan;
 
     public function __construct($project, $author)
     {
-        $this->priority = $project;
+        $this->project = $project;
         $this->author = $author;
         $this->priority = 2;
         $this->type = Type::NONE;

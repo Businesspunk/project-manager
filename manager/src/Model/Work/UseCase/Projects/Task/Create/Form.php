@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type;
 use App\Model\Work\Entity\Projects\Task\Type as TaskType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Form extends AbstractType
 {
@@ -35,7 +36,17 @@ class Form extends AbstractType
                 'plan',
                 Type\DateType::class,
                 ['widget' => 'single_text', 'input'  => 'datetime_immutable', 'required' => false]
-            )
-            ->add('parent', Type\IntegerType::class, ['required' => false]);
+            );
+
+        if ($options['parentId']) {
+            $builder->add('parent', Type\HiddenType::class);
+        } else {
+            $builder->add('parent', Type\IntegerType::class, ['required' => false]);
+        }
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setRequired('parentId');
     }
 }

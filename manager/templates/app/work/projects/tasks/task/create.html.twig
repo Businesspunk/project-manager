@@ -1,0 +1,76 @@
+{% extends 'app/index.html.twig' %}
+
+{% block title %}Create{% endblock %}
+
+{% if parent is not null %}
+    {% set pageTitle = 'Create subtask' %}
+{% else %}
+    {% set pageTitle = 'Create' %}
+{% endif %}
+
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('home') }}">Home</a></span>
+    </li>
+    <li class="breadcrumb-item">
+        <span><a href="{{ path('work.projects') }}">Projects</a></span>
+    </li>
+
+    <li class="breadcrumb-item">
+        <span>
+            <a href="{{ path('work.projects.project', {id: project.id}) }}">{{ project.name }}</a>
+        </span>
+    </li>
+
+    <li class="breadcrumb-item">
+        <span>
+            <a href="{{ path('work.projects.project.tasks', {id: project.id}) }}">Tasks</a>
+        </span>
+    </li>
+
+    {% if parent is not null %}
+        <li class="breadcrumb-item">
+            <span>
+                <a href="{{ path('work.projects.tasks.show', {id: parent.id}) }}">{{ parent.title }}</a>
+            </span>
+        </li>
+        <li class="breadcrumb-item active"><span>{{ pageTitle }}</span></li>
+    {% else %}
+        <li class="breadcrumb-item active"><span>{{ pageTitle }}</span></li>
+    {% endif %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">{{ pageTitle }}</div>
+        <div class="card-body">
+            {{ form_start(form) }}
+            {{ form_row(form.title) }}
+            <div class="mt-3">
+                {{ form_row(form.content) }}
+            </div>
+            <div class="mt-3">
+                {{ form_row(form.type) }}
+            </div>
+            <div class="mt-3">
+                {{ form_row(form.priority) }}
+            </div>
+            <div class="mt-3">
+                {{ form_row(form.plan) }}
+            </div>
+            {% if parent is null %}
+                <div class="mt-3">
+                    {{ form_row(form.parent) }}
+                </div>
+            {% endif %}
+            <button class="btn btn-block btn-info text-white mt-2" type="submit">Create</button>
+            {{ form_end(form) }}
+
+            <div class="h-25"></div>
+        </div>
+    </div>
+
+    <div class="h-25"></div>
+{% endblock %}

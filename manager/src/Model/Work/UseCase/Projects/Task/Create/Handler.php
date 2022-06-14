@@ -47,8 +47,8 @@ class Handler
             new Type($command->type)
         );
 
-        if ($command->parent) {
-            $parent = $this->tasks->get(new Id($command->author));
+        if ($parent = $command->parent) {
+            $parent = $this->tasks->get(new Id($parent));
             $task->setChildOf($parent);
         }
 
