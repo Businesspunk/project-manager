@@ -16,9 +16,9 @@ class Gravatar extends AbstractExtension
 
     public function getUrl(string $email, int $size = 80): string
     {
-        return sprintf('https://www.gravatar.com/avatar/%s%s', md5(strtolower(trim($email))), http_build_query([
+        return sprintf('https://www.gravatar.com/avatar/%s?%s', md5(strtolower(trim($email))), http_build_query([
             's' => $size,
-            'd' => 'mp'
+            'd' => 'identicon'
         ]));
     }
 }
