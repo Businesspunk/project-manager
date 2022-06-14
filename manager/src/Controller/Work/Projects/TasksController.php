@@ -5,6 +5,7 @@ namespace App\Controller\Work\Projects;
 use App\Controller\ControllerFlashTrait;
 use App\Controller\ErrorHandler;
 use App\Model\Work\Entity\Projects\Task\Task;
+use App\Model\Work\UseCase\Projects\Task\Move;
 use App\ReadModel\Work\Task\Filter\Filter;
 use App\ReadModel\Work\Task\Filter\Form;
 use App\ReadModel\Work\Task\TaskFetcher;
@@ -177,6 +178,33 @@ class TasksController extends AbstractController
         }
 
         return $this->render('app/work/projects/tasks/task/edit.html.twig', [
+            'task' => $task,
+            'project' => $task->getProject(),
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/move", name=".move")
+     */
+    public function move(Task $task, Request $request, Move\Handler $handler): Response
+    {
+        $command = Move\Command::fromTask($task);
+        $form = $this->createForm(Move\Form::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $handler->handle($command);
+                $this->addFlash('success', 'Task was successfully moved');
+                return $this->redirectDefault($task);
+            } catch (\DomainException $e) {
+                $this->addExceptionFlash($e);
+                $this->errorHandler->handle($e);
+            }
+        }
+
+        return $this->render('app/work/projects/tasks/task/move.html.twig', [
             'task' => $task,
             'project' => $task->getProject(),
             'form' => $form->createView()

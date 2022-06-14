@@ -2,6 +2,7 @@
 
 namespace App\Model\Work\UseCase\Projects\Task\Move;
 
+use App\Model\Work\Entity\Projects\Task\Task;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
@@ -18,7 +19,6 @@ class Command
     public $project;
     /**
      * @var bool
-     * @Assert\NotBlank
      * @Assert\Type("bool")
      */
     public $withChildren;
@@ -26,5 +26,12 @@ class Command
     public function __construct(int $id)
     {
         $this->id = $id;
+    }
+
+    public static function fromTask(Task $task): self
+    {
+        $command = new self($task->getId()->getValue());
+        $command->project = $task->getProject()->getId()->getValue();
+        return $command;
     }
 }

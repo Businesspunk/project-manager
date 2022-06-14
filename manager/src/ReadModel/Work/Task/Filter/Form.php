@@ -24,7 +24,7 @@ class Form extends AbstractType
         $projectId = $options['project_id'];
         $members = [];
 
-        $membersQuery = $this->members->activeDepartmentList($projectId);
+        $membersQuery = $this->members->activeDepartmentList($projectId) ?? [];
 
         foreach ($membersQuery as $member) {
             $members[$member['department']][$member['name']] = $member['id'];

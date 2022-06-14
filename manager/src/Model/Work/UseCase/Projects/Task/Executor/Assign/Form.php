@@ -20,7 +20,8 @@ class Form extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $members = [];
-        foreach ($this->members->activeDepartmentList($options['project_id']) as $member) {
+        $memberQuery = $this->members->activeDepartmentList($options['project_id']) ?? [];
+        foreach ($memberQuery as $member) {
             $members[$member['department'] . ' - ' . $member['name'] . ' (' . $member['email'] . ')'] = $member['id'];
         }
 
