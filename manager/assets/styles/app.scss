@@ -61,3 +61,7 @@ html body .task_priority .icon:not(.icon-c-s):not(.icon-custom-size){
 .sortable_link{
   display: flex;
 }
+
+.form-error-icon.badge.badge-danger {
+  background: $warning-base;
+}
