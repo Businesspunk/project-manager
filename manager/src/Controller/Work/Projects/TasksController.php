@@ -7,6 +7,7 @@ use App\Controller\ErrorHandler;
 use App\Model\Work\Entity\Projects\Task\Task;
 use App\Model\Work\UseCase\Projects\Task\ChildOf;
 use App\Model\Work\UseCase\Projects\Task\Move;
+use App\Model\Work\UseCase\Projects\Task\Remove;
 use App\ReadModel\Work\Task\Filter\Filter;
 use App\ReadModel\Work\Task\Filter\Form;
 use App\ReadModel\Work\Task\TaskFetcher;
@@ -210,6 +211,26 @@ class TasksController extends AbstractController
             'project' => $task->getProject(),
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/{id}/delete", name=".delete", methods={"POST"})
+     */
+    public function delete(Task $task, Request $request, Remove\Handler $handler): Response
+    {
+        if (!$this->isCsrfTokenValid('delete', $request->request->get('token'))) {
+            return $this->redirectDefault($task);
+        }
+
+        $command = Remove\Command::fromTask($task);
+
+        try {
+            $handler->handle($command);
+            $this->addFlash('success', 'Task was successfully deleted');
+        } catch (\DomainException $e) {
+            $this->addExceptionFlash($e);
+        }
+        return $this->redirectToRoute('work.projects.tasks');
     }
 
     /**

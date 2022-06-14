@@ -20,7 +20,7 @@ class Task
     /**
      * @var Id
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\GeneratedValue(strategy="SEQUENCE")
      * @ORM\SequenceGenerator(sequenceName="work_projects_tasks_seq", initialValue=1)
      * @ORM\Column(type="work_projects_task_id")
      */
@@ -80,6 +80,7 @@ class Task
     /**
      * @var Task
      * @ORM\ManyToOne (targetEntity="Task")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $parent;
     /**

@@ -36,6 +36,16 @@
         <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{{ path('work.projects.tasks.move', {id: task.id}) }}">Move To Project</a></li>
             <li><a class="dropdown-item" href="{{ path('work.projects.tasks.parent.set', {id: task.id}) }}">Set Child Of</a></li>
+            <li>
+                <form
+                        action="{{ path('work.projects.tasks.delete', {id: task.id}) }}"
+                        method="post"
+                        onsubmit="return confirm('Are you sure you want to delete task?')">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" name="token" value="{{ csrf_token('delete') }}"/>
+                    <button type="submit" class="dropdown-item">Delete</button>
+                </form>
+            </li>
         </ul>
     </div>
     <div class="row mt-3">
