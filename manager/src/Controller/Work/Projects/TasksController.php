@@ -9,6 +9,7 @@ use App\Model\Work\UseCase\Projects\Task\ChildOf;
 use App\Model\Work\UseCase\Projects\Task\Move;
 use App\Model\Work\UseCase\Projects\Task\Remove;
 use App\Model\Work\UseCase\Projects\Task\Take;
+use App\Model\Work\UseCase\Projects\Task\Start;
 use App\ReadModel\Work\Task\Filter\Filter;
 use App\ReadModel\Work\Task\Filter\Form;
 use App\ReadModel\Work\Task\TaskFetcher;
@@ -229,6 +230,26 @@ class TasksController extends AbstractController
         try {
             $handler->handle($command);
             $this->addFlash('success', 'Task was successfully taken');
+        } catch (\DomainException $e) {
+            $this->addExceptionFlash($e);
+        }
+        return $this->redirectDefault($task);
+    }
+
+    /**
+     * @Route("/{id}/start", name=".start", methods={"POST"})
+     */
+    public function start(Task $task, Request $request, Start\Handler $handler): Response
+    {
+        if (!$this->isCsrfTokenValid('start', $request->request->get('token'))) {
+            return $this->redirectDefault($task);
+        }
+
+        $command = Start\Command::fromTask($task);
+
+        try {
+            $handler->handle($command);
+            $this->addFlash('success', 'Task was successfully started');
         } catch (\DomainException $e) {
             $this->addExceptionFlash($e);
         }
