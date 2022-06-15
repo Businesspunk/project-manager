@@ -7,11 +7,13 @@ use App\Controller\ErrorHandler;
 use App\Annotation\GuidAnnotation;
 use App\Model\Work\Entity\Projects\Project\Project;
 use App\Model\Work\Entity\Projects\Task\Id;
+use App\Model\Work\Entity\Projects\Task\Task;
 use App\Model\Work\Entity\Projects\Task\TaskRepository;
 use App\ReadModel\Work\Task\Filter\Filter;
 use App\ReadModel\Work\Task\Filter\Form;
 use App\ReadModel\Work\Task\TaskFetcher;
 use App\Security\Voter\Work\ProjectAccess;
+use App\Security\Voter\Work\TaskAccess;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -71,6 +73,7 @@ class TasksController extends AbstractController
      */
     public function create(Project $project, Request $request, TaskRepository $tasks, Create\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(TaskAccess::MANAGE, Task::class);
         $command = new Create\Command($project->getId()->getValue(), $this->getUser()->getId());
         $parentId = $request->query->get('parent');
         $command->parent = $parentId;

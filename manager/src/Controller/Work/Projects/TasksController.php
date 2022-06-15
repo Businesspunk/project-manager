@@ -14,6 +14,7 @@ use App\Model\Work\UseCase\Projects\Task\TakeAndStart;
 use App\ReadModel\Work\Task\Filter\Filter;
 use App\ReadModel\Work\Task\Filter\Form;
 use App\ReadModel\Work\Task\TaskFetcher;
+use App\Security\Voter\Work\TaskAccess;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,9 +87,14 @@ class TasksController extends AbstractController
         Priority\Handler $priorityHandler,
         Progress\Handler $progressHandler
     ): Response {
+        $this->denyAccessUnlessGranted(TaskAccess::VIEW, $task);
         $command = Type\Command::fromTask($task);
         $command->type = $task->getType()->getValue();
-        $typeForm = $this->createForm(Type\Form::class, $command);
+
+        $formOptions = [
+            'disabled' => !$this->isGranted(TaskAccess::MANAGE, $task)
+        ];
+        $typeForm = $this->createForm(Type\Form::class, $command, $formOptions);
         $typeForm->handleRequest($request);
 
         if ($typeForm->isSubmitted() && $typeForm->isValid()) {
@@ -104,7 +110,7 @@ class TasksController extends AbstractController
 
         $command = Status\Command::fromTask($task);
         $command->status = $task->getStatus()->getValue();
-        $statusForm = $this->createForm(Status\Form::class, $command);
+        $statusForm = $this->createForm(Status\Form::class, $command, $formOptions);
         $statusForm->handleRequest($request);
 
         if ($statusForm->isSubmitted() && $statusForm->isValid()) {
@@ -120,7 +126,7 @@ class TasksController extends AbstractController
 
         $command = Priority\Command::fromTask($task);
         $command->priority = $task->getPriority();
-        $priorityForm = $this->createForm(Priority\Form::class, $command);
+        $priorityForm = $this->createForm(Priority\Form::class, $command, $formOptions);
         $priorityForm->handleRequest($request);
 
         if ($priorityForm->isSubmitted() && $priorityForm->isValid()) {
@@ -136,7 +142,7 @@ class TasksController extends AbstractController
 
         $command = Progress\Command::fromTask($task);
         $command->progress = $task->getProgress();
-        $progressForm = $this->createForm(Progress\Form::class, $command);
+        $progressForm = $this->createForm(Progress\Form::class, $command, $formOptions);
         $progressForm->handleRequest($request);
 
         if ($progressForm->isSubmitted() && $progressForm->isValid()) {
@@ -158,7 +164,8 @@ class TasksController extends AbstractController
                 'statusForm' => $statusForm->createView(),
                 'priorityForm' => $priorityForm->createView(),
                 'progressForm' => $progressForm->createView()
-            ]
+            ],
+            'actionsGranted' => TaskAccess::MANAGE
         ]);
     }
 
@@ -167,6 +174,7 @@ class TasksController extends AbstractController
      */
     public function edit(Task $task, Request $request, Edit\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
         $command = Edit\Command::fromTask($task);
         $form = $this->createForm(Edit\Form::class, $command);
         $form->handleRequest($request);
@@ -194,6 +202,7 @@ class TasksController extends AbstractController
      */
     public function move(Task $task, Request $request, Move\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
         $command = Move\Command::fromTask($task);
         $form = $this->createForm(Move\Form::class, $command);
         $form->handleRequest($request);
@@ -221,6 +230,7 @@ class TasksController extends AbstractController
      */
     public function take(Task $task, Request $request, Take\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
         if (!$this->isCsrfTokenValid('take', $request->request->get('token'))) {
             return $this->redirectDefault($task);
         }
@@ -242,6 +252,7 @@ class TasksController extends AbstractController
      */
     public function start(Task $task, Request $request, Start\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
         if (!$this->isCsrfTokenValid('start', $request->request->get('token'))) {
             return $this->redirectDefault($task);
         }
@@ -262,6 +273,7 @@ class TasksController extends AbstractController
      */
     public function takeAndStart(Task $task, Request $request, TakeAndStart\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
         if (!$this->isCsrfTokenValid('takeandstart', $request->request->get('token'))) {
             return $this->redirectDefault($task);
         }
@@ -283,6 +295,7 @@ class TasksController extends AbstractController
      */
     public function delete(Task $task, Request $request, Remove\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
         if (!$this->isCsrfTokenValid('delete', $request->request->get('token'))) {
             return $this->redirectDefault($task);
         }
@@ -303,6 +316,7 @@ class TasksController extends AbstractController
      */
     public function setParent(Task $task, Request $request, ChildOf\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
         $command = ChildOf\Command::fromTask($task);
         $form = $this->createForm(ChildOf\Form::class, $command);
         $form->handleRequest($request);
@@ -330,6 +344,7 @@ class TasksController extends AbstractController
      */
     public function assign(Task $task, Request $request, Executor\Assign\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
         $command = Executor\Assign\Command::fromTask($task);
         $form = $this->createForm(
             Executor\Assign\Form::class,
@@ -366,6 +381,7 @@ class TasksController extends AbstractController
         Request $request,
         Executor\Revoke\Handler $handler
     ): Response {
+        $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
         if (!$this->isCsrfTokenValid('revoke', $request->request->get('token'))) {
             return $this->redirectDefault($task);
         }
@@ -387,6 +403,7 @@ class TasksController extends AbstractController
      */
     public function planDate(Task $task, Request $request, Plan\Set\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
         $command = Plan\Set\Command::fromTask($task);
         $form = $this->createForm(Plan\Set\Form::class, $command);
         $form->handleRequest($request);
@@ -414,6 +431,7 @@ class TasksController extends AbstractController
      */
     public function removePlanDate(Task $task, Request $request, Plan\Remove\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
         if (!$this->isCsrfTokenValid('delete', $request->request->get('token'))) {
             return $this->redirectDefault($task);
         }

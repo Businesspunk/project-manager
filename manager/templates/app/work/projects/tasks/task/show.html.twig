@@ -27,6 +27,9 @@
 
 {% block content %}
     <h3>{{ task.title }}</h3>
+    {% set canPerformActions = is_granted(actionsGranted, task) %}
+
+    {% if canPerformActions %}
     <div class="actions mt-3">
         {% if(task.hasExecutorById(app.user.id) == false and task.isNew) %}
             <form
@@ -77,6 +80,8 @@
             </li>
         </ul>
     </div>
+    {% endif %}
+
     <div class="row mt-3">
         <div class="col-md-8">
             <div class="card">
@@ -96,6 +101,7 @@
                                     {% if task.planDate is not null %}
                                         {{ task.planDate|date('d-m-Y') }}
                                     {% endif %}
+                                    {% if canPerformActions %}
                                     <div class="d-flex">
                                         <a href="{{ path('work.projects.tasks.plan.edit', {id: task.id}) }}" class="text-black me-1">
                                             <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-pencil') }}"></use></svg>
@@ -115,6 +121,7 @@
                                             </div>
                                         {% endif %}
                                     </div>
+                                    {% endif %}
                                 </td>
                             </tr>
                             <tr>
@@ -167,10 +174,11 @@
             <div class="card mt-3">
                 <div class="card-header d-flex justify-content-between">
                     Executors
-
-                    <a href="{{ path('work.projects.tasks.assign', {id: task.id}) }}" class="text-black">
-                        <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-plus') }}"></use></svg>
-                    </a>
+                    {% if canPerformActions %}
+                        <a href="{{ path('work.projects.tasks.assign', {id: task.id}) }}" class="text-black">
+                            <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-plus') }}"></use></svg>
+                        </a>
+                    {% endif %}
                 </div>
                 <div class="card-body">
                     {% for executor in task.executors %}
@@ -179,18 +187,20 @@
                                 <img src="{{ gravatar(executor.email) }}" class="avatar-sm avatar-img" alt="{{ executor.fullName }}">
                                 <a href="{{ path('work.members.show', {id: executor.id}) }}" class="ms-1 text-sm-start link-info text-decoration-none">{{ executor.fullName }}</a>
                             </div>
-                            <div>
-                                <form
-                                        action="{{ path('work.projects.tasks.revoke', {id: task.id, executorId: executor.id}) }}"
-                                        method="post"
-                                        onsubmit="return confirm('Are you sure you want to delete executor?')">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <input type="hidden" name="token" value="{{ csrf_token('revoke') }}"/>
-                                    <button type="submit" class="text-black p-0 border-0 bg-transparent">
-                                        <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-x') }}"></use></svg>
-                                    </button>
-                                </form>
-                            </div>
+                            {% if canPerformActions %}
+                                <div>
+                                    <form
+                                            action="{{ path('work.projects.tasks.revoke', {id: task.id, executorId: executor.id}) }}"
+                                            method="post"
+                                            onsubmit="return confirm('Are you sure you want to delete executor?')">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="token" value="{{ csrf_token('revoke') }}"/>
+                                        <button type="submit" class="text-black p-0 border-0 bg-transparent">
+                                            <svg class="icon"><use xlink:href="{{ asset('build/coreui/icons/svg/free.svg#cil-x') }}"></use></svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>
