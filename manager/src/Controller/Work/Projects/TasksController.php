@@ -81,6 +81,7 @@ class TasksController extends AbstractController
      */
     public function show(
         Task $task,
+        TaskFetcher $tasks,
         Request $request,
         Type\Handler $typeHandler,
         Status\Handler $statusHandler,
@@ -158,6 +159,7 @@ class TasksController extends AbstractController
 
         return $this->render('app/work/projects/tasks/task/show.html.twig', [
             'task' => $task,
+            'subtasks' => $tasks->childrenOf($task->getId()->getValue()),
             'project' => $task->getProject(),
             'forms' => [
                 'typeForm' => $typeForm->createView(),

@@ -27,6 +27,7 @@ class TaskFetcher
                 'concat(m.name_first, \' \', m.name_last) as author',
                 'p.name as project',
                 'p.id as project_id',
+                't.parent_id as parent',
                 't.title',
                 't.type',
                 't.priority',
@@ -105,6 +106,48 @@ class TaskFetcher
         }, $tasks));
 
         return $pagination;
+    }
+
+    public function childrenOf(int $id): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select(
+                't.id',
+                't.date',
+                'p.name as project',
+                'p.id as project_id',
+                't.title',
+                't.type',
+                't.priority',
+                't.status',
+                't.progress'
+            )->leftJoin('t', 'work_members_members', 'm', 't.author_id = m.id')
+            ->leftJoin('t', 'work_projects_projects', 'p', 'p.id = t.project_id')
+            ->from('work_projects_tasks', 't')
+            ->where('t.parent_id = :parent_id')
+            ->setParameter(':parent_id', $id)
+            ->execute();
+
+        $tasks = $qb->fetchAllAssociative();
+        $executors = $this->batchLoadExecutors(array_column($tasks, 'id'));
+
+        $tasks = array_map(static function (array $task) use ($executors) {
+            return array_merge($task, [
+                'executors' => array_values(
+                    array_column(
+                        array_filter(
+                            $executors,
+                            static function (array $executor) use ($task) {
+                                return $executor['task_id'] === $task['id'];
+                            }
+                        ),
+                        'name'
+                    )
+                )
+            ]);
+        }, $tasks);
+
+        return $tasks;
     }
 
     private function batchLoadExecutors(array $ids): array

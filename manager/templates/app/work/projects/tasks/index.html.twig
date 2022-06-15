@@ -72,7 +72,7 @@
                             {% if project is null %}
                                 <td><a href="{{ path('work.projects.project', {id: task.project_id}) }}">{{ task.project }}</a></td>
                             {% endif %}
-                            <td><a href="{{ path('work.projects.tasks.show', {id: task.id}) }}">{{ task.title }}</a></td>
+                            <td>{% if task.parent %}» {% endif %}<a href="{{ path('work.projects.tasks.show', {id: task.id}) }}">{{ task.title }}</a></td>
                             <td>{{ task_type(task.type) }}</td>
                             <td>{{ task_priority(task.priority) }}</td>
                             <td>{{ task_executors(task.executors) }}</td>
