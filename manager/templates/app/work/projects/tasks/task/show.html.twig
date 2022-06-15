@@ -28,6 +28,16 @@
 {% block content %}
     <h3>{{ task.title }}</h3>
     <div class="actions mt-3">
+        {% if task.hasExecutorById(app.user.id) == false %}
+            <form
+                    action="{{ path('work.projects.tasks.take', {id: task.id}) }}"
+                    class="d-inline-block"
+                    method="post">
+                <input type="hidden" name="token" value="{{ csrf_token('take') }}"/>
+                <button type="submit" class="btn btn-success text-white">Take</button>
+            </form>
+        {% endif %}
+
         <a href="{{ path('work.projects.tasks.assign', {id: task.id}) }}" class="btn btn-info text-white">Assign</a>
         <a href="{{ path('work.projects.project.tasks.create', {id: project.id, parent: task.id}) }}" class="btn btn-info text-white">Add Sub Task</a>
         <a href="{{ path('work.projects.tasks.edit', {id: task.id}) }}" class="btn btn-info text-white">Edit</a>

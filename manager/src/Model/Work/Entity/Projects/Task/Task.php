@@ -3,6 +3,7 @@
 namespace App\Model\Work\Entity\Projects\Task;
 
 use App\Model\Work\Entity\Members\Member\Member;
+use App\Model\Work\Entity\Members\Member\Id as MemberId;
 use App\Model\Work\Entity\Projects\Project\Project;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -209,6 +210,16 @@ class Task
     public function isNew(): bool
     {
         return $this->status->isNew();
+    }
+
+    public function hasExecutorById(string $id)
+    {
+        foreach ($this->executors as $executor) {
+            if ($executor->getId()->isEqual(new MemberId($id))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function isEqual(self $other): bool

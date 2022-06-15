@@ -8,6 +8,7 @@ use App\Model\Work\Entity\Projects\Task\Task;
 use App\Model\Work\UseCase\Projects\Task\ChildOf;
 use App\Model\Work\UseCase\Projects\Task\Move;
 use App\Model\Work\UseCase\Projects\Task\Remove;
+use App\Model\Work\UseCase\Projects\Task\Take;
 use App\ReadModel\Work\Task\Filter\Filter;
 use App\ReadModel\Work\Task\Filter\Form;
 use App\ReadModel\Work\Task\TaskFetcher;
@@ -211,6 +212,27 @@ class TasksController extends AbstractController
             'project' => $task->getProject(),
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/{id}/take", name=".take", methods={"POST"})
+     */
+    public function take(Task $task, Request $request, Take\Handler $handler): Response
+    {
+        if (!$this->isCsrfTokenValid('take', $request->request->get('token'))) {
+            return $this->redirectDefault($task);
+        }
+
+        $command = Take\Command::fromTask($task);
+        $command->member = $this->getUser()->getId();
+
+        try {
+            $handler->handle($command);
+            $this->addFlash('success', 'Task was successfully taken');
+        } catch (\DomainException $e) {
+            $this->addExceptionFlash($e);
+        }
+        return $this->redirectDefault($task);
     }
 
     /**

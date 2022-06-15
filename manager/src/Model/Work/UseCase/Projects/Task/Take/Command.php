@@ -2,6 +2,7 @@
 
 namespace App\Model\Work\UseCase\Projects\Task\Take;
 
+use App\Model\Work\Entity\Projects\Task\Task;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
@@ -17,9 +18,13 @@ class Command
      */
     public $member;
 
-    public function __construct(int $id, string $member)
+    public function __construct(int $id)
     {
         $this->id = $id;
-        $this->member = $member;
+    }
+
+    public static function fromTask(Task $task): self
+    {
+        return new self($task->getId()->getValue());
     }
 }
