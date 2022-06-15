@@ -131,7 +131,7 @@ class TaskFetcher
         $tasks = $qb->fetchAllAssociative();
         $executors = $this->batchLoadExecutors(array_column($tasks, 'id'));
 
-        $tasks = array_map(static function (array $task) use ($executors) {
+        return array_map(static function (array $task) use ($executors) {
             return array_merge($task, [
                 'executors' => array_values(
                     array_column(
@@ -146,8 +146,6 @@ class TaskFetcher
                 )
             ]);
         }, $tasks);
-
-        return $tasks;
     }
 
     private function batchLoadExecutors(array $ids): array
