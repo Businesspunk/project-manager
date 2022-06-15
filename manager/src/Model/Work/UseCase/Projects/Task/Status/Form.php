@@ -13,6 +13,7 @@ class Form extends AbstractType
     {
         $builder->add('status', Type\ChoiceType::class, [
             'choices' => [
+                'New' => Status::NEW,
                 'In work' => Status::IN_WORK,
                 'Need approve' => Status::NEED_APPROVE,
                 'Done' => Status::DONE

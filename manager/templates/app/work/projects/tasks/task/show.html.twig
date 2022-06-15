@@ -28,24 +28,33 @@
 {% block content %}
     <h3>{{ task.title }}</h3>
     <div class="actions mt-3">
-        {% if task.hasExecutorById(app.user.id) == false %}
+        {% if(task.hasExecutorById(app.user.id) == false and task.isNew) %}
             <form
-                    action="{{ path('work.projects.tasks.take', {id: task.id}) }}"
+                    action="{{ path('work.projects.tasks.takeandstart', {id: task.id}) }}"
                     class="d-inline-block"
                     method="post">
-                <input type="hidden" name="token" value="{{ csrf_token('take') }}"/>
-                <button type="submit" class="btn btn-success text-white">Take</button>
+                <input type="hidden" name="token" value="{{ csrf_token('takeandstart') }}"/>
+                <button type="submit" class="btn btn-success text-white">Take and start</button>
             </form>
-        {% endif %}
-
-        {% if task.isNew %}
-            <form
-                    action="{{ path('work.projects.tasks.start', {id: task.id}) }}"
-                    class="d-inline-block"
-                    method="post">
-                <input type="hidden" name="token" value="{{ csrf_token('start') }}"/>
-                <button type="submit" class="btn btn-success text-white">Start</button>
-            </form>
+        {% else %}
+            {% if task.hasExecutorById(app.user.id) == false %}
+                <form
+                        action="{{ path('work.projects.tasks.take', {id: task.id}) }}"
+                        class="d-inline-block"
+                        method="post">
+                    <input type="hidden" name="token" value="{{ csrf_token('take') }}"/>
+                    <button type="submit" class="btn btn-success text-white">Take</button>
+                </form>
+            {% endif %}
+            {% if task.isNew %}
+                <form
+                        action="{{ path('work.projects.tasks.start', {id: task.id}) }}"
+                        class="d-inline-block"
+                        method="post">
+                    <input type="hidden" name="token" value="{{ csrf_token('start') }}"/>
+                    <button type="submit" class="btn btn-success text-white">Start</button>
+                </form>
+            {% endif %}
         {% endif %}
 
         <a href="{{ path('work.projects.tasks.assign', {id: task.id}) }}" class="btn btn-info text-white">Assign</a>
