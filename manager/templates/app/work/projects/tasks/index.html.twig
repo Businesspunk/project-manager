@@ -70,7 +70,7 @@
                     {% for task in tasks %}
                         <tr class="align-middle">
                             <td>{{ task.id }}</td>
-                            <td>{{ task.date }}</td>
+                            <td>{{ task.date|date('d-m-Y')}}</td>
                             <td>{{ task.author }}</td>
                             {% if project is null %}
                                 <td><a href="{{ path('work.projects.project', {id: task.project_id}) }}">{{ task.project }}</a></td>
@@ -79,7 +79,7 @@
                             <td>{{ task_type(task.type) }}</td>
                             <td>{{ task_priority(task.priority) }}</td>
                             <td>{{ task_executors(task.executors) }}</td>
-                            <td>{{ task.plan_date }}</td>
+                            <td>{{ task.plan_date|date('d-m-Y') }}</td>
                             <td>{{ task_status(task.status) }}</td>
                             <td>{{ task_progress(task.progress) }}</td>
                         </tr>

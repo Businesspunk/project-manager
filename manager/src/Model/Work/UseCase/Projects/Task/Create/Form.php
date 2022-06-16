@@ -35,7 +35,13 @@ class Form extends AbstractType
             ->add(
                 'plan',
                 Type\DateType::class,
-                ['widget' => 'single_text', 'input'  => 'datetime_immutable', 'required' => false]
+                [
+                    'widget' => 'single_text',
+                    'format' => 'dd-MM-yyyy',
+                    'input'  => 'datetime_immutable',
+                    'html5' => false,
+                    'attr' => ['class' => 'js-datepicker']
+                ]
             );
 
         if ($options['parentId']) {

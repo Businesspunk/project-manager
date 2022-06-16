@@ -14,7 +14,13 @@ class Form extends AbstractType
         $builder->add(
             'plan',
             Type\DateType::class,
-            ['widget' => 'single_text', 'input'  => 'datetime_immutable']
+            [
+                'widget' => 'single_text',
+                'format' => 'dd-MM-yyyy',
+                'input'  => 'datetime_immutable',
+                'html5' => false,
+                'attr' => ['class' => 'js-datepicker']
+            ]
         );
     }
 }
