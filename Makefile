@@ -54,6 +54,9 @@ run-tests:
 dev-build:
 	docker-compose build
 
+dev-db-dump:
+	docker-compose exec manager-postgres pg_dumpall -c -U postgres > dump.sql
+
 prod-up:
 	REGISTRY=$(REGISTRY) TAG=$(TAG) REDIS_SECRET=$(REDIS_SECRET) docker-compose -f docker-compose-production.yml up -d
 
@@ -79,3 +82,6 @@ deploy:
 	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'docker-compose up -d --build'
 	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'until docker-compose exec -T manager-postgres pg_isready --timeout=0 --dbname=app ; do sleep 1 ; done'
 	ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'docker-compose run --rm manager-php-cli bin/console doctrine:migrations:migrate --no-interaction'
+
+prod-db-restore:
+	cat dump.sql | ssh -o StrictHostKeyChecking=no -i $(PEM_KEY_PATH) $(USER_HOST) 'docker-compose exec -T manager-postgres psql -U postgres -d app'
