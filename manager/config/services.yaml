@@ -70,6 +70,10 @@ services:
         tags:
             - { name: knp_menu.menu_builder, method: build, alias: work_projects }
 
+    App\Menu\Work\TasksMenu:
+        tags:
+            - { name: knp_menu.menu_builder, method: build, alias: work_tasks_presets }
+
     App\Menu\Work\MembersMenu:
         tags:
             - { name: knp_menu.menu_builder, method: build, alias: work_members }

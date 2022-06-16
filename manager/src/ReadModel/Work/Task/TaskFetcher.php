@@ -38,6 +38,11 @@ class TaskFetcher
             ->leftJoin('t', 'work_projects_projects', 'p', 'p.id = t.project_id')
             ->from('work_projects_tasks', 't');
 
+        if ($author = $filter->author) {
+            $qb->andWhere('t.author_id = :author');
+            $qb->setParameter(':author', $author);
+        }
+
         if ($project = $filter->project) {
             $qb->andWhere('t.project_id = :project');
             $qb->setParameter(':project', $project);

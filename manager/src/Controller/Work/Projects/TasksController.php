@@ -77,6 +77,69 @@ class TasksController extends AbstractController
     }
 
     /**
+     * @Route("/me", name=".me")
+     */
+    public function me(Request $request, TaskFetcher $tasks): Response
+    {
+        if ($this->isGranted('ROLE_WORK_PROJECTS_MANAGE')) {
+            $filter = Filter::all();
+        } else {
+            $filter = Filter::forMember($this->getUser()->getId());
+        }
+
+        $form = $this->createForm(Form::class, $filter, ['project_id' => null]);
+        $form->handleRequest($request);
+
+        if ($filter->executor) {
+            parse_str($request->getQueryString(), $params);
+            return $this->redirectToRoute('work.projects.tasks', $params);
+        }
+
+        $pagination = $tasks->all(
+            $filter->forExecutor($this->getUser()->getId()),
+            $request->query->getInt('page', 1),
+            self::PER_PAGE,
+            $request->query->get('sort', 'id'),
+            $request->query->get('direction', 'desc')
+        );
+
+        return $this->render('app/work/projects/tasks/index.html.twig', [
+            'tasks' => $pagination,
+            'form' => $form->createView(),
+            'project' => null
+        ]);
+    }
+
+    /**
+     * @Route("/own", name=".own")
+     */
+    public function own(Request $request, TaskFetcher $tasks): Response
+    {
+        if ($this->isGranted('ROLE_WORK_PROJECTS_MANAGE')) {
+            $filter = Filter::all();
+        } else {
+            $filter = Filter::forMember($this->getUser()->getId());
+        }
+
+        $form = $this->createForm(Form::class, $filter, ['project_id' => null]);
+        $form->handleRequest($request);
+
+        $pagination = $tasks->all(
+            $filter->forAuthor($this->getUser()->getId()),
+            $request->query->getInt('page', 1),
+            self::PER_PAGE,
+            $request->query->get('sort', 'id'),
+            $request->query->get('direction', 'desc')
+        );
+
+        return $this->render('app/work/projects/tasks/index.html.twig', [
+            'tasks' => $pagination,
+            'form' => $form->createView(),
+            'project' => null
+        ]);
+    }
+
+    /**
      * @Route("/{id}", name=".show")
      */
     public function show(

@@ -1,0 +1,3 @@
+{% set queryParams = app.request.query.all %}
+{% set menu = knp_menu_get('work_tasks_presets', [], {queryParams, project}) %}
+{{ knp_menu_render(menu, {currentClass: 'active'}) }}

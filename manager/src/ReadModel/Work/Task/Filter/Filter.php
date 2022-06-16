@@ -11,6 +11,7 @@ class Filter
     public $priority;
     public $executor;
     public $project;
+    public $author;
 
     public function __construct(?string $member)
     {
@@ -25,5 +26,17 @@ class Filter
     public static function forMember(string $id): self
     {
         return new self($id);
+    }
+
+    public function forExecutor(string $id): self
+    {
+        $this->executor = $id;
+        return $this;
+    }
+
+    public function forAuthor(string $id): self
+    {
+        $this->author = $id;
+        return $this;
     }
 }
