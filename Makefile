@@ -1,5 +1,5 @@
 REGISTRY := $(shell echo businesspunk)
-TAG := $(shell echo 3.6)
+TAG := $(shell echo 3.7)
 USER_HOST := $(shell echo ec2-user@44.203.151.26)
 PEM_KEY_PATH := $(shell echo /Users/nikitakazakevich/Downloads/Manager.pem)
 REDIS_SECRET := $(shell echo secret)
