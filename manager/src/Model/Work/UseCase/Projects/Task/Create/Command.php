@@ -18,10 +18,10 @@ class Command
      */
     public $author;
     /**
-     * @var string
-     * @Assert\NotBlank
+     * @var TitleRow[]
+     * @Assert\Valid
      */
-    public $title;
+    public $titles;
     /**
      * @var string
      */

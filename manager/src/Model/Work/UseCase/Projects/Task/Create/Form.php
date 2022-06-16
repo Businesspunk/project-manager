@@ -13,8 +13,8 @@ class Form extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', Type\TextType::class)
-            ->add('content', Type\TextareaType::class, ['attr' => ['rows' => 10]])
+            ->add('titles', TitlesType::class)
+            ->add('content', Type\TextareaType::class, ['attr' => ['rows' => 10], 'required' => false])
             ->add('type', Type\ChoiceType::class, [
                 'choices' => [
                     'None' => TaskType::NONE,

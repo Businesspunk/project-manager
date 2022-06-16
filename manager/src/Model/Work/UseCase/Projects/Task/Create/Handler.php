@@ -36,27 +36,30 @@ class Handler
         $project = $this->projects->get(new ProjectId($command->project));
         $member = $this->members->get(new MemberId($command->author));
 
-        $task = new Task(
-            $this->tasks->nextId(),
-            $project,
-            $member,
-            new \DateTimeImmutable(),
-            $command->title,
-            $command->content,
-            $command->priority,
-            new Type($command->type)
-        );
+        $date = new \DateTimeImmutable();
+        foreach ($command->titles as $title) {
+            $task = new Task(
+                $this->tasks->nextId(),
+                $project,
+                $member,
+                $date,
+                $title->value,
+                $command->content,
+                $command->priority,
+                new Type($command->type)
+            );
 
-        if ($parent = $command->parent) {
-            $parent = $this->tasks->get(new Id($parent));
-            $task->setChildOf($parent);
+            if ($parent = $command->parent) {
+                $parent = $this->tasks->get(new Id($parent));
+                $task->setChildOf($parent);
+            }
+
+            if ($command->plan) {
+                $task->plan($command->plan);
+            }
+            $this->tasks->add($task);
+            $date = $date->modify('+1 second');
         }
-
-        if ($command->plan) {
-            $task->plan($command->plan);
-        }
-
-        $this->tasks->add($task);
         $this->flusher->flush();
     }
 }

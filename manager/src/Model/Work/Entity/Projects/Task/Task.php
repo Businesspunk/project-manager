@@ -107,7 +107,7 @@ class Task
         Member $author,
         \DateTimeImmutable $date,
         string $title,
-        string $content,
+        ?string $content,
         int $priority,
         Type $type
     ) {
